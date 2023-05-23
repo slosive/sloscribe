@@ -14,7 +14,6 @@ type (
 	Option func(p *Options)
 )
 
-
 func Include(dirs ...string) Option {
 	return func(e *Options) {
 		e.IncludedDirs = dirs

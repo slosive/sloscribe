@@ -82,9 +82,8 @@ func (p parser) Parse(ctx context.Context) (*sloth.Spec, error) {
 		fmt.Println("go >>", string(bytes))
 	}
 
-	//buf := []byte{}
-
-	//for i := 0; i < 5; i++ {
+	// buf := []byte{}
+	// for i := 0; i < 5; i++ {
 	//	if byt, ok := mod.Memory().ReadByte(greetingPtr, uint32(ptrSize[0])); !ok {
 	//		log.Panicf("Memory.Read(%d, %d) out of range of memory size %d",
 	//			greetingPtr, greetingSize, mod.Memory().Size())
@@ -100,7 +99,7 @@ func (p parser) Parse(ctx context.Context) (*sloth.Spec, error) {
 	//	}
 	//
 	//	greetingPtr = greetingPtr + 32
-	//}
+	// }
 
 	fmt.Printf("hello_world returned: %v", greetingSize)
 

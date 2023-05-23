@@ -156,11 +156,15 @@ func (g Grammar) parse() (*sloth.Spec, error) {
 		case ".slo":
 			fields := reflect.VisibleFields(reflect.TypeOf(*slo))
 			pValue := reflect.ValueOf(slo).Elem()
-			parseFields(strings.ToLower(attr.Key.Value), strings.TrimSpace(attr.Value), fields, pValue)
+			if err := parseFields(strings.ToLower(attr.Key.Value), strings.TrimSpace(attr.Value), fields, pValue); err != nil {
+				continue
+			}
 		default:
 			fields := reflect.VisibleFields(reflect.TypeOf(*spec))
 			pValue := reflect.ValueOf(spec).Elem()
-			parseFields(strings.ToLower(attr.Key.Value), strings.TrimSpace(attr.Value), fields, pValue)
+			if err := parseFields(strings.ToLower(attr.Key.Value), strings.TrimSpace(attr.Value), fields, pValue); err != nil {
+				continue
+			}
 		}
 	}
 

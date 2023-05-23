@@ -32,7 +32,7 @@ func newParser(logger *logging.Logger, dirs ...string) *parser {
 	pkgs := map[string]*ast.Package{}
 	for _, dir := range dirs {
 		if _, err := os.Stat(dir); errors.Is(err, os.ErrNotExist) {
-			//skip if dir doesn't exists
+			// skip if dir doesn't exists
 			continue
 		}
 
@@ -47,7 +47,6 @@ func newParser(logger *logging.Logger, dirs ...string) *parser {
 				pkgs[pkgName] = pkg
 			}
 		}
-
 	}
 
 	return &parser{

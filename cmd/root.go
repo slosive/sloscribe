@@ -22,8 +22,7 @@ var rootCmd = &cobra.Command{
 func Execute(ctx context.Context) {
 	log := logging.LoggerFromContext(ctx)
 	err := rootCmd.ExecuteContext(ctx)
-	switch {
-	case err != nil:
+	if err != nil {
 		log.Error(err, "")
 		os.Exit(1)
 	}

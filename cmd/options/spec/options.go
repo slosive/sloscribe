@@ -43,7 +43,7 @@ func (o *Options) Complete() error {
 	// The following are the supported languages: yaml(default), json.
 	for _, format := range o.Formats {
 		if ok := generate.IsValidOutputFormat(format); !ok {
-			err = goaloe.Default().Error(
+			err = goaloe.DefaultOrDie().Error(
 				multierr.Append(err, errors.Errorf("invalid format %q was passed to --format flag", format)),
 				"unsupported_output_format")
 		}
@@ -55,7 +55,7 @@ func (o *Options) Complete() error {
 	// @aloe details The source language passed to the --lang flag is not currently supported by the tool.
 	// The following are the supported languages: go, wasm(experimental).
 	if ok := lang.IsSupportedLanguage(o.SrcLanguage); !ok {
-		err = goaloe.Default().Error(
+		err = goaloe.DefaultOrDie().Error(
 			multierr.Append(err, errors.Errorf("unsupported language %q was passed to --lang flag", o.SrcLanguage)),
 			"unsupported_language")
 	}

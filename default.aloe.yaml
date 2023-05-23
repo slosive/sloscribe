@@ -1,0 +1,31 @@
+base_url: https://github.com/tfadeyi/sloth-simple-comments
+description: This is a CLI tool for embedding sloth SLI/SLOs into the application sourcecode
+errors_definitions:
+    clean_artefacts_error:
+        code: clean_artefacts_error
+        details: |-
+            The tool has failed to delete the artefacts from the previous execution.
+            Try manually deleting them before running the tool again.
+        summary: The tool has failed to delete the artefacts from the previous execution.
+        title: Error Removing Previous Artefacts
+    unsupported_language:
+        code: unsupported_language
+        details: |-
+            The source language passed to the --lang flag is not currently supported by the tool.
+            The following are the supported languages: go, wasm(experimental).
+        summary: The language passed to the --lang flag is not supported.
+        title: Unsupported Language Error
+    unsupported_output_format:
+        code: unsupported_output_format
+        details: |-
+            The format passed to the --lang flag is not currently supported by the tool.
+            The following are the supported languages: yaml(default), json.
+        summary: The format passed to the --format flag is not supported.
+        title: Unsupported Output Format Error
+    write_artefacts_error:
+        code: write_artefacts_error
+        details: The tool has failed to print out the Sloth definitions for service.
+        summary: The tool has failed to print out the Sloth definitions for service.
+        title: Error Creating Artefacts
+name: sloth-simple-comments
+version: v0.0.1

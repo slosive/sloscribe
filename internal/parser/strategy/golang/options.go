@@ -9,4 +9,3 @@ func Parser() options.Option {
 		e.Strategy = newParser(e.Logger, e.IncludedDirs...)
 	}
 }
-

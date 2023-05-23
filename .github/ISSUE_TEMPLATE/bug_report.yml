@@ -1,0 +1,40 @@
+name: 🐛 Report a bug
+description: Have you found a bug or issue? Create a bug report for this project
+labels: [ "bug" ]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
+
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: |
+        Provide a summary of the bug that you've encountered.
+        * What is the current bug behavior?
+        * Give all the context you can, provide relevant logs and/or screenshots.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expectation
+    attributes:
+      label: What should have happened?
+      description: Describe what you expected to happen.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction
+      description: Detail the steps taken to reproduce this error and, ideally, share a repo of a minimal reproducible example. State whether this issue can be reproduced consistently or if it is intermittent.
+      placeholder: |
+        1. Given...
+        2. When...
+        3. Then...
+    validations:
+      required: true
