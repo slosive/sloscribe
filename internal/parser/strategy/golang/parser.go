@@ -88,19 +88,11 @@ func getPackages(dir string) (map[string]*ast.Package, error) {
 	return pkgs, err
 }
 
-func getFile(file string) (*ast.File, error) {
-	fset := token.NewFileSet()
-	return goparser.ParseFile(fset, file, nil, goparser.ParseComments)
-}
-
 func (p parser) Parse(ctx context.Context) (*sloth.Spec, error) {
 	// collect all aloe error comments from packages and add them to the spec struct
 	for _, pkg := range p.ApplicationPackages {
 		for _, file := range pkg.Files {
-			if err := p.parseServiceComments(file.Comments...); err != nil {
-				p.Logger.Info(err.Error())
-			}
-			if err := p.parseSLOsComments(file.Comments...); err != nil {
+			if err := p.parseComments(file.Comments...); err != nil {
 				p.Logger.Info(err.Error())
 				continue
 			}
@@ -110,9 +102,9 @@ func (p parser) Parse(ctx context.Context) (*sloth.Spec, error) {
 	return p.Spec, nil
 }
 
-func (p parser) parseServiceComments(comments ...*ast.CommentGroup) error {
+func (p parser) parseComments(comments ...*ast.CommentGroup) error {
 	for _, comment := range comments {
-		app, err := grammar.EvalService(strings.TrimSpace(comment.Text()))
+		newSpec, err := grammar.Eval(strings.TrimSpace(comment.Text()))
 		switch {
 		case errors.Is(err, grammar.ErrParseSource):
 			continue
@@ -121,26 +113,20 @@ func (p parser) parseServiceComments(comments ...*ast.CommentGroup) error {
 			continue
 		}
 
-		p.Spec.Service = app.Service
-		p.Spec.Version = app.Version
-		p.Spec.Labels = app.Labels
-	}
-	return nil
-}
-
-func (p parser) parseSLOsComments(comments ...*ast.CommentGroup) error {
-	for _, comment := range comments {
-		newSLOs, err := grammar.Eval(strings.TrimSpace(comment.Text()))
-		switch {
-		case errors.Is(err, grammar.ErrParseSource):
-			continue
-		case err != nil:
-			p.Logger.Error(err, "")
-			continue
+		if p.Spec.Service == "" {
+			p.Spec.Service = newSpec.Service
+		}
+		if p.Spec.Version == "" {
+			p.Spec.Version = newSpec.Version
+		}
+		if p.Spec.Labels == nil {
+			p.Spec.Labels = newSpec.Labels
 		}
 
-		for _, slo := range newSLOs {
-			p.Spec.SLOs = append(p.Spec.SLOs, slo)
+		for _, slo := range newSpec.SLOs {
+			if slo.Name != "" {
+				p.Spec.SLOs = append(p.Spec.SLOs, slo)
+			}
 		}
 	}
 	return nil

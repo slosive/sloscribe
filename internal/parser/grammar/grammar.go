@@ -1,20 +1,17 @@
 package grammar
 
 import (
+	"reflect"
+	"strconv"
+	"strings"
+
 	"github.com/alecthomas/participle/v2"
 	"github.com/alecthomas/participle/v2/lexer"
 	"github.com/juju/errors"
 	sloth "github.com/slok/sloth/pkg/prometheus/api/v1"
-	"reflect"
-	"strconv"
-	"strings"
 )
 
 type (
-	ServiceInfoGrammar struct {
-		Stmts []*Statement `@@*`
-	}
-
 	Grammar struct {
 		SloStmts []*Statement `@@*`
 	}
@@ -25,68 +22,24 @@ type (
 	}
 
 	Key struct {
-		Type  string `(Sloth @((".alerting"|".sli")(".page"|".ticket")?)?)`
-		Value string `Whitespace* @Keyword`
+		Type  string `(Sloth @((".alerting"(".page"|".ticket")?|".sli"|".slo"))?)`
+		Value string `Whitespace* @("service"|"version"|"error_query"|"total_query"|"error_ratio_query"|"name"|"description"|"objective"|"labels"|"annotations"|"disable")`
 	}
 )
 
 const (
-	serviceAttr            = "service"
-	versionAttr            = "version"
 	sliErrorQueryAttr      = "error_query"
 	sliTotalQueryAttr      = "total_query"
 	sliErrorRatioQueryAttr = "error_ratio_query"
-	nameAttr               = "name"
-	descriptionAttr        = "description"
-	objectiveAttr          = "objective"
-	labelAttr              = "labels"
-	annotationAttr         = "annotations"
-	disableAttr            = "disable"
 )
 
 var (
 	ErrMissingRequiredField = errors.New("missing required application field(s)")
 	ErrParseSource          = errors.New("error parsing source material")
-	keywords                = []string{
-		sliErrorQueryAttr,
-		sliTotalQueryAttr,
-		sliErrorRatioQueryAttr,
-		nameAttr,
-		descriptionAttr,
-		objectiveAttr,
-		labelAttr,
-		annotationAttr,
-		disableAttr,
-		serviceAttr,
-		versionAttr,
-	}
 )
 
 func (k Key) GetStmtType() string {
 	return k.Type
-}
-
-func IsMapValue(attr string) bool {
-	return attr == labelAttr || attr == annotationAttr
-}
-
-func (g ServiceInfoGrammar) getAttribute(attribute string) (map[string]string, bool) {
-	attributes := make(map[string]string)
-	for _, attr := range g.Stmts {
-		if strings.ToLower(attr.Key.Value) == attribute {
-			if !IsMapValue(attribute) {
-				return map[string]string{
-					attribute: strings.TrimSpace(attr.Value),
-				}, true
-			}
-			// get label name
-			maps := strings.SplitN(attr.Value, " ", 1)
-			name := strings.TrimSpace(maps[0])
-			value := strings.TrimSpace(maps[1])
-			attributes[name] = value
-		}
-	}
-	return attributes, len(attributes) > 0
 }
 
 func parseFields(attr string, value string, fields []reflect.StructField, pValue reflect.Value) error {
@@ -128,15 +81,19 @@ func parseFields(attr string, value string, fields []reflect.StructField, pValue
 	return nil
 }
 
-func (g Grammar) parseSLO() (*sloth.SLO, error) {
+func (g Grammar) parse() (*sloth.Spec, error) {
+	var spec = &sloth.Spec{
+		Version: sloth.Version,
+		Service: "",
+	}
 	var slo = &sloth.SLO{
 		Name:        "",
 		Description: "",
 		Objective:   0,
 		Labels:      map[string]string{},
 		SLI: sloth.SLI{
-			Raw:    &sloth.SLIRaw{},
-			Events: &sloth.SLIEvents{},
+			Raw:    nil,
+			Events: nil,
 			Plugin: nil,
 		},
 	}
@@ -150,8 +107,9 @@ func (g Grammar) parseSLO() (*sloth.SLO, error) {
 			}
 			fields := reflect.VisibleFields(reflect.TypeOf(*alert))
 			pValue := reflect.ValueOf(alert).Elem()
-			parseFields(strings.ToLower(attr.Key.Value), strings.TrimSpace(attr.Value), fields, pValue)
-			slo.Alerting.TicketAlert = *alert
+			if err := parseFields(strings.ToLower(attr.Key.Value), strings.TrimSpace(attr.Value), fields, pValue); err == nil {
+				slo.Alerting.TicketAlert = *alert
+			}
 		case ".alerting.page":
 			alert := &sloth.Alert{
 				Disable:     false,
@@ -160,8 +118,9 @@ func (g Grammar) parseSLO() (*sloth.SLO, error) {
 			}
 			fields := reflect.VisibleFields(reflect.TypeOf(*alert))
 			pValue := reflect.ValueOf(alert).Elem()
-			parseFields(strings.ToLower(attr.Key.Value), strings.TrimSpace(attr.Value), fields, pValue)
-			slo.Alerting.PageAlert = *alert
+			if err := parseFields(strings.ToLower(attr.Key.Value), strings.TrimSpace(attr.Value), fields, pValue); err == nil {
+				slo.Alerting.PageAlert = *alert
+			}
 		case ".alerting":
 			alerting := &sloth.Alerting{
 				Name:        "",
@@ -172,30 +131,45 @@ func (g Grammar) parseSLO() (*sloth.SLO, error) {
 			}
 			fields := reflect.VisibleFields(reflect.TypeOf(*alerting))
 			pValue := reflect.ValueOf(alerting).Elem()
-			parseFields(strings.ToLower(attr.Key.Value), strings.TrimSpace(attr.Value), fields, pValue)
-			slo.Alerting = *alerting
+			if err := parseFields(strings.ToLower(attr.Key.Value), strings.TrimSpace(attr.Value), fields, pValue); err == nil && alerting.Name != "" {
+				slo.Alerting = *alerting
+			}
 		case ".sli":
 			// SLI
 			switch attr.Key.Value {
 			case sliTotalQueryAttr:
+				if slo.SLI.Events == nil {
+					slo.SLI.Events = &sloth.SLIEvents{}
+				}
 				slo.SLI.Events.TotalQuery = strings.TrimSpace(attr.Value)
 			case sliErrorQueryAttr:
+				if slo.SLI.Events == nil {
+					slo.SLI.Events = &sloth.SLIEvents{}
+				}
 				slo.SLI.Events.ErrorQuery = strings.TrimSpace(attr.Value)
 			case sliErrorRatioQueryAttr:
+				if slo.SLI.Raw == nil {
+					slo.SLI.Raw = &sloth.SLIRaw{}
+				}
 				slo.SLI.Raw.ErrorRatioQuery = strings.TrimSpace(attr.Value)
 			}
-		default:
+		case ".slo":
 			fields := reflect.VisibleFields(reflect.TypeOf(*slo))
 			pValue := reflect.ValueOf(slo).Elem()
 			parseFields(strings.ToLower(attr.Key.Value), strings.TrimSpace(attr.Value), fields, pValue)
+		default:
+			fields := reflect.VisibleFields(reflect.TypeOf(*spec))
+			pValue := reflect.ValueOf(spec).Elem()
+			parseFields(strings.ToLower(attr.Key.Value), strings.TrimSpace(attr.Value), fields, pValue)
 		}
 	}
-	return slo, nil
+
+	spec.SLOs = []sloth.SLO{*slo}
+	return spec, nil
 }
 
 var lexerDefinition = lexer.MustSimple([]lexer.SimpleRule{
 	{"EOL", `[\n\r]+`},
-	{"Keyword", strings.Join(keywords, "|")},
 	{"Sloth", `@sloth`},
 	{"String", `([a-zA-Z_0-9\.\/:,\-\'\(\)~\[\]\{\}=\"\|%])\w*`},
 	{"Whitespace", `[ \t]+`},
@@ -212,64 +186,15 @@ func eval(filename, source string, options ...participle.ParseOption) (*Grammar,
 	return ast.ParseString(filename, source, options...)
 }
 
-func Eval(source string, options ...participle.ParseOption) (map[string]sloth.SLO, error) {
+func Eval(source string, options ...participle.ParseOption) (*sloth.Spec, error) {
 	grammar, err := eval("", source, options...)
 	if err != nil {
 		return nil, err
 	}
 
-	foundSLOs := make(map[string]sloth.SLO)
-	newSLO := sloth.SLO{}
-
-	// SLO
-	s, _ := grammar.parseSLO()
-	newSLO = *s
-
-	// TODO checks on the required fields
-	if newSLO.Objective == 0 {
-		return nil, errors.New("SLO's objective is missing")
-	}
-	if newSLO.Name == "" {
-		return nil, errors.New("SLO's name is missing")
-	}
-
-	foundSLOs[newSLO.Name] = newSLO
-	return foundSLOs, nil
-}
-
-func evalService(filename, source string, options ...participle.ParseOption) (*ServiceInfoGrammar, error) {
-	ast, err := participle.Build[ServiceInfoGrammar](
-		participle.Lexer(lexerDefinition),
-	)
-	if err != nil {
-		return nil, err
-	}
-
-	return ast.ParseString(filename, source, options...)
-}
-
-func EvalService(source string, options ...participle.ParseOption) (*sloth.Spec, error) {
-	grammar, err := evalService("", source, options...)
-	if err != nil {
-		return nil, err
-	}
-
-	spec := &sloth.Spec{
-		Version: sloth.Version,
-		Service: "",
-		Labels:  nil,
-	}
-
 	// Spec
-	if attrs, ok := grammar.getAttribute(serviceAttr); ok {
-		spec.Service = attrs[serviceAttr]
-	}
-	if attrs, ok := grammar.getAttribute(versionAttr); ok {
-		spec.Version = attrs[versionAttr]
-	}
-	if attrs, ok := grammar.getAttribute(labelAttr); ok {
-		spec.Labels = attrs
-	}
+	s, _ := grammar.parse()
+	newSpec := *s
 
-	return spec, nil
+	return &newSpec, nil
 }

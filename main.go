@@ -15,7 +15,7 @@ import (
 //@aloe name sloth-simple-comments
 //@aloe url https://github.com/tfadeyi/sloth-simple-comments
 //@aloe version v0.0.1
-//@aloe description This is a CLI tool to parse source code and generate a Sloth definition manifest.
+//@aloe description This is a CLI tool for embedding sloth SLI/SLOs into the application sourcecode
 
 func main() {
 	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, os.Kill, syscall.SIGTERM)

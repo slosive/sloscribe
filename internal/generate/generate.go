@@ -11,6 +11,7 @@ import (
 
 	"github.com/juju/errors"
 	sloth "github.com/slok/sloth/pkg/prometheus/api/v1"
+	"github.com/tfadeyi/go-aloe"
 	"gopkg.in/yaml.v3"
 )
 
@@ -39,7 +40,7 @@ func WriteSpecification(spec *sloth.Spec, stdout bool, out string, formats ...st
 		// @aloe summary The tool has failed to delete the artifacts from the previous execution.
 		// @aloe details The tool has failed to delete the artifacts from the previous execution.
 		// Try manually deleting them before running the tool again.
-		return err
+		return goaloe.Default().Error(err, "clean_artifacts_error")
 	}
 
 	outputFileName := defaultOutputFile
@@ -70,7 +71,7 @@ func WriteSpecification(spec *sloth.Spec, stdout bool, out string, formats ...st
 			// @aloe title Error Creating Artifacts
 			// @aloe summary The tool has failed to print out the Sloth definitions for service.
 			// @aloe details The tool has failed to print out the Sloth definitions for service.
-			return err
+			return goaloe.Default().Error(err, "write_artifacts_error")
 		}
 	}
 
