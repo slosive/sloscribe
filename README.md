@@ -73,7 +73,7 @@ The definitions are added through declarative comments, as shown below.
 
 ```text
 Usage:
-  sli-app generate [flags]
+  sli-app init [flags]
 
 Flags:
       --dirs strings     Comma separated list of directories to be parses by the tool (default [current working directory])
@@ -116,7 +116,7 @@ This example shows how sloth's comments can be added next to the prometheus metr
 Now running the following command from the root of the project.
 
 ```shell
-./sloth-comments generate --stdout
+./sloth-comments init --stdout
 ```
 
 This will generate the following sloth definitions being outputted to standard out.
@@ -139,7 +139,7 @@ slos:
 This specification can then be passed to the Sloth CLI to generate Prometheus alerting groups.
 
 ```shell
- ./sloth-comments generate && sloth generate -i sloth_definitions.yaml
+ ./sloth-comments init && sloth generate -i sloth_definitions.yaml
 ```
 
 Resulting alert groups
