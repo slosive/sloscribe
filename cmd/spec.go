@@ -59,6 +59,8 @@ i.e:
 				languageParser = golang.Parser()
 			}
 
+			logger.Info("Parsing source code for slo definitions", "directories", opts.IncludedDirs)
+
 			parser, err := parser.New(
 				languageParser,
 				options.Logger(&logger),
@@ -70,6 +72,8 @@ i.e:
 			if err != nil {
 				return err
 			}
+
+			logger.Info("Source code was parsed successfully")
 
 			return generate.WriteSpecification(service, opts.StdOutput, outputDir, opts.Formats...)
 		},

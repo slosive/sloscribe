@@ -52,5 +52,5 @@ lint:
 
 # generates the licenses used by the tool
 licenses:
-	rm -rf licenses
-	go-licenses save . --save_path="./licenses"
+	rm -rf kodata
+	go-licenses save . --save_path="kodata/licenses"

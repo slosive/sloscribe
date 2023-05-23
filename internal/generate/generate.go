@@ -35,12 +35,12 @@ func WriteSpecification(spec *sloth.Spec, stdout bool, out string, formats ...st
 	// remove all previous output files
 	err := cleanAll(spec.Service, formats...)
 	if err != nil {
-		// @aloe code clean_artifacts_error
-		// @aloe title Error Removing Previous Artifacts
-		// @aloe summary The tool has failed to delete the artifacts from the previous execution.
-		// @aloe details The tool has failed to delete the artifacts from the previous execution.
+		// @aloe code clean_artefacts_error
+		// @aloe title Error Removing Previous Artefacts
+		// @aloe summary The tool has failed to delete the artefacts from the previous execution.
+		// @aloe details The tool has failed to delete the artefacts from the previous execution.
 		// Try manually deleting them before running the tool again.
-		return goaloe.Default().Error(err, "clean_artifacts_error")
+		return goaloe.DefaultOrDie().Error(err, "clean_artefacts_error")
 	}
 
 	outputFileName := defaultOutputFile
@@ -67,11 +67,11 @@ func WriteSpecification(spec *sloth.Spec, stdout bool, out string, formats ...st
 		}
 
 		if err = writeAll(stdout, files); err != nil {
-			// @aloe code write_artifacts_error
-			// @aloe title Error Creating Artifacts
+			// @aloe code write_artefacts_error
+			// @aloe title Error Creating Artefacts
 			// @aloe summary The tool has failed to print out the Sloth definitions for service.
 			// @aloe details The tool has failed to print out the Sloth definitions for service.
-			return goaloe.Default().Error(err, "write_artifacts_error")
+			return goaloe.DefaultOrDie().Error(err, "write_artefacts_error")
 		}
 	}
 
@@ -109,6 +109,9 @@ func writeAll(stdout bool, files map[string][]byte) error {
 		// decide which writer to use to print the application spec
 		if !stdout {
 			w, err = os.OpenFile(path, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644)
+			if err != nil {
+				return err
+			}
 		}
 		// write to writer
 		_, err = w.Write(body)
