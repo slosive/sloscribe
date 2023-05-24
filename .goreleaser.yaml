@@ -1,4 +1,4 @@
-project_name: aloe-cli
+project_name: sloth-simple-comments
 before:
   hooks:
     - go mod tidy
@@ -73,10 +73,10 @@ kos:
     base_image: gcr.io/distroless/base:nonroot
     # labels are going to be supported in goreleaser 1.16.3, waiting for the release
     labels:
-      org.opencontainers.image.source: https://github.com/tfadeyi/aloe-cli
-      org.opencontainers.image.description: "CLI tool for the Aloe specification"
+      org.opencontainers.image.source: https://github.com/tfadeyi/sloth-simple-comments
+      org.opencontainers.image.description: "Generate Sloth SLO/SLI definitions from source code. "
       org.opencontainers.image.licenses: MIT
-      org.opencontainers.image.title: "Aloe CLI"
+      org.opencontainers.image.title: "Sloth Comments CLI"
       org.opencontainers.image.vendor: ""
       org.opencontainers.image.authors: "Oluwole Fadeyi"
 
