@@ -9,7 +9,7 @@ title: sloth-simple-comments
 
 ### Description
 
-This is a CLI tool for embedding sloth SLI/SLOs into the application sourcecode
+Generate Sloth SLO/SLI definitions from sourcecode.
 
 ### Error definitions
 
