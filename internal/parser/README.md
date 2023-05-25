@@ -31,7 +31,7 @@ func New(opts ...options.Option) (*Parser, error)
 
 New creates a new instance of the parser, defaults to golang parsing strategy if non are passed
 
-### func \(\*Parser\) [Parse](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/parser.go#L38>)
+### func \(\*Parser\) [Parse](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/parser.go#L35>)
 
 ```go
 func (p *Parser) Parse(ctx context.Context) (*sloth.Spec, error)

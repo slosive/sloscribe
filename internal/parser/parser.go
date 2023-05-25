@@ -28,9 +28,6 @@ func New(opts ...options.Option) (*Parser, error) {
 	if defaultOpts.Strategy == nil {
 		return nil, errors.New("parsing strategy configuration was not set")
 	}
-	if defaultOpts.IncludedDirs == nil {
-		return nil, errors.New("no directories were included in the configuration")
-	}
 
 	return &Parser{defaultOpts}, nil
 }

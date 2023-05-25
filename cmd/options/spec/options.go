@@ -15,9 +15,9 @@ type (
 	// Options is the list of options/flag available to the application,
 	// plus the clients needed by the application to function.
 	Options struct {
-		StdOutput    bool
 		Formats      []string
 		IncludedDirs []string
+		Source       string
 		SrcLanguage  lang.SourceLanguage
 	}
 )
@@ -82,18 +82,19 @@ func (o *Options) addAppFlags(fs *pflag.FlagSet) {
 		&o.Formats,
 		"format",
 		[]string{"yaml"},
-		"Output format (yaml,json)",
-	)
-	fs.BoolVar(
-		&o.StdOutput,
-		"stdout",
-		false,
-		"Print output to standard output.",
+		"Output format (yaml,json).",
 	)
 	fs.StringVar(
 		(*string)(&o.SrcLanguage),
 		"lang",
 		"go",
 		"Language of the source files. (go, wasm)",
+	)
+	fs.StringVarP(
+		&o.Source,
+		"file",
+		"f",
+		"",
+		"Source file to parse.",
 	)
 }
