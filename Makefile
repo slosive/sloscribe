@@ -18,6 +18,8 @@ install-ci-tools:
 	go install github.com/atombender/go-jsonschema/cmd/gojsonschema@v0.11.0
 
 install-local-tools: install-ci-tools
+	go install github.com/princjef/gomarkdoc/cmd/gomarkdoc@v0.4.1
+	go install github.com/tfadeyi/aloe-cli@v0.0.2
 	go install github.com/goreleaser/goreleaser@v1.18.2
 	go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.52.2
 

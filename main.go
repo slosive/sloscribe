@@ -1,6 +1,9 @@
 /*
 Copyright © 2023 Oluwole Fadeyi
 */
+//go:generate aloe-cli spec generate main.go --format yaml,markdown
+//go:generate gomarkdoc --output '{{.Dir}}/README.md' ./internal ./cmd
+
 package main
 
 import (
