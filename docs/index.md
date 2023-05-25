@@ -1,15 +1,15 @@
 ---
-title: sloth-simple-comments
+title: slotalk
 ---
 
-## sloth-simple-comments
+## slotalk
 
-**Application**: sloth-simple-comments
+**Application**: slotalk
 **Version**: v0.0.1
 
 ### Description
 
-Generate Sloth SLO/SLI definitions from sourcecode.
+Generate Sloth SLO/SLI definitions from code annotations.
 
 ### Error definitions
 

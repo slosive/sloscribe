@@ -1,5 +1,5 @@
 base_url: https://tfadeyi.github.io
-description: Generate Sloth SLO/SLI definitions from sourcecode.
+description: Generate Sloth SLO/SLI definitions from code annotations.
 errors_definitions:
     clean_artefacts_error:
         code: clean_artefacts_error
@@ -27,5 +27,5 @@ errors_definitions:
         details: The tool has failed to print out the Sloth definitions for service.
         summary: The tool has failed to print out the Sloth definitions for service.
         title: Error Creating Artefacts
-name: sloth-simple-comments
+name: slotalk
 version: v0.0.1

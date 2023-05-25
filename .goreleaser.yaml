@@ -1,4 +1,4 @@
-project_name: sloth-simple-comments
+project_name: slotalk
 before:
   hooks:
     - go mod tidy
@@ -71,12 +71,11 @@ kos:
     id: "linux"
     build: "linux"
     base_image: gcr.io/distroless/base:nonroot
-    # labels are going to be supported in goreleaser 1.16.3, waiting for the release
     labels:
-      org.opencontainers.image.source: https://github.com/tfadeyi/sloth-simple-comments
-      org.opencontainers.image.description: "Generate Sloth SLO/SLI definitions from source code. "
+      org.opencontainers.image.source: "https://github.com/tfadeyi/{{ .ProjectName }}"
+      org.opencontainers.image.description: "Generate Sloth SLO/SLI definitions from source code."
       org.opencontainers.image.licenses: MIT
-      org.opencontainers.image.title: "Sloth Comments CLI"
+      org.opencontainers.image.title: "{{ .ProjectName }}"
       org.opencontainers.image.vendor: ""
       org.opencontainers.image.authors: "Oluwole Fadeyi"
 

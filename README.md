@@ -1,7 +1,6 @@
 <div align="center">
 
-# Sloth Comments
-
+# Slotalk
 <hr>
 
 [![Continuous Integration](https://img.shields.io/github/actions/workflow/status/tfadeyi/sloth-simple-comments/ci.yml?branch=main&style=for-the-badge)](https://github.com/tfadeyi/sloth-simple-comments/actions/workflows/ci.yml)
@@ -13,7 +12,7 @@
 </div>
 
 
-This CLI tool allows developers to embed [Sloth](https://sloth.dev/) SLO/SLI [definitions](https://github.com/slok/sloth/tree/main/pkg/prometheus/api/v1) into their code base, without defining a separate
+Slotalk is a CLI tool to help developers embed [Sloth](https://sloth.dev/) SLO/SLI [definitions](https://github.com/slok/sloth/tree/main/pkg/prometheus/api/v1) into their code base, without defining a separate
 YAML file close to where the metrics used in the actual SLIs are defined.
 
 The tool takes inspiration from [Swaggo](https://github.com/swaggo/swag), a tool to generate Swagger docs from Go code,

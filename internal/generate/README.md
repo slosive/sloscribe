@@ -23,13 +23,13 @@ ErrUnsupportedFormat is returned if the output format is unsupported
 var ErrUnsupportedFormat = errors.New("the specification is in an invalid format")
 ```
 
-## func [IsValidOutputFormat](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/generate/generate.go#L24>)
+## func [IsValidOutputFormat](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/generate/generate.go#L25>)
 
 ```go
 func IsValidOutputFormat(format string) bool
 ```
 
-## func [WriteSpecification](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/generate/generate.go#L34>)
+## func [WriteSpecification](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/generate/generate.go#L35>)
 
 ```go
 func WriteSpecification(spec *sloth.Spec, stdout bool, out string, formats ...string) error

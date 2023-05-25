@@ -4,7 +4,7 @@ COMMIT:=$(shell git rev-list -1 HEAD)
 VERSION:=$(COMMIT)
 DATE:=$(shell date -uR)
 
-BIN_NAME:=slouth-comments
+BIN_NAME:=slotalk
 GOFLAGS:=-mod=readonly
 GO_BUILD:=go build $(GOFLAGS)
 

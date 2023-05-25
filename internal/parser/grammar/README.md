@@ -11,8 +11,8 @@ import "github.com/tfadeyi/sloth-simple-comments/internal/parser/grammar"
 - [Variables](<#variables>)
 - [func Eval(source string, options ...participle.ParseOption) (*sloth.Spec, error)](<#func-eval>)
 - [type Grammar](<#type-grammar>)
-- [type Key](<#type-key>)
-  - [func (k Key) GetStmtType() string](<#func-key-getstmttype>)
+- [type Scope](<#type-scope>)
+  - [func (k Scope) GetType() string](<#func-scope-gettype>)
 - [type Statement](<#type-statement>)
 
 
@@ -25,13 +25,15 @@ var (
 )
 ```
 
-## func [Eval](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/grammar/grammar.go#L196>)
+## func [Eval](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/grammar/grammar.go#L191>)
 
 ```go
 func Eval(source string, options ...participle.ParseOption) (*sloth.Spec, error)
 ```
 
-## type [Grammar](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/grammar/grammar.go#L16-L19>)
+Eval evaluates the source input against the grammar and returns an instance of \*sloth.Spec
+
+## type [Grammar](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/grammar/grammar.go#L15-L18>)
 
 Grammar is the participle grammar use to parse the Sloth comment groups in source files
 
@@ -42,29 +44,33 @@ type Grammar struct {
 }
 ```
 
-## type [Key](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/grammar/grammar.go#L26-L30>)
+## type [Scope](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/grammar/grammar.go#L25-L29>)
+
+Scope defines the statement scope, similar to a code function
 
 ```go
-type Key struct {
-    // Type is the type of
+type Scope struct {
+    // Type is the specification struct a statement refers to
     Type  string `(Sloth @((".alerting"(".page"|".ticket")?|".sli"|".slo"))?)`
     Value string `Whitespace* @("service"|"version"|"error_query"|"total_query"|"error_ratio_query"|"name"|"description"|"objective"|"labels"|"annotations"|"disable")`
 }
 ```
 
-### func \(Key\) [GetStmtType](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/grammar/grammar.go#L44>)
+### func \(Scope\) [GetType](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/grammar/grammar.go#L44>)
 
 ```go
-func (k Key) GetStmtType() string
+func (k Scope) GetType() string
 ```
 
-## type [Statement](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/grammar/grammar.go#L21-L24>)
+GetType returns the type of the statement scope
+
+## type [Statement](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/grammar/grammar.go#L20-L23>)
 
 Statement is any comment starting with @sloth keyword
 
 ```go
 type Statement struct {
-    Key   Key    `@@`
+    Scope Scope  `@@`
     Value string `Whitespace* @(String (Whitespace|EOL)*)+`
 }
 ```
