@@ -13,8 +13,8 @@ import (
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "sli-app",
-	Short: "Generate sloth definitions from comments in the application's code.",
+	Use:   "slotalk",
+	Short: "Generate Sloth SLO/SLI definitions from code annotations.",
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.

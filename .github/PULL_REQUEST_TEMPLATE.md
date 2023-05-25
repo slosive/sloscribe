@@ -1,5 +1,5 @@
 <!--
-By submitting a pull request to this repository, you agree to the terms within the project's Code of Conduct: https://github.com/tfadeyi/auth0-simple-exporter/blob/main/CODE_OF_CONDUCT.md.
+By submitting a pull request to this repository, you agree to the terms within the project's Code of Conduct: https://github.com/tfadeyi/slotalk/blob/main/CODE_OF_CONDUCT.md.
 -->
 
 ### 📋 Changes
