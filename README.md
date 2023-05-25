@@ -2,12 +2,14 @@
 
 # Sloth Comments
 
-[![Continuous Integration](https://img.shields.io/github/actions/workflow/status/tfadeyi/sloth-simple-comments/ci.yml?branch=main&style=flat-square)](https://github.com/tfadeyi/sloth-simple-comments/actions/workflows/ci.yml)
-[![License](https://img.shields.io/badge/License-MIT-yellowgreen.svg?style=flat-square)](https://github.com/tfadeyi/sloth-simple-comments/blob/main/LICENSE)
-[![Language](https://img.shields.io/github/go-mod/go-version/tfadeyi/sloth-simple-comments?style=flat-square)](https://github.com/tfadeyi/sloth-simple-comments)
-[![GitHub release](https://img.shields.io/github/v/release/tfadeyi/sloth-simple-comments?color=green&style=flat-square)](https://github.com/tfadeyi/sloth-simple-comments/releases)
-[![Code size](https://img.shields.io/github/languages/code-size/tfadeyi/sloth-simple-comments?color=orange&style=flat-square)](https://github.com/tfadeyi/sloth-simple-comments)
-[![Go Report Card](https://goreportcard.com/badge/github.com/tfadeyi/sloth-simple-comments?style=flat-square)](https://goreportcard.com/report/github.com/tfadeyi/sloth-simple-comments)
+<hr>
+
+[![Continuous Integration](https://img.shields.io/github/actions/workflow/status/tfadeyi/sloth-simple-comments/ci.yml?branch=main&style=for-the-badge)](https://github.com/tfadeyi/sloth-simple-comments/actions/workflows/ci.yml)
+[![License](https://img.shields.io/badge/License-MIT-yellowgreen.svg?style=for-the-badge)](https://github.com/tfadeyi/sloth-simple-comments/blob/main/LICENSE)
+[![Language](https://img.shields.io/github/go-mod/go-version/tfadeyi/sloth-simple-comments?style=for-the-badge)](https://github.com/tfadeyi/sloth-simple-comments)
+[![GitHub release](https://img.shields.io/github/v/release/tfadeyi/sloth-simple-comments?color=green&style=for-the-badge)](https://github.com/tfadeyi/sloth-simple-comments/releases)
+[![Code size](https://img.shields.io/github/languages/code-size/tfadeyi/sloth-simple-comments?color=orange&style=for-the-badge)](https://github.com/tfadeyi/sloth-simple-comments)
+[![Go Report Card](https://goreportcard.com/badge/github.com/tfadeyi/sloth-simple-comments?style=for-the-badge)](https://goreportcard.com/report/github.com/tfadeyi/sloth-simple-comments)
 </div>
 
 
@@ -19,7 +21,7 @@ as such it uses a similar pattern when it comes to embedding the Sloth definitio
 
 ## Motivation
 
-* **Experimentation**, this was the main motivation behind development, testing libraries like: [go/ast](https://pkg.go.dev/go/ast), [wezero](https://github.com/tetratelabs/wazero), [participle](https://github.com/alecthomas/participle).
+* **Experimentation**, this was the main motivation behind development, testing libraries like: [go/ast](https://pkg.go.dev/go/ast), [wazero](https://github.com/tetratelabs/wazero), [participle](https://github.com/alecthomas/participle).
 * **Developer experience**, but also finding ways to improve developer experience when it comes to more platform engineering concepts like SLIs and SLOs. I want to see if moving these concepts closer to devs,
 would make them less of an afterthought.
 * **More Experimentation** Many of the cloud native tools I've seen have been very targeted towards DevOps/SecOps and Platform Engineering personas,

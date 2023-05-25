@@ -6,22 +6,24 @@ import (
 	"strings"
 
 	"github.com/alecthomas/participle/v2"
-	"github.com/alecthomas/participle/v2/lexer"
 	"github.com/juju/errors"
 	sloth "github.com/slok/sloth/pkg/prometheus/api/v1"
 )
 
 type (
+	// Grammar is the participle grammar use to parse the Sloth comment groups in source files
 	Grammar struct {
-		SloStmts []*Statement `@@*`
+		// Stmts is a list of Sloth grammar Statements
+		Stmts []*Statement `@@*`
 	}
-
+	// Statement is any comment starting with @sloth keyword
 	Statement struct {
-		Key   Key    `@@`
+		Scope Scope  `@@`
 		Value string `Whitespace* @(String (Whitespace|EOL)*)+`
 	}
-
-	Key struct {
+	// Scope defines the statement scope, similar to a code function
+	Scope struct {
+		// Type is the specification struct a statement refers to
 		Type  string `(Sloth @((".alerting"(".page"|".ticket")?|".sli"|".slo"))?)`
 		Value string `Whitespace* @("service"|"version"|"error_query"|"total_query"|"error_ratio_query"|"name"|"description"|"objective"|"labels"|"annotations"|"disable")`
 	}
@@ -38,11 +40,13 @@ var (
 	ErrParseSource          = errors.New("error parsing source material")
 )
 
-func (k Key) GetStmtType() string {
+// GetType returns the type of the statement scope
+func (k Scope) GetType() string {
 	return k.Type
 }
 
-func parseFields(attr string, value string, fields []reflect.StructField, pValue reflect.Value) error {
+// parseAndAssignStructFields
+func parseAndAssignStructFields(attr string, value string, fields []reflect.StructField, pValue reflect.Value) error {
 	for _, field := range fields {
 		tag, ok := field.Tag.Lookup("yaml")
 		if !ok {
@@ -58,13 +62,13 @@ func parseFields(attr string, value string, fields []reflect.StructField, pValue
 					case reflect.Bool:
 						b, err := strconv.ParseBool(value)
 						if err != nil {
-							panic(err)
+							return err
 						}
 						v.SetBool(b)
 					case reflect.Float64:
 						f, err := strconv.ParseFloat(value, 64)
 						if err != nil {
-							panic(err)
+							return err
 						}
 						v.SetFloat(f)
 					case reflect.Map:
@@ -97,8 +101,8 @@ func (g Grammar) parse() (*sloth.Spec, error) {
 			Plugin: nil,
 		},
 	}
-	for _, attr := range g.SloStmts {
-		switch attr.Key.GetStmtType() {
+	for _, attr := range g.Stmts {
+		switch attr.Scope.GetType() {
 		case ".alerting.ticket":
 			alert := &sloth.Alert{
 				Disable:     false,
@@ -107,7 +111,7 @@ func (g Grammar) parse() (*sloth.Spec, error) {
 			}
 			fields := reflect.VisibleFields(reflect.TypeOf(*alert))
 			pValue := reflect.ValueOf(alert).Elem()
-			if err := parseFields(strings.ToLower(attr.Key.Value), strings.TrimSpace(attr.Value), fields, pValue); err == nil {
+			if err := parseAndAssignStructFields(strings.ToLower(attr.Scope.Value), strings.TrimSpace(attr.Value), fields, pValue); err == nil {
 				slo.Alerting.TicketAlert = *alert
 			}
 		case ".alerting.page":
@@ -118,7 +122,7 @@ func (g Grammar) parse() (*sloth.Spec, error) {
 			}
 			fields := reflect.VisibleFields(reflect.TypeOf(*alert))
 			pValue := reflect.ValueOf(alert).Elem()
-			if err := parseFields(strings.ToLower(attr.Key.Value), strings.TrimSpace(attr.Value), fields, pValue); err == nil {
+			if err := parseAndAssignStructFields(strings.ToLower(attr.Scope.Value), strings.TrimSpace(attr.Value), fields, pValue); err == nil {
 				slo.Alerting.PageAlert = *alert
 			}
 		case ".alerting":
@@ -131,12 +135,12 @@ func (g Grammar) parse() (*sloth.Spec, error) {
 			}
 			fields := reflect.VisibleFields(reflect.TypeOf(*alerting))
 			pValue := reflect.ValueOf(alerting).Elem()
-			if err := parseFields(strings.ToLower(attr.Key.Value), strings.TrimSpace(attr.Value), fields, pValue); err == nil && alerting.Name != "" {
+			if err := parseAndAssignStructFields(strings.ToLower(attr.Scope.Value), strings.TrimSpace(attr.Value), fields, pValue); err == nil && alerting.Name != "" {
 				slo.Alerting = *alerting
 			}
 		case ".sli":
 			// SLI
-			switch attr.Key.Value {
+			switch attr.Scope.Value {
 			case sliTotalQueryAttr:
 				if slo.SLI.Events == nil {
 					slo.SLI.Events = &sloth.SLIEvents{}
@@ -156,13 +160,13 @@ func (g Grammar) parse() (*sloth.Spec, error) {
 		case ".slo":
 			fields := reflect.VisibleFields(reflect.TypeOf(*slo))
 			pValue := reflect.ValueOf(slo).Elem()
-			if err := parseFields(strings.ToLower(attr.Key.Value), strings.TrimSpace(attr.Value), fields, pValue); err != nil {
+			if err := parseAndAssignStructFields(strings.ToLower(attr.Scope.Value), strings.TrimSpace(attr.Value), fields, pValue); err != nil {
 				continue
 			}
 		default:
 			fields := reflect.VisibleFields(reflect.TypeOf(*spec))
 			pValue := reflect.ValueOf(spec).Elem()
-			if err := parseFields(strings.ToLower(attr.Key.Value), strings.TrimSpace(attr.Value), fields, pValue); err != nil {
+			if err := parseAndAssignStructFields(strings.ToLower(attr.Scope.Value), strings.TrimSpace(attr.Value), fields, pValue); err != nil {
 				continue
 			}
 		}
@@ -171,13 +175,6 @@ func (g Grammar) parse() (*sloth.Spec, error) {
 	spec.SLOs = []sloth.SLO{*slo}
 	return spec, nil
 }
-
-var lexerDefinition = lexer.MustSimple([]lexer.SimpleRule{
-	{"EOL", `[\n\r]+`},
-	{"Sloth", `@sloth`},
-	{"String", `([a-zA-Z_0-9\.\/:,\-\'\(\)~\[\]\{\}=\"\|%])\w*`},
-	{"Whitespace", `[ \t]+`},
-})
 
 func eval(filename, source string, options ...participle.ParseOption) (*Grammar, error) {
 	ast, err := participle.Build[Grammar](
@@ -190,6 +187,7 @@ func eval(filename, source string, options ...participle.ParseOption) (*Grammar,
 	return ast.ParseString(filename, source, options...)
 }
 
+// Eval evaluates the source input against the grammar and returns an instance of *sloth.Spec
 func Eval(source string, options ...participle.ParseOption) (*sloth.Spec, error) {
 	grammar, err := eval("", source, options...)
 	if err != nil {

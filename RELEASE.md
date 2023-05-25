@@ -7,5 +7,3 @@ To make a new release just create a new git tag, this will trigger a new Github 
 git tag -a v0.1.0 -m "First release"
 git push origin v0.1.0
 ```
-
-> ⚠️ Remember to update the Helm Chart and OpenAPI specification.
