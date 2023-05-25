@@ -32,20 +32,7 @@ builds:
     goarch:
       - amd64
       - arm64
-  - id: "windows"
-    env:
-      - CGO_ENABLED=0
-    mod_timestamp: "{{ .CommitTimestamp }}"
-    flags:
-      - -trimpath
-    ldflags:
-      - -s -w -X "pkg/version.version={{.Version}}" -X "pkg/version.commit={{.Commit}}" -X "pkg/version.date={{.Date}}"
-    binary: "{{ .ProjectName }}"
-    goos:
-      - windows
-    goarch:
-      - amd64
-      - arm64
+
 archives:
   - id: linux
     format: tar.gz
@@ -59,12 +46,6 @@ archives:
     wrap_in_directory: true
     builds:
       - "darwin"
-  - id: windows
-    format: tar.gz
-    name_template: "{{ .ProjectName }}-{{ .Os }}-{{ .Arch }}"
-    wrap_in_directory: true
-    builds:
-      - "windows"
 
 kos:
   - working_dir: .
