@@ -1,10 +1,6 @@
 package cmd
 
 import (
-	"github.com/tfadeyi/sloth-simple-comments/internal/parser/strategy/golang"
-	"github.com/tfadeyi/sloth-simple-comments/internal/parser/strategy/wasm"
-	"os"
-
 	"github.com/spf13/cobra"
 	specoptions "github.com/tfadeyi/sloth-simple-comments/cmd/options/spec"
 	"github.com/tfadeyi/sloth-simple-comments/internal/generate"
@@ -12,18 +8,22 @@ import (
 	"github.com/tfadeyi/sloth-simple-comments/internal/parser"
 	"github.com/tfadeyi/sloth-simple-comments/internal/parser/lang"
 	"github.com/tfadeyi/sloth-simple-comments/internal/parser/options"
+	"github.com/tfadeyi/sloth-simple-comments/internal/parser/strategy/golang"
+	"github.com/tfadeyi/sloth-simple-comments/internal/parser/strategy/wasm"
+	"io"
 )
 
 func specGenerateCmd() *cobra.Command {
 	opts := specoptions.New()
-	var outputDir string
+	var inputReader io.ReadCloser
+	var languageParser options.Option
 	cmd := &cobra.Command{
 		Use:   "init",
 		Short: "Init generates the Sloth definition specification from source code comments.",
 		Long: `The init command parses files in the target directory for comments using the @sloth tags,
 i.e: 
-	// @sloth name chatgpt
-	// @sloth objective 95.0
+	// @sloth.slo name chatgpt
+	// @sloth.slo objective 95.0
 
 
 These are then used to generate Sloth definition specifications. 
@@ -36,21 +36,11 @@ i.e:
 `,
 		SilenceErrors: true,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			// if an argument is passed to the command
-			// arg 1: should be the output directory where to store the output
-			output, err := os.Getwd()
-			if err != nil {
+			logger := logging.LoggerFromContext(cmd.Context())
+			if err := opts.Complete(); err != nil {
 				return err
 			}
-			if len(args) == 1 {
-				output = args[0]
-			}
-			outputDir = output
-			return opts.Complete()
-		},
-		RunE: func(cmd *cobra.Command, args []string) error {
-			logger := logging.LoggerFromContext(cmd.Context())
-			var languageParser options.Option
+
 			switch opts.SrcLanguage {
 			case lang.Wasm:
 				logger.Info("The wasm parser has not been fully implemented and shouldn't be used! It will have unexpected behaviours.")
@@ -59,11 +49,25 @@ i.e:
 				languageParser = golang.Parser()
 			}
 
-			logger.Info("Parsing source code for slo definitions", "directories", opts.IncludedDirs)
+			if opts.Source == "-" {
+				inputReader = io.NopCloser(cmd.InOrStdin())
+			}
+
+			return nil
+		},
+		RunE: func(cmd *cobra.Command, args []string) error {
+			logger := logging.LoggerFromContext(cmd.Context())
+
+			logger.Info("Parsing source code for slo definitions",
+				"directories", opts.IncludedDirs,
+				"source", opts.Source,
+			)
 
 			parser, err := parser.New(
 				languageParser,
 				options.Logger(&logger),
+				options.SourceFile(opts.Source),
+				options.SourceContent(inputReader),
 				options.Include(opts.IncludedDirs...))
 			if err != nil {
 				return err
@@ -75,7 +79,7 @@ i.e:
 
 			logger.Info("Source code was parsed successfully")
 
-			return generate.WriteSpecification(service, opts.StdOutput, outputDir, opts.Formats...)
+			return generate.WriteSpecification(service, true, "", opts.Formats...)
 		},
 	}
 	opts = opts.Prepare(cmd)

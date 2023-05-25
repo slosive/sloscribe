@@ -9,6 +9,7 @@ import (
 	"go/ast"
 	goparser "go/parser"
 	"go/token"
+	"io"
 	"io/fs"
 	"os"
 	"path/filepath"
@@ -16,19 +17,17 @@ import (
 )
 
 type parser struct {
-	Spec                *sloth.Spec
-	GeneralInfoSource   string
-	IncludedDirs        []string
-	ApplicationPackages map[string]*ast.Package
-	Logger              *logging.Logger
+	spec                *sloth.Spec
+	sourceFile          string
+	sourceContent       io.ReadCloser
+	includedDirs        []string
+	applicationPackages map[string]*ast.Package
+	logger              *logging.Logger
 }
 
-const (
-	defaultSourceFile = "main.go"
-)
-
 // newParser client parser performs all checks at initialization time
-func newParser(logger *logging.Logger, dirs ...string) *parser {
+func newParser(logger *logging.Logger, sourceFile string,
+	sourceContent io.ReadCloser, dirs ...string) *parser {
 	pkgs := map[string]*ast.Package{}
 	for _, dir := range dirs {
 		if _, err := os.Stat(dir); errors.Is(err, os.ErrNotExist) {
@@ -50,16 +49,17 @@ func newParser(logger *logging.Logger, dirs ...string) *parser {
 	}
 
 	return &parser{
-		Spec: &sloth.Spec{
+		spec: &sloth.Spec{
 			Version: sloth.Version,
 			Service: "",
 			Labels:  nil,
 			SLOs:    nil,
 		},
-		GeneralInfoSource:   defaultSourceFile,
-		IncludedDirs:        dirs,
-		ApplicationPackages: pkgs,
-		Logger:              logger,
+		sourceFile:          sourceFile,
+		sourceContent:       sourceContent,
+		includedDirs:        dirs,
+		applicationPackages: pkgs,
+		logger:              logger,
 	}
 }
 
@@ -87,18 +87,39 @@ func getPackages(dir string) (map[string]*ast.Package, error) {
 	return pkgs, err
 }
 
+func getFile(name string, file io.ReadCloser) (*ast.File, error) {
+	fset := token.NewFileSet()
+	if file != nil {
+		defer file.Close()
+	}
+	return goparser.ParseFile(fset, name, file, goparser.ParseComments)
+}
+
 func (p parser) Parse(ctx context.Context) (*sloth.Spec, error) {
 	// collect all aloe error comments from packages and add them to the spec struct
-	for _, pkg := range p.ApplicationPackages {
-		for _, file := range pkg.Files {
-			if err := p.parseComments(file.Comments...); err != nil {
-				p.Logger.Info(err.Error())
-				continue
+	if p.sourceFile != "" || p.sourceContent != nil {
+		file, err := getFile(p.sourceFile, p.sourceContent)
+		if err != nil {
+			return nil, err
+		}
+		if err := p.parseComments(file.Comments...); err != nil {
+			return nil, err
+		}
+		return p.spec, nil
+	}
+
+	if len(p.applicationPackages) > 0 {
+		for _, pkg := range p.applicationPackages {
+			for _, file := range pkg.Files {
+				if err := p.parseComments(file.Comments...); err != nil {
+					p.logger.Info(err.Error())
+					continue
+				}
 			}
 		}
 	}
 
-	return p.Spec, nil
+	return p.spec, nil
 }
 
 func (p parser) parseComments(comments ...*ast.CommentGroup) error {
@@ -108,23 +129,23 @@ func (p parser) parseComments(comments ...*ast.CommentGroup) error {
 		case errors.Is(err, grammar.ErrParseSource):
 			continue
 		case err != nil:
-			p.Logger.Error(err, "")
+			p.logger.Error(err, "")
 			continue
 		}
 
-		if p.Spec.Service == "" {
-			p.Spec.Service = newSpec.Service
+		if p.spec.Service == "" {
+			p.spec.Service = newSpec.Service
 		}
-		if p.Spec.Version == "" {
-			p.Spec.Version = newSpec.Version
+		if p.spec.Version == "" {
+			p.spec.Version = newSpec.Version
 		}
-		if p.Spec.Labels == nil {
-			p.Spec.Labels = newSpec.Labels
+		if p.spec.Labels == nil {
+			p.spec.Labels = newSpec.Labels
 		}
 
 		for _, slo := range newSpec.SLOs {
 			if slo.Name != "" {
-				p.Spec.SLOs = append(p.Spec.SLOs, slo)
+				p.spec.SLOs = append(p.spec.SLOs, slo)
 			}
 		}
 	}

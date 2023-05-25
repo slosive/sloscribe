@@ -14,40 +14,56 @@ Package options contains the different options available for the Parser struct
   - [func Include(dirs ...string) Option](<#func-include>)
   - [func Logger(logger *logging.Logger) Option](<#func-logger>)
   - [func ParserStrategy(p strategy.ParsingStrategy) Option](<#func-parserstrategy>)
+  - [func SourceContent(content io.ReadCloser) Option](<#func-sourcecontent>)
+  - [func SourceFile(file string) Option](<#func-sourcefile>)
 - [type Options](<#type-options>)
 
 
-## type [Option](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/options/options.go#L14>)
+## type [Option](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/options/options.go#L17>)
 
 ```go
 type Option func(p *Options)
 ```
 
-### func [Include](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/options/options.go#L17>)
+### func [Include](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/options/options.go#L20>)
 
 ```go
 func Include(dirs ...string) Option
 ```
 
-### func [Logger](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/options/options.go#L23>)
+### func [Logger](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/options/options.go#L26>)
 
 ```go
 func Logger(logger *logging.Logger) Option
 ```
 
-### func [ParserStrategy](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/options/options.go#L29>)
+### func [ParserStrategy](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/options/options.go#L32>)
 
 ```go
 func ParserStrategy(p strategy.ParsingStrategy) Option
 ```
 
-## type [Options](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/options/options.go#L9-L13>)
+### func [SourceContent](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/options/options.go#L44>)
+
+```go
+func SourceContent(content io.ReadCloser) Option
+```
+
+### func [SourceFile](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/options/options.go#L38>)
+
+```go
+func SourceFile(file string) Option
+```
+
+## type [Options](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/options/options.go#L10-L16>)
 
 ```go
 type Options struct {
-    Strategy     strategy.ParsingStrategy
-    IncludedDirs []string
-    Logger       *logging.Logger
+    Strategy      strategy.ParsingStrategy
+    IncludedDirs  []string
+    Logger        *logging.Logger
+    SourceFile    string
+    SourceContent io.ReadCloser
 }
 ```
 

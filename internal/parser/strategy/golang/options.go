@@ -6,6 +6,6 @@ import (
 
 func Parser() options.Option {
 	return func(e *options.Options) {
-		e.Strategy = newParser(e.Logger, e.IncludedDirs...)
+		e.Strategy = newParser(e.Logger, e.SourceFile, e.SourceContent, e.IncludedDirs...)
 	}
 }

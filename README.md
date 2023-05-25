@@ -1,7 +1,6 @@
 <div align="center">
 
 # Slotalk
-<hr>
 
 [![Continuous Integration](https://img.shields.io/github/actions/workflow/status/tfadeyi/sloth-simple-comments/ci.yml?branch=main&style=for-the-badge)](https://github.com/tfadeyi/sloth-simple-comments/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/License-MIT-yellowgreen.svg?style=for-the-badge)](https://github.com/tfadeyi/sloth-simple-comments/blob/main/LICENSE)
@@ -29,22 +28,38 @@ so I wanted try my hand on building something for developers.
 
 ## Prerequisites
 
-* [Sloth CLI](https://github.com/slok/sloth).
+* [Sloth CLI](https://github.com/slok/sloth)
 
 ## TL;DR
 
-1. Add comments to your source code. See [Declarative Comments](#Declerative-Comments).
+1. Add comments to your source code. See [Declarative Comments](#Declarative Comments).
 2. Download a pre-compiled binary from the release page.
-```shell
-    curl -LJO https://github.com/tfadeyi/sloth-simple-comments/releases/download/v0.0.1/sloth-simple-comments-linux-amd64.tar.gz && \
-    tar -xzvf sloth-simple-comments-linux-amd64.tar.gz && \
-    cd sloth-simple-comments-linux-amd64
-```
-3. Run `sloth-comments` init in the project's root folder which contains the main.go file. This will parse your comments and generate the `sloth_definitions.yaml` file.
-> ./sloth-comments init
+    ```shell
+        curl -LJO https://github.com/tfadeyi/slotalk/releases/download/v0.0.2/slotalk-linux-amd64.tar.gz && \
+        tar -xzvf slotalk-linux-amd64.tar.gz && \
+        cd slotalk-linux-amd64
+    ```
+3. Run `slotalk` init in the project's root. This will parse your comments and print to standard out.
+    ```shell
+    ./slotalk init
+    ```
 
-4. Run `sloth` generate command using the `sloth_definitions.yaml` as input.
-> sloth generate -i sloth_definitions.yaml
+    You can also specify the specific file to parse by using the `-f` flag.
+
+    ```shell
+    ./slotalk init -f metrics.go
+    ```
+
+    Another way would be to pass the input file through pipe.
+
+    ```shell
+    cat metrics.go | ./slotalk init -f -
+    ```
+
+4. Run `sloth` generate command using the `sloth_defs.yaml` as input.
+    ```shell
+    sloth generate -i sloth_defs.yaml
+    ```
 
 This will return the Prometheus alerting rules for the given SLOs.
 
@@ -109,11 +124,11 @@ Usage:
   sli-app init [flags]
 
 Flags:
-      --dirs strings     Comma separated list of directories to be parses by the tool (default [current working directory])
-      --format strings   Output format (yaml,json) (default [yaml])
-  -h, --help             help for generate
+      --dirs strings     Comma separated list of directories to be parses by the tool (default [/home/jetstack-oluwole/go/src/github.com/tfadeyi/slotalk])
+  -f, --file string      Source file to parse.
+      --format strings   Output format (yaml,json). (default [yaml])
+  -h, --help             help for init
       --lang string      Language of the source files. (go, wasm) (default "go")
-      --stdout           Print output to standard output.
 ```
 
 ### Examples
@@ -125,11 +140,11 @@ This example shows how sloth's comments can be added next to the prometheus metr
     // @sloth service chatgpt
     
     var (
-        // @sloth name chat-gpt-availability
-        // @sloth objective 95.0
+        // @sloth.slo name chat-gpt-availability
+        // @sloth.slo objective 95.0
         // @sloth.sli error_query sum(rate(tenant_failed_login_operations_total{client="chat-gpt"}[{{.window}}])) OR on() vector(0)
         // @sloth.sli total_query sum(rate(tenant_login_operations_total{client="chat-gpt"}[{{.window}}]))
-        // @sloth description 95% of logins to the chat-gpt app should be successful.
+        // @sloth.slo description 95% of logins to the chat-gpt app should be successful.
         // @sloth.alerting name ChatGPTAvailability
         metricGaugeCertInventoryProcessingMessages = prometheus.NewGauge(
             prometheus.GaugeOpts{
@@ -149,7 +164,7 @@ This example shows how sloth's comments can be added next to the prometheus metr
 Now running the following command from the root of the project.
 
 ```shell
-./sloth-comments init --stdout
+./slotalk init
 ```
 
 This will generate the following sloth definitions being outputted to standard out.
@@ -172,7 +187,8 @@ slos:
 This specification can then be passed to the Sloth CLI to generate Prometheus alerting groups.
 
 ```shell
- ./sloth-comments init && sloth generate -i sloth_definitions.yaml
+touch sloth_defs.yaml && \
+./slotalk init > sloth_defs.yaml && sloth generate -i sloth_defs.yaml
 ```
 
 <details>
