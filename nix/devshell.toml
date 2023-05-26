@@ -2,7 +2,8 @@
 name = "develpment-shell"
 motd = """{106}Nix Development Shell{reset}
 
-* Sloth is already installed
+* Sloth is already installed, type "sloth" on the terminal.
+* Slotalk is also installed, type "slotalk" on the terminal.
 
 \n Use CTRL-D to leave the shell
 """
@@ -17,5 +18,7 @@ packages = [
 
 startup.gomarkdoc.text = "go install github.com/princjef/gomarkdoc/cmd/gomarkdoc@latest"
 startup.aloe.text = "go install github.com/tfadeyi/aloe-cli@latest"
-startup.sloth.text = "go install github.com/slok/sloth@latest"
-#startup.slotalk.text = "go install github.com/tfadeyi/slotalk@latest"
+startup.sloth.text = "go install github.com/slok/sloth/cmd/sloth@latest"
+# change when you update the go module
+startup.slotalk.text = "go install github.com/tfadeyi/sloth-simple-comments@latest"
+startup.slotalk_alias.text = "alias slotalk='sloth-simple-comments'"
