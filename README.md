@@ -68,12 +68,12 @@ This will return the Prometheus alerting rules for the given SLOs.
 The definitions are added through declarative comments, as shown below.
 
 ```go
-// @sloth service chatgpt
-// @sloth name chat-gpt-availability
-// @sloth objective 95.0
+// @sloth.slo service chatgpt
+// @sloth.slo name chat-gpt-availability
+// @sloth.slo objective 95.0
 // @sloth.sli error_query sum(rate(tenant_failed_login_operations_total{client="chat-gpt"}[{{.window}}])) OR on() vector(0)
 // @sloth.sli total_query sum(rate(tenant_login_operations_total{client="chat-gpt"}[{{.window}}]))
-// @sloth description 95% of logins to the chat-gpt app should be successful.
+// @sloth.slo description 95% of logins to the chat-gpt app should be successful.
 // @sloth.alerting name ChatGPTAvailability
 ```
 
