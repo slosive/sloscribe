@@ -5,10 +5,23 @@ motd = """{106}Nix Development Shell{reset}
 * Sloth is already installed, type "sloth" on the terminal.
 * Slotalk is also installed, type "slotalk" on the terminal.
 
-\n Use CTRL-D to leave the shell
+Run example:
+    * curl the gist containing the metrics code:
+      - curl https://gist.githubusercontent.com/tfadeyi/df60aebd858d1c76428c045d4df7b114/raw/dfb96773dfb64086280845b9a0776012cbd7d26b/metrics.go
+    * Use slotalk and sloth to generate the rules.yaml
+      - curl https://gist.githubusercontent.com/tfadeyi/df60aebd858d1c76428c045d4df7b114/raw/dfb96773dfb64086280845b9a0776012cbd7d26b/metrics.go | slotalk init -f - > ./demo/sdefs.yaml
+      - cat ./demo/sdefs.yaml
+      - sloth generate -i ./demo/sdefs.yaml -o ./demo/rules.yml
+      - cat ./demo/rules.yml
+      - optionally run single command: curl https://gist.githubusercontent.com/tfadeyi/df60aebd858d1c76428c045d4df7b114/raw/dfb96773dfb64086280845b9a0776012cbd7d26b/metrics.go | slotalk init -f - > ./demo/sdefs.yaml && sloth generate -i ./demo/sdefs.yaml -o ./demo/rules.yml
+    * Run prometheus
+      - prometheus --web.enable-lifecycle --storage.tsdb.path=./demo/data --config.file=./demo/prometheus.yml
+
+Use CTRL-D to leave the shell
 """
 
 packages = [
+    "prometheus",
     "gotools",
     "go-tools",
     "golangci-lint",
