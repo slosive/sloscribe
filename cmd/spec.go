@@ -4,6 +4,7 @@ import (
 	"io"
 
 	"github.com/spf13/cobra"
+	specoptions "github.com/tfadeyi/slotalk/cmd/options/spec"
 	"github.com/tfadeyi/slotalk/internal/generate"
 	"github.com/tfadeyi/slotalk/internal/logging"
 	"github.com/tfadeyi/slotalk/internal/parser"
@@ -11,7 +12,6 @@ import (
 	"github.com/tfadeyi/slotalk/internal/parser/options"
 	"github.com/tfadeyi/slotalk/internal/parser/strategy/golang"
 	"github.com/tfadeyi/slotalk/internal/parser/strategy/wasm"
-	specoptions "github.com/tfadeyi/slotalk/cmd/options/spec"
 )
 
 func specGenerateCmd() *cobra.Command {
