@@ -1,16 +1,17 @@
 package cmd
 
 import (
-	"github.com/spf13/cobra"
-	specoptions "github.com/tfadeyi/sloth-simple-comments/cmd/options/spec"
-	"github.com/tfadeyi/sloth-simple-comments/internal/generate"
-	"github.com/tfadeyi/sloth-simple-comments/internal/logging"
-	"github.com/tfadeyi/sloth-simple-comments/internal/parser"
-	"github.com/tfadeyi/sloth-simple-comments/internal/parser/lang"
-	"github.com/tfadeyi/sloth-simple-comments/internal/parser/options"
-	"github.com/tfadeyi/sloth-simple-comments/internal/parser/strategy/golang"
-	"github.com/tfadeyi/sloth-simple-comments/internal/parser/strategy/wasm"
 	"io"
+
+	"github.com/spf13/cobra"
+	specoptions "github.com/tfadeyi/slotalk/cmd/options/spec"
+	"github.com/tfadeyi/slotalk/internal/generate"
+	"github.com/tfadeyi/slotalk/internal/logging"
+	"github.com/tfadeyi/slotalk/internal/parser"
+	"github.com/tfadeyi/slotalk/internal/parser/lang"
+	"github.com/tfadeyi/slotalk/internal/parser/options"
+	"github.com/tfadeyi/slotalk/internal/parser/strategy/golang"
+	"github.com/tfadeyi/slotalk/internal/parser/strategy/wasm"
 )
 
 func specGenerateCmd() *cobra.Command {

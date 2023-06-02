@@ -8,7 +8,7 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
-	"github.com/tfadeyi/sloth-simple-comments/internal/logging"
+	"github.com/tfadeyi/slotalk/internal/logging"
 )
 
 // rootCmd represents the base command when called without any subcommands

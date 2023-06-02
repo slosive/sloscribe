@@ -5,7 +5,7 @@ import (
 
 	"github.com/juju/errors"
 	sloth "github.com/slok/sloth/pkg/prometheus/api/v1"
-	"github.com/tfadeyi/sloth-simple-comments/internal/parser/options"
+	"github.com/tfadeyi/slotalk/internal/parser/options"
 )
 
 type (

@@ -29,16 +29,44 @@ so I wanted try my hand on building something for developers.
 ## Prerequisites
 
 * [Sloth CLI](https://github.com/slok/sloth)
+* [Go](https://go.dev/doc/install) (optional)
+* [Nix](https://zero-to-nix.com/start/install) (optional)
 
 ## TL;DR
 
-1. Add comments to your source code. See [Declarative Comments](#Declarative Comments).
-2. Download a pre-compiled binary from the release page.
-    ```shell
-        curl -LJO https://github.com/tfadeyi/slotalk/releases/download/v0.0.2/slotalk-linux-amd64.tar.gz && \
-        tar -xzvf slotalk-linux-amd64.tar.gz && \
-        cd slotalk-linux-amd64
-    ```
+1. Add comments to your source code. See [Declarative Comments](#Declarative-Comments).
+
+2. Slotalk Installation
+
+   **Go install**
+
+   If go is present on the host machine, you can just download the required binaries.
+   
+   ```shell
+   # install the latest version of slotalk
+   go install github.com/tfadeyi/slotalk@latest
+   # (OPTIONAL) install the latest version of sloth
+   go install github.com/slok/sloth/cmd/sloth@latest
+   ```
+
+   **Nix**
+
+   If nix is present on the host machine, you can run the tool in the development shell
+   
+   ```shell
+   # creates a nix development shell with slotalk and sloth
+   nix develop github:tfadeyi/slotalk
+   ```
+
+   **Pre-released binaries**
+
+   Download a pre-compiled binary from the release page.
+   ```shell
+     curl -LJO https://github.com/tfadeyi/slotalk/releases/download/v0.0.2/slotalk-linux-amd64.tar.gz && \
+     tar -xzvf slotalk-linux-amd64.tar.gz && \
+     cd slotalk-linux-amd64
+   ```
+
 3. Run `slotalk` init in the project's root. This will parse your comments and print to standard out.
     ```shell
     ./slotalk init
@@ -187,7 +215,6 @@ slos:
 This specification can then be passed to the Sloth CLI to generate Prometheus alerting groups.
 
 ```shell
-touch sloth_defs.yaml && \
 ./slotalk init > sloth_defs.yaml && sloth generate -i sloth_defs.yaml
 ```
 

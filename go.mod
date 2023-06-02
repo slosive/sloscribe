@@ -1,6 +1,6 @@
-module github.com/tfadeyi/sloth-simple-comments
+module github.com/tfadeyi/slotalk
 
-go 1.19
+go 1.20
 
 require (
 	github.com/alecthomas/participle/v2 v2.0.0

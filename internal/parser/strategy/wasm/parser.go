@@ -4,12 +4,13 @@ import (
 	"context"
 	_ "embed"
 	"fmt"
+	"log"
+	"os"
+
 	sloth "github.com/slok/sloth/pkg/prometheus/api/v1"
 	"github.com/tetratelabs/wazero"
 	"github.com/tetratelabs/wazero/imports/assemblyscript"
-	"github.com/tfadeyi/sloth-simple-comments/internal/logging"
-	"log"
-	"os"
+	"github.com/tfadeyi/slotalk/internal/logging"
 )
 
 type parser struct {

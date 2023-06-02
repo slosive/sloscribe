@@ -1,7 +1,7 @@
 package golang
 
 import (
-	"github.com/tfadeyi/sloth-simple-comments/internal/parser/options"
+	"github.com/tfadeyi/slotalk/internal/parser/options"
 )
 
 func Parser() options.Option {

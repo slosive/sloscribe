@@ -2,10 +2,6 @@ package golang
 
 import (
 	"context"
-	"github.com/juju/errors"
-	sloth "github.com/slok/sloth/pkg/prometheus/api/v1"
-	"github.com/tfadeyi/sloth-simple-comments/internal/logging"
-	"github.com/tfadeyi/sloth-simple-comments/internal/parser/grammar"
 	"go/ast"
 	goparser "go/parser"
 	"go/token"
@@ -14,6 +10,11 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/juju/errors"
+	sloth "github.com/slok/sloth/pkg/prometheus/api/v1"
+	"github.com/tfadeyi/slotalk/internal/logging"
+	"github.com/tfadeyi/slotalk/internal/parser/grammar"
 )
 
 type parser struct {

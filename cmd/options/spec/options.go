@@ -1,14 +1,15 @@
 package spec
 
 import (
+	"os"
+
 	multierr "github.com/hashicorp/go-multierror"
 	"github.com/juju/errors"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 	goaloe "github.com/tfadeyi/go-aloe"
-	"github.com/tfadeyi/sloth-simple-comments/internal/generate"
-	"github.com/tfadeyi/sloth-simple-comments/internal/parser/lang"
-	"os"
+	"github.com/tfadeyi/slotalk/internal/generate"
+	"github.com/tfadeyi/slotalk/internal/parser/lang"
 )
 
 type (
