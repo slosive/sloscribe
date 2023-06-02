@@ -28,16 +28,17 @@ package main
 
 import (
 	"context"
-	"github.com/tfadeyi/sloth-simple-comments/cmd"
-	"github.com/tfadeyi/sloth-simple-comments/internal/logging"
 	"os"
 	"os/signal"
 	"syscall"
+
+	"github.com/tfadeyi/slotalk/cmd"
+	"github.com/tfadeyi/slotalk/internal/logging"
 )
 
 // @aloe name slotalk
 // @aloe url https://tfadeyi.github.io
-// @aloe version v0.0.1
+// @aloe version v0.0.2
 // @aloe description Generate Sloth SLO/SLI definitions from code annotations.
 
 func main() {
