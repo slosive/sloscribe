@@ -10,90 +10,172 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/tfadeyi/sloth-simple-comments?style=for-the-badge)](https://goreportcard.com/report/github.com/tfadeyi/sloth-simple-comments)
 </div>
 
+> ⚠ The tool is still not ready for production use.
 
-Slotalk is a CLI tool to help developers embed [Sloth](https://sloth.dev/) SLO/SLI [definitions](https://github.com/slok/sloth/tree/main/pkg/prometheus/api/v1) into their code base, without defining a separate
-YAML file close to where the metrics used in the actual SLIs are defined.
+Slotalk is a CLI that allows developers to embed [Sloth](https://sloth.dev/) SLO/SLI [definitions](https://github.com/slok/sloth/tree/main/pkg/prometheus/api/v1) into their code base, without defining a separate
+YAML file. Closer to where the Prometheus metrics used by the SLIs are actually defined.
 
-The tool takes inspiration from [Swaggo](https://github.com/swaggo/swag), a tool to generate Swagger docs from Go code,
-as such it uses a similar pattern when it comes to embedding the Sloth definitions within the code.
+The tool takes inspiration from [Swaggo](https://github.com/swaggo/swag), a CLI that generate Swagger docs from Go code,
+as such it uses a similar pattern when it comes to the in code annotations.
+
+## Table of Contents
+
+* [Motivation](#Motivation)
+* [Prerequisites](#Prerequisites)
+* [Try it!](#Try-it!)
+  * [Nix](#Nix)
+  * [Source](#Source)
+* [Installation](#Installation)
+  * [Go install](#Go-install)
+  * [Pre-released binaries](#Pre-released binaries)
+  * [Docker](#Docker)
+* [Get Started](#Get-Started)
+* [CLI usage](#CLI usage)
+* [Declarative Comments](#Declarative Comments)
+* [Examples](#Examples)
+  * [Basic usage - Generate Sloth definitions using go:generate]()
+  * [Basic usage - Generate Prometheus alert groups from code annotations]()
+* [License](#License)
+
 
 ## Motivation
 
 * **Experimentation**, this was the main motivation behind development, testing libraries like: [go/ast](https://pkg.go.dev/go/ast), [wazero](https://github.com/tetratelabs/wazero), [participle](https://github.com/alecthomas/participle).
-* **Developer experience**, but also finding ways to improve developer experience when it comes to more platform engineering concepts like SLIs and SLOs. I want to see if moving these concepts closer to devs,
-would make them less of an afterthought.
-* **More Experimentation** Many of the cloud native tools I've seen have been very targeted towards DevOps/SecOps and Platform Engineering personas,
-so I wanted try my hand on building something for developers.
+* **Developer experience**, finding ways to improve developer experience when it comes to more platform engineering concepts like SLIs and SLOs. I want to see if moving these concepts closer to devs,
+  would make them less of an afterthought.
+* **More Experimentation**, many of the cloud native tools I've seen, and I've worked on have been very targeted towards DevOps/SecOps and Platform Engineering personas,
+  so I wanted try my hand on building something for developers.
 * Trying ways to avoid writing YAML...
 
 ## Prerequisites
 
-* [Sloth CLI](https://github.com/slok/sloth)
-* [Go](https://go.dev/doc/install) (optional)
+* [Sloth CLI](https://github.com/slok/sloth) (optional)
+* [Go](https://go.dev/doc/install)
 * [Nix](https://zero-to-nix.com/start/install) (optional)
 
-## TL;DR
+## Try it!
 
-1. Add comments to your source code. See [Declarative Comments](#Declarative-Comments).
-
-2. Slotalk Installation
-
-   **Go install**
-
-   If go is present on the host machine, you can just download the required binaries.
-   
-   ```shell
-   # install the latest version of slotalk
-   go install github.com/tfadeyi/slotalk@latest
-   # (OPTIONAL) install the latest version of sloth
-   go install github.com/slok/sloth/cmd/sloth@latest
-   ```
-
-   **Nix**
-
-   If nix is present on the host machine, you can run the tool in the development shell
-   
+### Nix
+Generate Prometheus SLO alert rules from an example [metrics.go](https://gist.githubusercontent.com/tfadeyi/df60aebd858d1c76428c045d4df7b114/raw/dfb96773dfb64086280845b9a0776012cbd7d26b/metrics.go).
    ```shell
    # creates a nix development shell with slotalk and sloth
    nix develop github:tfadeyi/slotalk
    ```
 
-   **Pre-released binaries**
+### Source
+Generate Prometheus SLO alert rules from an example [metrics.go](https://gist.githubusercontent.com/tfadeyi/df60aebd858d1c76428c045d4df7b114/raw/dfb96773dfb64086280845b9a0776012cbd7d26b/metrics.go).
 
-   Download a pre-compiled binary from the release page.
+1. Install Slotalk
    ```shell
-     curl -LJO https://github.com/tfadeyi/slotalk/releases/download/v0.0.2/slotalk-linux-amd64.tar.gz && \
-     tar -xzvf slotalk-linux-amd64.tar.gz && \
-     cd slotalk-linux-amd64
+   # install the latest version of slotalk
+   go install github.com/tfadeyi/slotalk@latest
+   # install the latest version of sloth
+   go install github.com/slok/sloth/cmd/sloth@latest
+   ```
+2. Run `slotalk` and `sloth` to generate Prometheus alert rules from code annotations.
+    ```shell
+    curl https://gist.githubusercontent.com/tfadeyi/df60aebd858d1c76428c045d4df7b114/raw/dfb96773dfb64086280845b9a0776012cbd7d26b/metrics.go > metrics.go
+    cat metrics.go | slotalk init -f - > ./sloth_defs.yaml
+    sloth generate -i ./sloth_defs.yaml -o ./rules.yml
+    ```
+
+You now should have Prometheus alerting rules that can be added to your Prometheus configuration.
+<details>
+  <summary>Prometheus configuration</summary>
+
+```yaml
+# my global config
+global:
+  scrape_interval: 5s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
+  evaluation_interval: 5s # Evaluate rules every 15 seconds. The default is every 1 minute.
+  # scrape_timeout is set to the global default (10s).
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+          # - alertmanager:9093
+
+# Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
+rule_files:
+ - "rules.yml"
+
+# A scrape configuration containing exactly one endpoint to scrape:
+# Here it's Prometheus itself.
+scrape_configs:
+  # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
+  - job_name: "exporter"
+
+    # metrics_path defaults to '/metrics'
+    # scheme defaults to 'http'.
+
+    static_configs:
+      - targets: ["localhost:9301"]
+```
+
+</details>
+
+## Installation
+
+### Go install
+
+   ```shell
+   # install the latest version of slotalk
+   go install github.com/tfadeyi/slotalk@latest
    ```
 
-3. Run `slotalk` init in the project's root. This will parse your comments and print to standard out.
+### Pre-released binaries
+
+Download a pre-compiled binary from the release page.
+   ```shell
+  curl -LJO https://github.com/tfadeyi/slotalk/releases/download/v0.0.2/slotalk-linux-amd64.tar.gz && \
+  tar -xzvf slotalk-linux-amd64.tar.gz && \
+  cd slotalk-linux-amd64
+   ```
+
+### Docker
+   ```shell
+  docker pull ghcr.io/tfadeyi/sloth-simple-comments:latest
+   ```
+
+## Get Started
+
+1. Add comments to your source code. See [Declarative Comments](#Declarative-Comments).
+2. Run `slotalk` init in the project's root. This will parse your source code annotations and print the sloth definitions to standard out.
     ```shell
     ./slotalk init
     ```
 
-    You can also specify the specific file to parse by using the `-f` flag.
+   You can also specify the specific file to parse by using the `-f` flag.
 
     ```shell
     ./slotalk init -f metrics.go
     ```
 
-    Another way would be to pass the input file through pipe.
+   Another way would be to pass the input file through pipe.
 
     ```shell
     cat metrics.go | ./slotalk init -f -
     ```
 
-4. Run `sloth` generate command using the `sloth_defs.yaml` as input.
-    ```shell
-    sloth generate -i sloth_defs.yaml
-    ```
+## CLI usage
 
-This will return the Prometheus alerting rules for the given SLOs.
+```text
+Usage:
+  sli-app init [flags]
+
+Flags:
+      --dirs strings     Comma separated list of directories to be parses by the tool (default [/home/jetstack-oluwole/go/src/github.com/tfadeyi/slotalk])
+  -f, --file string      Source file to parse.
+      --format strings   Output format (yaml,json). (default [yaml])
+  -h, --help             help for init
+      --lang string      Language of the source files. (go, wasm) (default "go")
+```
 
 ## Declarative Comments
 
-The definitions are added through declarative comments, as shown below.
+The Sloth definitions are added through declarative comments, as shown below.
 
 ```go
 // @sloth.slo service chatgpt
@@ -145,23 +227,80 @@ The definitions are added through declarative comments, as shown below.
 | labels      |             | @sloth.alerting.page labels severity critical     |
 | annotations |             | @sloth.alerting.page annotations tier application |
 
-### CLI usage
+## Examples
 
-```text
-Usage:
-  sli-app init [flags]
+### Basic usage - Generate Sloth definitions using go:generate
+The following example shows how to use `go:generate` to generate Sloth definitions from in code annotations.
 
-Flags:
-      --dirs strings     Comma separated list of directories to be parses by the tool (default [/home/jetstack-oluwole/go/src/github.com/tfadeyi/slotalk])
-  -f, --file string      Source file to parse.
-      --format strings   Output format (yaml,json). (default [yaml])
-  -h, --help             help for init
-      --lang string      Language of the source files. (go, wasm) (default "go")
+**metrics.go**
+```go
+    // @sloth service chatgpt
+    var (
+        // @sloth.slo name chat-gpt-availability
+        // @sloth.slo objective 95.0
+        // @sloth.sli error_query sum(rate(tenant_failed_login_operations_total{client="chat-gpt"}[{{.window}}])) OR on() vector(0)
+        // @sloth.sli total_query sum(rate(tenant_login_operations_total{client="chat-gpt"}[{{.window}}]))
+        // @sloth.slo description 95% of logins to the chat-gpt app should be successful.
+        // @sloth.alerting name ChatGPTAvailability
+        metricGaugeCertInventoryProcessingMessages = prometheus.NewGauge(
+            prometheus.GaugeOpts{
+                Namespace: "chatgpt",
+                Subsystem: "auth0",
+                Name:      "tenant_login_operations_total",
+            })
+        tenantFailedLogins = prometheus.NewCounter(
+            prometheus.CounterOpts{
+            Namespace: "chatgpt",
+            Subsystem: "auth0",
+            Name:      "tenant_failed_login_operations_total",
+        })
+    )
 ```
 
-### Examples
+**main.go**
+```go
+//go:generate slotalk init
 
-#### Basic usage
+package main
+
+import (
+)
+
+// @sloth service chatgpt
+func main() {
+}
+```
+
+Running go generate, will allow the `slotalk` to walk through the different packages parsing the in code annotations and
+generate Sloth definitions.
+
+```shell
+go generate ./...
+```
+
+<details>
+  <summary>Result Sloth Definitions.</summary>
+
+```yaml
+# Code generated by slotalk: https://github.com/tfadeyi/slotalk.
+# DO NOT EDIT.
+version: prometheus/v1
+service: chatgpt
+slos:
+    - name: chat-gpt-availability
+      description: 95% of logins to the chat-gpt app should be successful.
+      objective: 95
+      sli:
+        events:
+            error_query: sum(rate(tenant_failed_login_operations_total{client="chat-gpt"}[{{.window}}])) OR on() vector(0)
+            total_query: sum(rate(tenant_login_operations_total{client="chat-gpt"}[{{.window}}]))
+      alerting:
+        name: ChatGPTAvailability
+```
+
+</details>
+
+### Basic usage - Generate Prometheus alert groups from code annotations
 
 This example shows how sloth's comments can be added next to the prometheus metrics defined in a `metrics.go` file. 
 ```go
