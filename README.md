@@ -10,13 +10,13 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/tfadeyi/sloth-simple-comments?style=for-the-badge)](https://goreportcard.com/report/github.com/tfadeyi/sloth-simple-comments)
 </div>
 
-> ⚠ The tool is still not ready for production use.
+> ⚠ The tool is still not ready for real production use yet.
 
-Slotalk is a CLI that allows developers to embed [Sloth](https://sloth.dev/) SLO/SLI [definitions](https://github.com/slok/sloth/tree/main/pkg/prometheus/api/v1) into their code base, without defining a separate
-YAML file. Closer to where the Prometheus metrics used by the SLIs are actually defined.
+Slotalk is a CLI tool that allows developers to embed [Sloth](https://github.com/slok/sloth) SLO/SLI [specifications](https://github.com/slok/sloth/blob/main/pkg/prometheus/api/v1/README.md) as in-code annotations rather than a YAML file.
 
-The tool takes inspiration from [Swaggo](https://github.com/swaggo/swag), a CLI that generate Swagger docs from Go code,
-as such it uses a similar pattern when it comes to the in code annotations.
+Similar to how [Swaggo](https://github.com/swaggo/swag) does for Swagger docs, moving the SLO/SLI specification closer to where its relevant Prometheus metric was defined.
+
+Slotalk can be used in tandem with the [Sloth CLI](https://github.com/slok/sloth#getting-started) to generate Prometheus alerts groups from the in-code annotations, which can be used in any Prometheus/Grafana monitoring system to keep track of the service's SLOs. See examples below.
 
 ## Table of Contents
 
@@ -26,9 +26,6 @@ as such it uses a similar pattern when it comes to the in code annotations.
   * [Nix](#Nix)
   * [Source](#Source)
 * [Installation](#Installation)
-  * [Go install](#Go-install)
-  * [Pre-released binaries](#pre-released-binaries)
-  * [Docker](#Docker)
 * [Get Started](#Get-Started)
 * [CLI usage](#CLI-usage)
 * [Declarative Comments](#Declarative-Comments)
@@ -58,8 +55,8 @@ as such it uses a similar pattern when it comes to the in code annotations.
 ### Nix
 Generate Prometheus SLO alert rules from an example [metrics.go](https://gist.githubusercontent.com/tfadeyi/df60aebd858d1c76428c045d4df7b114/raw/dfb96773dfb64086280845b9a0776012cbd7d26b/metrics.go).
    ```shell
-   # creates a nix development shell with slotalk and sloth
-   nix develop github:tfadeyi/slotalk
+   # creates a nix demo shell with slotalk and sloth. just follow the shell instructions
+   nix develop github:tfadeyi/slotalk#demo
    ```
 
 ### Source
@@ -124,6 +121,12 @@ scrape_configs:
    # install the latest version of slotalk
    go install github.com/tfadeyi/slotalk@latest
    ```
+
+### Nix
+
+```shell
+nix run github:tfadeyi/slotalk
+```
 
 ### Pre-released binaries
 

@@ -12,7 +12,7 @@
 }:
 
 let
-  goEnv = pkgs.mkGoEnv { pwd = ./..; };
+  goEnv = pkgs.mkGoEnv { pwd = ./../..; };
 in
 pkgs.devshell.mkShell {
   packages = [

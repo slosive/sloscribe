@@ -1,0 +1,45 @@
+[[env]]
+name = "GOROOT"
+value = ""
+
+[devshell]
+name = "demo-shell"
+motd = """{106}Nix Demo Shell{reset}
+
+* Sloth is already installed, type "sloth" on the terminal.
+* Slotalk is also installed, type "slotalk" on the terminal.
+
+Run example:
+    * Check the simple prometheus configuration:
+      - cat prometheus.yml
+    * Check the sample metrics.go code containing prometheus metrics:
+      - cat metrics.go
+    * Use slotalk and sloth to generate the rules.yaml
+      - cat metrics.go | slotalk init -f - > ./slos_definitions.yaml
+      - cat ./slos_definitions.yaml
+      - sloth generate -i ./slos_definitions.yaml -o ./rules.yml
+      - cat ./rules.yml
+    * (Optionally) run everything as a single command:
+      - cat metrics.go | slotalk init -f - > ./slos_definitions.yaml && sloth generate -i ./slos_definitions.yaml -o ./rules.yml
+    * Run prometheus
+      - prometheus --web.enable-lifecycle --storage.tsdb.path=./data --config.file=./prometheus.yml
+
+Use CTRL-D to leave the shell
+"""
+
+packages = [
+    "go",
+    "prometheus",
+    "gotools",
+    "go-tools",
+]
+
+startup.setup_demo.text = """rm -rf demo && \
+mkdir demo && cd demo && \
+curl https://gist.githubusercontent.com/tfadeyi/6ed500bf0c91519c57f0d023eee9ff48/raw/16536edfb04d420a0bbf7cb3f81b81d60ddd021f/prometheus.yml > prometheus.yml && \
+cat prometheus.yml && \
+curl https://gist.githubusercontent.com/tfadeyi/df60aebd858d1c76428c045d4df7b114/raw/dfb96773dfb64086280845b9a0776012cbd7d26b/metrics.go > metrics.go && \
+cat metrics.go
+"""
+startup.sloth.text = "go install github.com/slok/sloth/cmd/sloth@latest"
+startup.slotalk.text = "go install github.com/tfadeyi/slotalk@latest"

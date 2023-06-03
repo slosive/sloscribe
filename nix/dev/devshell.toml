@@ -1,0 +1,21 @@
+[[env]]
+name = "GOROOT"
+value = ""
+
+[devshell]
+name = "development-shell"
+motd = """{106}Nix Development Shell{reset}
+Use CTRL-D to leave the shell
+"""
+
+packages = [
+    "go",
+    "gotools",
+    "go-tools",
+    "golangci-lint",
+    "goreleaser",
+    "moq"
+]
+
+startup.gomarkdoc.text = "go install github.com/princjef/gomarkdoc/cmd/gomarkdoc@latest"
+startup.aloe.text = "go install github.com/tfadeyi/aloe-cli@latest"
