@@ -13,7 +13,7 @@
 
 pkgs.buildGoApplication {
   pname = "slotalk";
-  version = "v0.0.2";
+  version = "v0.0.3";
   pwd = ./.;
   src = ./.;
   modules = ./gomod2nix.toml;

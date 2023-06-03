@@ -27,14 +27,14 @@ as such it uses a similar pattern when it comes to the in code annotations.
   * [Source](#Source)
 * [Installation](#Installation)
   * [Go install](#Go-install)
-  * [Pre-released binaries](#Pre-released binaries)
+  * [Pre-released binaries](#pre-released-binaries)
   * [Docker](#Docker)
 * [Get Started](#Get-Started)
-* [CLI usage](#CLI usage)
-* [Declarative Comments](#Declarative Comments)
+* [CLI usage](#CLI-usage)
+* [Declarative Comments](#Declarative-Comments)
 * [Examples](#Examples)
-  * [Basic usage - Generate Sloth definitions using go:generate]()
-  * [Basic usage - Generate Prometheus alert groups from code annotations]()
+  * [Basic usage - Generate Sloth definitions using go:generate](#basic-usage---generate-sloth-definitions-using-gogenerate)
+  * [Basic usage - Generate Prometheus alert groups from code annotations](#basic-usage---generate-prometheus-alert-groups-from-code-annotations)
 * [License](#License)
 
 
@@ -129,14 +129,14 @@ scrape_configs:
 
 Download a pre-compiled binary from the release page.
    ```shell
-  curl -LJO https://github.com/tfadeyi/slotalk/releases/download/v0.0.2/slotalk-linux-amd64.tar.gz && \
+  curl -LJO https://github.com/tfadeyi/slotalk/releases/download/v0.0.3/slotalk-linux-amd64.tar.gz && \
   tar -xzvf slotalk-linux-amd64.tar.gz && \
   cd slotalk-linux-amd64
    ```
 
 ### Docker
    ```shell
-  docker pull ghcr.io/tfadeyi/sloth-simple-comments:latest
+  docker pull ghcr.io/tfadeyi/slotalk:latest
    ```
 
 ## Get Started
