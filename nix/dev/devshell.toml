@@ -10,6 +10,7 @@ Use CTRL-D to leave the shell
 
 packages = [
     "go",
+    "gnumake",
     "gotools",
     "go-tools",
     "golangci-lint",
