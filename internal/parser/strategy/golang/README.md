@@ -3,7 +3,7 @@
 # golang
 
 ```go
-import "github.com/tfadeyi/sloth-simple-comments/internal/parser/strategy/golang"
+import "github.com/tfadeyi/slotalk/internal/parser/strategy/golang"
 ```
 
 ## Index

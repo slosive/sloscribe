@@ -1,6 +1,7 @@
-package spec
+package init
 
 import (
+	"github.com/tfadeyi/slotalk/cmd/options/common"
 	"os"
 
 	multierr "github.com/hashicorp/go-multierror"
@@ -20,12 +21,15 @@ type (
 		IncludedDirs []string
 		Source       string
 		SrcLanguage  lang.SourceLanguage
+		*common.Options
 	}
 )
 
 // New creates a new instance of the application's options
-func New() *Options {
-	return new(Options)
+func New(c *common.Options) *Options {
+	opts := new(Options)
+	opts.Options = c
+	return opts
 }
 
 // Prepare assigns the applications flag/options to the cobra cli
@@ -60,11 +64,10 @@ func (o *Options) Complete() error {
 			multierr.Append(err, errors.Errorf("unsupported language %q was passed to --lang flag", o.SrcLanguage)),
 			"unsupported_language")
 	}
-
 	return err
 }
 
-func GetWorkingDirOrDie() string {
+func getWorkingDirOrDie() string {
 	dir, err := os.Getwd()
 	if err != nil {
 		panic(err)
@@ -76,7 +79,7 @@ func (o *Options) addAppFlags(fs *pflag.FlagSet) {
 	fs.StringSliceVar(
 		&o.IncludedDirs,
 		"dirs",
-		[]string{GetWorkingDirOrDie()},
+		[]string{getWorkingDirOrDie()},
 		"Comma separated list of directories to be parses by the tool",
 	)
 	fs.StringSliceVar(

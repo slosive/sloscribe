@@ -5,7 +5,7 @@ title: slotalk
 ## slotalk
 
 **Application**: slotalk
-**Version**: v0.0.1
+**Version**: v0.0.3
 
 ### Description
 
@@ -15,6 +15,8 @@ Generate Sloth SLO/SLI definitions from code annotations.
 
 
   * [**clean_artefacts_error**](./errors_definitions/clean_artefacts_error): The tool has failed to delete the artefacts from the previous execution.
+
+  * [**invalid_log_level**](./errors_definitions/invalid_log_level): The log level passed to the --log-level flag is not supported.
 
   * [**unsupported_language**](./errors_definitions/unsupported_language): The language passed to the --lang flag is not supported.
 

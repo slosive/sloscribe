@@ -3,7 +3,7 @@
 # wasm
 
 ```go
-import "github.com/tfadeyi/sloth-simple-comments/internal/parser/strategy/wasm"
+import "github.com/tfadeyi/slotalk/internal/parser/strategy/wasm"
 ```
 
 Package wasm is an attempt at using wazero to write parser in native languages like Typescript

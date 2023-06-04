@@ -38,7 +38,7 @@ func newParser(logger *logging.Logger, sourceFile string,
 
 		foundPkgs, err := getPackages(dir)
 		if err != nil {
-			logger.Info(err.Error())
+			logger.Warn(err)
 			continue
 		}
 
@@ -113,7 +113,7 @@ func (p parser) Parse(ctx context.Context) (*sloth.Spec, error) {
 		for _, pkg := range p.applicationPackages {
 			for _, file := range pkg.Files {
 				if err := p.parseComments(file.Comments...); err != nil {
-					p.logger.Info(err.Error())
+					p.logger.Warn(err)
 					continue
 				}
 			}
@@ -130,7 +130,7 @@ func (p parser) parseComments(comments ...*ast.CommentGroup) error {
 		case errors.Is(err, grammar.ErrParseSource):
 			continue
 		case err != nil:
-			p.logger.Error(err, "")
+			p.logger.Warn(err)
 			continue
 		}
 

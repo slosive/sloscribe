@@ -4,7 +4,8 @@ import (
 	"io"
 
 	"github.com/spf13/cobra"
-	specoptions "github.com/tfadeyi/slotalk/cmd/options/spec"
+	commonoptions "github.com/tfadeyi/slotalk/cmd/options/common"
+	initoptions "github.com/tfadeyi/slotalk/cmd/options/init"
 	"github.com/tfadeyi/slotalk/internal/generate"
 	"github.com/tfadeyi/slotalk/internal/logging"
 	"github.com/tfadeyi/slotalk/internal/parser"
@@ -14,8 +15,8 @@ import (
 	"github.com/tfadeyi/slotalk/internal/parser/strategy/wasm"
 )
 
-func specGenerateCmd() *cobra.Command {
-	opts := specoptions.New()
+func specInitCmd(common *commonoptions.Options) *cobra.Command {
+	opts := initoptions.New(common)
 	var inputReader io.ReadCloser
 	var languageParser options.Option
 	cmd := &cobra.Command{
@@ -38,7 +39,10 @@ i.e:
 		SilenceErrors: true,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			logger := logging.LoggerFromContext(cmd.Context())
+			logger = logger.WithName("init")
+
 			if err := opts.Complete(); err != nil {
+				logger.Error(err, "flag argument error")
 				return err
 			}
 
@@ -54,11 +58,11 @@ i.e:
 				inputReader = io.NopCloser(cmd.InOrStdin())
 			}
 
+			cmd.SetContext(logging.ContextWithLogger(cmd.Context(), logger))
 			return nil
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			logger := logging.LoggerFromContext(cmd.Context())
-
 			logger.Info("Parsing source code for slo definitions",
 				"directories", opts.IncludedDirs,
 				"source", opts.Source,
@@ -71,22 +75,21 @@ i.e:
 				options.SourceContent(inputReader),
 				options.Include(opts.IncludedDirs...))
 			if err != nil {
+				logger.Error(err, "parser initialization")
 				return err
 			}
+
 			service, err := parser.Parse(cmd.Context())
 			if err != nil {
+				logger.Error(err, "parser parsing error")
 				return err
 			}
 
-			logger.Info("Source code was parsed successfully")
-
+			logger.Info("Source code was parsed!")
+			logger.Info("Printing result specification to stdout.")
 			return generate.WriteSpecification(service, true, "", opts.Formats...)
 		},
 	}
 	opts = opts.Prepare(cmd)
 	return cmd
-}
-
-func init() {
-	rootCmd.AddCommand(specGenerateCmd())
 }

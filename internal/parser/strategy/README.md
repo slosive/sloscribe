@@ -3,7 +3,7 @@
 # strategy
 
 ```go
-import "github.com/tfadeyi/sloth-simple-comments/internal/parser/strategy"
+import "github.com/tfadeyi/slotalk/internal/parser/strategy"
 ```
 
 ## Index

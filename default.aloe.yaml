@@ -8,6 +8,13 @@ errors_definitions:
             Try manually deleting them before running the tool again.
         summary: The tool has failed to delete the artefacts from the previous execution.
         title: Error Removing Previous Artefacts
+    invalid_log_level:
+        code: invalid_log_level
+        details: |-
+            The log level passed to the --log-level flag is not currently supported by the tool.
+            The following are supported: none, debug, info(default), warn.
+        summary: The log level passed to the --log-level flag is not supported.
+        title: Invalid Log-Level Argument
     unsupported_language:
         code: unsupported_language
         details: |-
@@ -28,4 +35,4 @@ errors_definitions:
         summary: The tool has failed to print out the Sloth definitions for service.
         title: Error Creating Artefacts
 name: slotalk
-version: v0.0.1
+version: v0.0.3

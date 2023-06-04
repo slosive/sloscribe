@@ -3,7 +3,7 @@
 # generate
 
 ```go
-import "github.com/tfadeyi/sloth-simple-comments/internal/generate"
+import "github.com/tfadeyi/slotalk/internal/generate"
 ```
 
 Package generate contains utilities to generate data from a given specification

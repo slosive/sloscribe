@@ -12,10 +12,7 @@ var versionCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		ctx := cmd.Context()
 		log := logging.LoggerFromContext(ctx)
+		log = log.WithName("version")
 		log.Info(version.BuildInfo())
 	},
-}
-
-func init() {
-	rootCmd.AddCommand(versionCmd)
 }
