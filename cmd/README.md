@@ -3,7 +3,7 @@
 # cmd
 
 ```go
-import "github.com/tfadeyi/sloth-simple-comments/cmd"
+import "github.com/tfadeyi/slotalk/cmd"
 ```
 
 Copyright © 2023 Oluwole Fadeyi
@@ -13,7 +13,7 @@ Copyright © 2023 Oluwole Fadeyi
 - [func Execute(ctx context.Context)](<#func-execute>)
 
 
-## func [Execute](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/cmd/root.go#L22>)
+## func [Execute](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/cmd/root.go#L42>)
 
 ```go
 func Execute(ctx context.Context)

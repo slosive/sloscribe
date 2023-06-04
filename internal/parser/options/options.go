@@ -26,7 +26,8 @@ func Include(dirs ...string) Option {
 
 func Logger(logger *logging.Logger) Option {
 	return func(e *Options) {
-		e.Logger = logger
+		log := logger.WithName("parser")
+		e.Logger = &log
 	}
 }
 

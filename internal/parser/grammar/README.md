@@ -3,7 +3,7 @@
 # grammar
 
 ```go
-import "github.com/tfadeyi/sloth-simple-comments/internal/parser/grammar"
+import "github.com/tfadeyi/slotalk/internal/parser/grammar"
 ```
 
 ## Index

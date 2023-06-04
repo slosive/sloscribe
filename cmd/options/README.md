@@ -3,7 +3,7 @@
 # options
 
 ```go
-import "github.com/tfadeyi/sloth-simple-comments/cmd/options"
+import "github.com/tfadeyi/slotalk/cmd/options"
 ```
 
 Package options handles the different options the binary commands has.

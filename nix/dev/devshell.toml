@@ -5,6 +5,10 @@ value = ""
 [devshell]
 name = "development-shell"
 motd = """{106}Nix Development Shell{reset}
+
+Commands:
+{50}prepare{reset}: runs the formatter, the tests, the linter and go generate.
+
 Use CTRL-D to leave the shell
 """
 
@@ -20,3 +24,11 @@ packages = [
 
 startup.gomarkdoc.text = "go install github.com/princjef/gomarkdoc/cmd/gomarkdoc@latest"
 startup.aloe.text = "go install github.com/tfadeyi/aloe-cli@latest"
+startup.prepare_clean.text = """alias prepare='
+echo "preparing the project:" \
+go fmt ./... && \
+make generate && \
+make lint && \
+make test
+'
+"""

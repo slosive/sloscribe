@@ -3,7 +3,7 @@
 # parser
 
 ```go
-import "github.com/tfadeyi/sloth-simple-comments/internal/parser"
+import "github.com/tfadeyi/slotalk/internal/parser"
 ```
 
 ## Index
