@@ -24,6 +24,7 @@ func cmd(opts *commonoptions.Options) *cobra.Command {
 			logger = logger.WithName("root")
 
 			if err := opts.Complete(); err != nil {
+				logger.Error(err, "flag argument error")
 				return err
 			}
 			if opts.LogLevel != "" {

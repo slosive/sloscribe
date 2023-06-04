@@ -166,7 +166,7 @@ Download a pre-compiled binary from the release page.
 
 ```text
 Usage:
-  sli-app init [flags]
+  slotalk init [flags]
 
 Flags:
       --dirs strings     Comma separated list of directories to be parses by the tool (default [/home/jetstack-oluwole/go/src/github.com/tfadeyi/slotalk])
@@ -174,6 +174,9 @@ Flags:
       --format strings   Output format (yaml,json). (default [yaml])
   -h, --help             help for init
       --lang string      Language of the source files. (go, wasm) (default "go")
+
+Global Flags:
+      --log-level string   Only log messages with the given severity or above. One of: [none, debug, info, warn], errors will always be printed (default "info")
 ```
 
 ## Declarative Comments
