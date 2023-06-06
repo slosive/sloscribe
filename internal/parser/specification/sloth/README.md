@@ -18,9 +18,11 @@ import "github.com/tfadeyi/slotalk/internal/parser/specification/sloth"
 func Parser() options.Option
 ```
 
-Parser returns the options.Options struct containing
+Parser returns the options.Option to run the parser targeting sloth as a specification
 
-## type [Options](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/specification/sloth/parser.go#L16-L19>)
+## type [Options](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/specification/sloth/parser.go#L17-L20>)
+
+Options is a struct contains all the configurations available for the sloth parser
 
 ```go
 type Options struct {

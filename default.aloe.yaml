@@ -21,7 +21,7 @@ errors_definitions:
             The source language passed to the --lang flag is not currently supported by the tool.
             The following are the supported languages: go, wasm(experimental).
         summary: The language passed to the --lang flag is not supported.
-        title: Unsupported Language Error
+        title: Unsupported TargetLanguage Error
     unsupported_output_format:
         code: unsupported_output_format
         details: |-

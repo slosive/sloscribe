@@ -6,6 +6,8 @@
 import "github.com/tfadeyi/slotalk/internal/parser/specification/sloth/grammar"
 ```
 
+Package grammar contains the grammar rules and lexer related to sloth
+
 ## Index
 
 - [Variables](<#variables>)

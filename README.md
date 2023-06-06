@@ -173,13 +173,13 @@ Flags:
   -f, --file string      Source file to parse.
       --format strings   Output format (yaml,json). (default [yaml])
   -h, --help             help for init
-      --lang string      Language of the source files. (go, wasm) (default "go")
+      --lang string      Language of the source files. (go) (default "go")
 
 Global Flags:
       --log-level string   Only log messages with the given severity or above. One of: [none, debug, info, warn], errors will always be printed (default "info")
 ```
 
-## Declarative Comments
+## Declarative Comments (Sloth)
 
 The Sloth definitions are added through declarative comments, as shown below.
 
@@ -194,44 +194,42 @@ The Sloth definitions are added through declarative comments, as shown below.
 ```
 
 ### Service definitions
-| annotation | description                                                     | example                                         |
-|------------|-----------------------------------------------------------------|-------------------------------------------------|
-| service    | **Required**. The name of the service the definitions refer to. | @sloth service chat-gpt                         |
-| version    | **Required**. The version of the Sloth specification.           | @sloth version prometheus/v1                    |
-| labels     | The labels associated to the Sloth service.                     | @sloth labels foo bar \n @sloth labels test slo |
+| annotation | description                                                     | example                                      |
+|------------|-----------------------------------------------------------------|----------------------------------------------|
+| service    | **Required**. The name of the service the definitions refer to. | @sloth service chat-gpt                      |
+| version    | The version of the Sloth specification.                         | @sloth version prometheus/v1                 |
+| labels     | The labels associated to the Sloth service.                     | @sloth labels foo bar @sloth labels test slo |
 
 ### SLO definitions
 
-| annotation  | description                                                 | example                                                                                                        |
-|-------------|-------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------|
-| name        | **Required**. The name of the SLO.                          | @sloth.slo name availability                                                                                   |
-| objective   | **Required**. The SLO objective in floating point notation. | @sloth.slo objective 95.0                                                                                      |
-| description |                                                             | @sloth.slo description 95% of logins to the chat-gpt app should be successful annotations. (can be multilined) |
-| labels      |                                                             |                                                                                                                |
+| annotation  | description                                                                                                                                                         | example                                                                                                        |
+|-------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------|
+| name        | **Required**. The name of the SLO.                                                                                                                                  | @sloth.slo name availability                                                                                   |
+| objective   | **Required**. The SLO Objective is target of the SLO the percentage (0, 100] (e.g 99.9).                                                                            | @sloth.slo objective 95.0                                                                                      |
+| description | Description is the description of the SLO.                                                                                                                          | @sloth.slo description 95% of logins to the chat-gpt app should be successful annotations. (can be multilined) |
+| labels      | Labels are the Prometheus labels that will have all the recording and alerting rules for this specific SLO. These labels are merged with the previous level labels. | @sloth.slo labels foo bar @sloth labels test slo                                                               |
 
 ### Alerting definitions
 
-| annotation  | description | example                                                                                                                                               |
-|-------------|-------------|-------------------------------------------------------------------------------------------------------------------------------------------------------|
-| name        |             | @sloth.alerting name ChatGPTAvailability                                                                                                              |
-| labels      |             | @sloth.alerting labels severity critical (new labels should be in new line)                                                                           |
-| annotations |             | @sloth.alerting annotations runbook: "https://github.com/kubernetes-monitoring/kubernetes-mixin/tree/master/runbook.md#alert-name-kubeapilatencyhigh" |
+| annotation  | description                                                                                     | example                                                                                                                                               |
+|-------------|-------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------|
+| name        | **Required**. Name is the name used by the alerts generated for this SLO.                       | @sloth.alerting name ChatGPTAvailability                                                                                                              |
+| labels      | Labels are the Prometheus labels that will have all the alerts generated by this SLO.           | @sloth.alerting labels severity critical                                                                                                              |
+| annotations | Annotations are the Prometheus annotations that will have all the alerts generated by this SLO. | @sloth.alerting annotations runbook: "https://github.com/kubernetes-monitoring/kubernetes-mixin/tree/master/runbook.md#alert-name-kubeapilatencyhigh" |
 
 ### Page Alerting definitions
 
-| annotation  | description | example                                           |
-|-------------|-------------|---------------------------------------------------|
-| name        |             | @sloth.alerting.page name pageAlerting            |
-| labels      |             | @sloth.alerting.page labels severity critical     |
-| annotations |             | @sloth.alerting.page annotations tier application |
+| annotation  | description                                                                                                                           | example                                           |
+|-------------|---------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------|
+| labels      | Labels are the Prometheus labels for the specific alert. For example can be useful to route the Page alert to specific Slack channel. | @sloth.alerting.page labels severity critical     |
+| annotations | Annotations are the Prometheus annotations for the specific alert.                                                                    | @sloth.alerting.page annotations tier application |
 
 ### Ticket Alerting definitions
 
-| annotation  | description | example                                           |
-|-------------|-------------|---------------------------------------------------|
-| name        |             | @sloth.alerting.page name ticketAlerting          |
-| labels      |             | @sloth.alerting.page labels severity critical     |
-| annotations |             | @sloth.alerting.page annotations tier application |
+| annotation  | description                                                                                                                           | example                                             |
+|-------------|---------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------|
+| labels      | Labels are the Prometheus labels for the specific alert. For example can be useful to route the Page alert to specific Slack channel. | @sloth.alerting.ticket labels severity critical     |
+| annotations | Annotations are the Prometheus annotations for the specific alert.                                                                    | @sloth.alerting.ticket annotations tier application |
 
 ## Examples
 

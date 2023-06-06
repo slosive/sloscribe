@@ -13,6 +13,7 @@ type parser struct {
 	languageParser language.Language
 }
 
+// Options is a struct contains all the configurations available for the sloth parser
 type Options struct {
 	Language   lang.Target
 	GolangOpts golang.Options
@@ -31,6 +32,7 @@ func newParser(opts Options) *parser {
 	}
 }
 
+// Parse parses the sloth specification using the target language parser
 func (p parser) Parse(ctx context.Context) (any, error) {
 	return p.languageParser.Parse(ctx)
 }
