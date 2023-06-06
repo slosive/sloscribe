@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/juju/errors"
-	sloth "github.com/slok/sloth/pkg/prometheus/api/v1"
 	"github.com/tfadeyi/slotalk/internal/parser/options"
 )
 
@@ -25,13 +24,14 @@ func New(opts ...options.Option) (*Parser, error) {
 		opt(defaultOpts)
 	}
 
-	if defaultOpts.Strategy == nil {
+	if defaultOpts.Specification == nil {
 		return nil, errors.New("parsing strategy configuration was not set")
 	}
 
 	return &Parser{defaultOpts}, nil
 }
 
-func (p *Parser) Parse(ctx context.Context) (*sloth.Spec, error) {
-	return p.Opts.Strategy.Parse(ctx)
+// Parse parses the data source using the given parser configurations
+func (p *Parser) Parse(ctx context.Context) (any, error) {
+	return p.Opts.Specification.Parse(ctx)
 }

@@ -1,19 +1,19 @@
 package lang
 
 type (
-	// SourceLanguage represents the language for the source file parsed by the generator
-	SourceLanguage string
+	// Target represents the language for the source file parsed by the generator
+	Target string
 )
 
 const (
-	Go   = SourceLanguage("go")
-	Wasm = SourceLanguage("wasm")
+	Go   = Target("go")
+	Rust = Target("rust")
 )
 
 // IsSupportedLanguage returns true is the input language is a supported language
-func IsSupportedLanguage(l SourceLanguage) bool {
+func IsSupportedLanguage(l Target) bool {
 	switch l {
-	case Go, Wasm:
+	case Go, Rust:
 		return true
 	}
 	return false

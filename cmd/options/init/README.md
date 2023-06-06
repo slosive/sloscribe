@@ -16,21 +16,22 @@ Package spec contains the different options present under the spec generation co
   - [func (o *Options) Prepare(cmd *cobra.Command) *Options](<#func-options-prepare>)
 
 
-## type [Options](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/cmd/options/init/options.go#L19-L25>)
+## type [Options](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/cmd/options/init/options.go#L19-L26>)
 
 Options is the list of options/flag available to the application, plus the clients needed by the application to function.
 
 ```go
 type Options struct {
-    Formats      []string
-    IncludedDirs []string
-    Source       string
-    SrcLanguage  lang.SourceLanguage
+    Formats       []string
+    IncludedDirs  []string
+    Source        string
+    SrcLanguage   lang.Target
+    Specification string
     *common.Options
 }
 ```
 
-### func [New](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/cmd/options/init/options.go#L29>)
+### func [New](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/cmd/options/init/options.go#L30>)
 
 ```go
 func New(c *common.Options) *Options
@@ -38,7 +39,7 @@ func New(c *common.Options) *Options
 
 New creates a new instance of the application's options
 
-### func \(\*Options\) [Complete](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/cmd/options/init/options.go#L42>)
+### func \(\*Options\) [Complete](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/cmd/options/init/options.go#L43>)
 
 ```go
 func (o *Options) Complete() error
@@ -46,7 +47,7 @@ func (o *Options) Complete() error
 
 Complete initialises the components needed for the application to function given the options
 
-### func \(\*Options\) [Prepare](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/cmd/options/init/options.go#L36>)
+### func \(\*Options\) [Prepare](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/cmd/options/init/options.go#L37>)
 
 ```go
 func (o *Options) Prepare(cmd *cobra.Command) *Options

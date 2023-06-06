@@ -13,7 +13,7 @@ Copyright © 2023 Oluwole Fadeyi
 - [func Execute(ctx context.Context)](<#func-execute>)
 
 
-## func [Execute](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/cmd/root.go#L42>)
+## func [Execute](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/cmd/root.go#L43>)
 
 ```go
 func Execute(ctx context.Context)

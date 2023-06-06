@@ -17,10 +17,11 @@ type (
 	// Options is the list of options/flag available to the application,
 	// plus the clients needed by the application to function.
 	Options struct {
-		Formats      []string
-		IncludedDirs []string
-		Source       string
-		SrcLanguage  lang.SourceLanguage
+		Formats       []string
+		IncludedDirs  []string
+		Source        string
+		SrcLanguage   lang.Target
+		Specification string
 		*common.Options
 	}
 )
@@ -92,7 +93,7 @@ func (o *Options) addAppFlags(fs *pflag.FlagSet) {
 		(*string)(&o.SrcLanguage),
 		"lang",
 		"go",
-		"Language of the source files. (go, wasm)",
+		"Language of the source files. (go, rust)",
 	)
 	fs.StringVarP(
 		&o.Source,
