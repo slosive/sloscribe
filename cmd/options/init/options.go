@@ -17,10 +17,11 @@ type (
 	// Options is the list of options/flag available to the application,
 	// plus the clients needed by the application to function.
 	Options struct {
-		Formats      []string
-		IncludedDirs []string
-		Source       string
-		SrcLanguage  lang.SourceLanguage
+		Formats       []string
+		IncludedDirs  []string
+		Source        string
+		SrcLanguage   lang.Target
+		Specification string
 		*common.Options
 	}
 )
@@ -55,7 +56,7 @@ func (o *Options) Complete() error {
 	}
 
 	// @aloe code unsupported_language
-	// @aloe title Unsupported Language Error
+	// @aloe title Unsupported TargetLanguage Error
 	// @aloe summary The language passed to the --lang flag is not supported.
 	// @aloe details The source language passed to the --lang flag is not currently supported by the tool.
 	// The following are the supported languages: go, wasm(experimental).
@@ -92,7 +93,7 @@ func (o *Options) addAppFlags(fs *pflag.FlagSet) {
 		(*string)(&o.SrcLanguage),
 		"lang",
 		"go",
-		"Language of the source files. (go, wasm)",
+		"Language of the source files. (go)",
 	)
 	fs.StringVarP(
 		&o.Source,

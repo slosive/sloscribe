@@ -3,8 +3,10 @@
 # grammar
 
 ```go
-import "github.com/tfadeyi/slotalk/internal/parser/grammar"
+import "github.com/tfadeyi/slotalk/internal/parser/specification/sloth/grammar"
 ```
+
+Package grammar contains the grammar rules and lexer related to sloth
 
 ## Index
 
@@ -25,7 +27,7 @@ var (
 )
 ```
 
-## func [Eval](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/grammar/grammar.go#L191>)
+## func [Eval](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/specification/sloth/grammar/grammar.go#L191>)
 
 ```go
 func Eval(source string, options ...participle.ParseOption) (*sloth.Spec, error)
@@ -33,7 +35,7 @@ func Eval(source string, options ...participle.ParseOption) (*sloth.Spec, error)
 
 Eval evaluates the source input against the grammar and returns an instance of \*sloth.Spec
 
-## type [Grammar](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/grammar/grammar.go#L15-L18>)
+## type [Grammar](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/specification/sloth/grammar/grammar.go#L15-L18>)
 
 Grammar is the participle grammar use to parse the Sloth comment groups in source files
 
@@ -44,7 +46,7 @@ type Grammar struct {
 }
 ```
 
-## type [Scope](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/grammar/grammar.go#L25-L29>)
+## type [Scope](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/specification/sloth/grammar/grammar.go#L25-L29>)
 
 Scope defines the statement scope, similar to a code function
 
@@ -56,7 +58,7 @@ type Scope struct {
 }
 ```
 
-### func \(Scope\) [GetType](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/grammar/grammar.go#L44>)
+### func \(Scope\) [GetType](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/specification/sloth/grammar/grammar.go#L44>)
 
 ```go
 func (k Scope) GetType() string
@@ -64,7 +66,7 @@ func (k Scope) GetType() string
 
 GetType returns the type of the statement scope
 
-## type [Statement](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/grammar/grammar.go#L20-L23>)
+## type [Statement](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/specification/sloth/grammar/grammar.go#L20-L23>)
 
 Statement is any comment starting with @sloth keyword
 

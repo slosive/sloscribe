@@ -11,7 +11,6 @@ import (
 	"strings"
 
 	"github.com/juju/errors"
-	sloth "github.com/slok/sloth/pkg/prometheus/api/v1"
 	"github.com/tfadeyi/go-aloe"
 	"gopkg.in/yaml.v3"
 )
@@ -32,9 +31,9 @@ func IsValidOutputFormat(format string) bool {
 }
 
 // WriteSpecification write the application bytes to a given writer
-func WriteSpecification(spec *sloth.Spec, stdout bool, out string, formats ...string) error {
+func WriteSpecification(spec any, stdout bool, out string, formats ...string) error {
 	// remove all previous output files
-	err := cleanAll(spec.Service, formats...)
+	err := cleanAll(formats...)
 	if err != nil {
 		// @aloe code clean_artefacts_error
 		// @aloe title Error Removing Previous Artefacts
@@ -82,7 +81,7 @@ func WriteSpecification(spec *sloth.Spec, stdout bool, out string, formats ...st
 	return nil
 }
 
-func cleanAll(applicationName string, formats ...string) error {
+func cleanAll(formats ...string) error {
 	for _, format := range formats {
 		if !IsValidOutputFormat(format) {
 			continue

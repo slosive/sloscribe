@@ -9,33 +9,33 @@ import "github.com/tfadeyi/slotalk/internal/parser/lang"
 ## Index
 
 - [Constants](<#constants>)
-- [func IsSupportedLanguage(l SourceLanguage) bool](<#func-issupportedlanguage>)
-- [type SourceLanguage](<#type-sourcelanguage>)
+- [func IsSupportedLanguage(l Target) bool](<#func-issupportedlanguage>)
+- [type Target](<#type-target>)
 
 
 ## Constants
 
 ```go
 const (
-    Go   = SourceLanguage("go")
-    Wasm = SourceLanguage("wasm")
+    Go   = Target("go")
+    Rust = Target("rust")
 )
 ```
 
 ## func [IsSupportedLanguage](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/lang/lang.go#L14>)
 
 ```go
-func IsSupportedLanguage(l SourceLanguage) bool
+func IsSupportedLanguage(l Target) bool
 ```
 
 IsSupportedLanguage returns true is the input language is a supported language
 
-## type [SourceLanguage](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/lang/lang.go#L5>)
+## type [Target](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/lang/lang.go#L5>)
 
-SourceLanguage represents the language for the source file parsed by the generator
+Target represents the language for the source file parsed by the generator
 
 ```go
-type SourceLanguage string
+type Target string
 ```
 
 

@@ -10,32 +10,36 @@ import "github.com/tfadeyi/slotalk/internal/parser"
 
 - [type Parser](<#type-parser>)
   - [func New(opts ...options.Option) (*Parser, error)](<#func-new>)
-  - [func (p *Parser) Parse(ctx context.Context) (*sloth.Spec, error)](<#func-parser-parse>)
+  - [func (p *Parser) Parse(ctx context.Context) (any, error)](<#func-parser-parse>)
 
 
-## type [Parser](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/parser.go#L13-L15>)
+## type [Parser](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/parser.go#L12-L16>)
 
 Parser parses source files containing the sloth definitions
 
 ```go
 type Parser struct {
+    // Opts contains the different options available to the parser.
+    // These are applied by the parser constructor during initialization
     Opts *options.Options
 }
 ```
 
-### func [New](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/parser.go#L19>)
+### func [New](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/parser.go#L20>)
 
 ```go
 func New(opts ...options.Option) (*Parser, error)
 ```
 
-New creates a new instance of the parser, defaults to golang parsing strategy if non are passed
+New creates a new instance of the parser. See options.Option for more info on the available configuration.
 
-### func \(\*Parser\) [Parse](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/parser.go#L35>)
+### func \(\*Parser\) [Parse](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/parser.go#L37>)
 
 ```go
-func (p *Parser) Parse(ctx context.Context) (*sloth.Spec, error)
+func (p *Parser) Parse(ctx context.Context) (any, error)
 ```
+
+Parse parses the data source using the given parser configurations
 
 
 

@@ -14,7 +14,7 @@ import (
 	"github.com/juju/errors"
 	sloth "github.com/slok/sloth/pkg/prometheus/api/v1"
 	"github.com/tfadeyi/slotalk/internal/logging"
-	"github.com/tfadeyi/slotalk/internal/parser/grammar"
+	"github.com/tfadeyi/slotalk/internal/parser/specification/sloth/grammar"
 )
 
 type parser struct {
@@ -26,9 +26,21 @@ type parser struct {
 	logger              *logging.Logger
 }
 
-// newParser client parser performs all checks at initialization time
-func newParser(logger *logging.Logger, sourceFile string,
-	sourceContent io.ReadCloser, dirs ...string) *parser {
+// Options contains the configuration options available to the Parser
+type Options struct {
+	Logger           *logging.Logger
+	SourceFile       string
+	SourceContent    io.ReadCloser
+	InputDirectories []string
+}
+
+// NewParser client parser performs all checks at initialization time
+func NewParser(opts Options) *parser {
+	logger := opts.Logger
+	dirs := opts.InputDirectories
+	sourceFile := opts.SourceFile
+	sourceContent := opts.SourceContent
+
 	pkgs := map[string]*ast.Package{}
 	for _, dir := range dirs {
 		if _, err := os.Stat(dir); errors.Is(err, os.ErrNotExist) {

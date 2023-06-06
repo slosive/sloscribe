@@ -12,57 +12,100 @@ Package options contains the different options available for the Parser struct
 
 - [type Option](<#type-option>)
   - [func Include(dirs ...string) Option](<#func-include>)
+  - [func Language(lang lang.Target) Option](<#func-language>)
   - [func Logger(logger *logging.Logger) Option](<#func-logger>)
-  - [func ParserStrategy(p strategy.ParsingStrategy) Option](<#func-parserstrategy>)
   - [func SourceContent(content io.ReadCloser) Option](<#func-sourcecontent>)
   - [func SourceFile(file string) Option](<#func-sourcefile>)
+  - [func Specification(target specification.Target) Option](<#func-specification>)
 - [type Options](<#type-options>)
 
 
-## type [Option](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/options/options.go#L18>)
+## type [Option](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/options/options.go#L41>)
+
+Option is a more atomic to configure the different Options rather than passing the entire Options struct.
 
 ```go
 type Option func(p *Options)
 ```
 
-### func [Include](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/options/options.go#L21>)
+### func [Include](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/options/options.go#L46>)
 
 ```go
 func Include(dirs ...string) Option
 ```
 
-### func [Logger](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/options/options.go#L27>)
+Include configure the parser to parse the given included directories SourceFile and SourceContent will override this, if present.
+
+### func [Language](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/options/options.go#L77>)
+
+```go
+func Language(lang lang.Target) Option
+```
+
+Language configure the parser to parse using a specific target language
+
+### func [Logger](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/options/options.go#L53>)
 
 ```go
 func Logger(logger *logging.Logger) Option
 ```
 
-### func [ParserStrategy](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/options/options.go#L34>)
+Logger configure the parser's logger
 
-```go
-func ParserStrategy(p strategy.ParsingStrategy) Option
-```
-
-### func [SourceContent](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/options/options.go#L46>)
+### func [SourceContent](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/options/options.go#L70>)
 
 ```go
 func SourceContent(content io.ReadCloser) Option
 ```
 
-### func [SourceFile](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/options/options.go#L40>)
+SourceContent configure the parser to parse a specific io.Reader Shouldn't be used together with SourceFile
+
+### func [SourceFile](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/options/options.go#L62>)
 
 ```go
 func SourceFile(file string) Option
 ```
 
-## type [Options](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/options/options.go#L11-L17>)
+SourceFile configure the parser to parse a specific file Shouldn't be used together with SourceContent
+
+### func [Specification](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/options/options.go#L84>)
+
+```go
+func Specification(target specification.Target) Option
+```
+
+Specification configure the parser to parse for a specific target specification
+
+## type [Options](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/options/options.go#L13-L39>)
+
+Options is a struct contains all the configurations available for the parser
 
 ```go
 type Options struct {
-    Strategy      strategy.ParsingStrategy
-    IncludedDirs  []string
-    Logger        *logging.Logger
-    SourceFile    string
+    // TargetSpecification is the specification targeted by the parser, i.e: sloth.
+    // the parser will parse the source code for the target annotations.
+    // Option: func Specification(target specification.Target) Option
+    TargetSpecification specification.Target
+
+    // TargetLanguage is the language targeted by the parser, i.e: go.
+    // Option: func Language(lang lang.Target) Option
+    TargetLanguage lang.Target
+
+    // IncludedDirs is the array containing all the directories that will be parsed by the parser.
+    // SourceFile and SourceContent will override this, if present.
+    // Option: func Include(dirs ...string) Option
+    IncludedDirs []string
+
+    // Logger is the parser's logger
+    // Option: func Logger(logger *logging.Logger) Option
+    Logger *logging.Logger
+
+    // SourceFile is the file the parser will parse. Shouldn't be used together with SourceContent
+    // Option: func SourceFile(file string) Option
+    SourceFile string
+
+    // SourceContent is the io.Reader the parser will parse. Shouldn't be used together with SourceFile
+    // Option: func SourceContent(content io.ReadCloser) Option
     SourceContent io.ReadCloser
 }
 ```

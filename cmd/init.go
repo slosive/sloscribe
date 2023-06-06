@@ -3,6 +3,7 @@ package cmd
 import (
 	"io"
 
+	"github.com/juju/errors"
 	"github.com/spf13/cobra"
 	commonoptions "github.com/tfadeyi/slotalk/cmd/options/common"
 	initoptions "github.com/tfadeyi/slotalk/cmd/options/init"
@@ -11,14 +12,13 @@ import (
 	"github.com/tfadeyi/slotalk/internal/parser"
 	"github.com/tfadeyi/slotalk/internal/parser/lang"
 	"github.com/tfadeyi/slotalk/internal/parser/options"
-	"github.com/tfadeyi/slotalk/internal/parser/strategy/golang"
-	"github.com/tfadeyi/slotalk/internal/parser/strategy/wasm"
+	"github.com/tfadeyi/slotalk/internal/parser/specification/sloth"
 )
 
 func specInitCmd(common *commonoptions.Options) *cobra.Command {
 	opts := initoptions.New(common)
 	var inputReader io.ReadCloser
-	var languageParser options.Option
+	var targetLanguage options.Option
 	cmd := &cobra.Command{
 		Use:   "init",
 		Short: "Init generates the Sloth definition specification from source code comments.",
@@ -47,11 +47,13 @@ i.e:
 			}
 
 			switch opts.SrcLanguage {
-			case lang.Wasm:
-				logger.Info("The wasm parser has not been fully implemented and shouldn't be used! It will have unexpected behaviours.")
-				languageParser = wasm.Parser()
+			case lang.Rust:
+				err := errors.New("The rust parser has not been fully implemented and shouldn't be used! It will have unexpected behaviours.")
+				logger.Error(err, "")
+				return err
+				targetLanguage = options.Language(lang.Rust)
 			default:
-				languageParser = golang.Parser()
+				targetLanguage = options.Language(lang.Go)
 			}
 
 			if opts.Source == "-" {
@@ -69,7 +71,8 @@ i.e:
 			)
 
 			parser, err := parser.New(
-				languageParser,
+				targetLanguage,
+				sloth.Parser(),
 				options.Logger(&logger),
 				options.SourceFile(opts.Source),
 				options.SourceContent(inputReader),
