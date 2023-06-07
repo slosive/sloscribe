@@ -9,9 +9,10 @@ import "github.com/tfadeyi/slotalk/internal/parser/specification/sloth/language/
 ## Index
 
 - [type Options](<#type-options>)
+  - [func NewOptions() *Options](<#func-newoptions>)
 
 
-## type [Options](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/specification/sloth/language/golang/parser.go#L30-L35>)
+## type [Options](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/specification/sloth/language/golang/parser.go#L29-L34>)
 
 Options contains the configuration options available to the Parser
 
@@ -22,6 +23,12 @@ type Options struct {
     SourceContent    io.ReadCloser
     InputDirectories []string
 }
+```
+
+### func [NewOptions](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/specification/sloth/language/golang/parser.go#L36>)
+
+```go
+func NewOptions() *Options
 ```
 
 

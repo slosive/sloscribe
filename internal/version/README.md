@@ -13,11 +13,13 @@ Package version, returns the build info of the binary
 - [func BuildInfo() string](<#func-buildinfo>)
 
 
-## func [BuildInfo](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/version/version.go#L12>)
+## func [BuildInfo](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/version/version.go#L13>)
 
 ```go
 func BuildInfo() string
 ```
+
+BuildInfo returns the binary build information
 
 
 

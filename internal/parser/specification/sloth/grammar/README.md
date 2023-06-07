@@ -27,13 +27,13 @@ var (
 )
 ```
 
-## func [Eval](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/specification/sloth/grammar/grammar.go#L191>)
+## func [Eval](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/specification/sloth/grammar/grammar.go#L192>)
 
 ```go
 func Eval(source string, options ...participle.ParseOption) (*sloth.Spec, error)
 ```
 
-Eval evaluates the source input against the grammar and returns an instance of \*sloth.Spec
+Eval evaluates the source input against the grammar and returns an instance of \*sloth.spec
 
 ## type [Grammar](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/specification/sloth/grammar/grammar.go#L15-L18>)
 

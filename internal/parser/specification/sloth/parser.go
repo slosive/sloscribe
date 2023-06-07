@@ -24,8 +24,9 @@ func newParser(opts Options) *parser {
 	var selectedLanguageParser language.Language
 	switch opts.Language {
 	case lang.Go:
-		selectedLanguageParser = golang.NewParser(opts.GolangOpts)
+		selectedLanguageParser = golang.NewParser(&opts.GolangOpts)
 	case lang.Rust:
+		// TODO implement
 	}
 	return &parser{
 		languageParser: selectedLanguageParser,

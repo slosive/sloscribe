@@ -33,7 +33,7 @@ func New(opts ...options.Option) (*Parser, error) {
 	return &Parser{defaultOpts}, nil
 }
 
-// Parse parses the data source using the given parser configurations
+// Parse parses the data source for the target annotations using the given parser configurations and returns a parsed specification.
 func (p *Parser) Parse(ctx context.Context) (any, error) {
 	return p.Opts.TargetSpecification.Parse(ctx)
 }

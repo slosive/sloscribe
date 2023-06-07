@@ -9,6 +9,7 @@ var (
 	date    string = "unknown"
 )
 
+// BuildInfo returns the binary build information
 func BuildInfo() string {
 	return fmt.Sprintf("%s, commit %s, built at %s", version, commit, date)
 }

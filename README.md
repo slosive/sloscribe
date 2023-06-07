@@ -184,7 +184,7 @@ Global Flags:
 The Sloth definitions are added through declarative comments, as shown below.
 
 ```go
-// @sloth.slo service chatgpt
+// @sloth service chatgpt
 // @sloth.slo name chat-gpt-availability
 // @sloth.slo objective 95.0
 // @sloth.sli error_query sum(rate(tenant_failed_login_operations_total{client="chat-gpt"}[{{.window}}])) OR on() vector(0)
