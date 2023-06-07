@@ -48,7 +48,7 @@ func NewParser(opts Options) *parser {
 			continue
 		}
 
-		foundPkgs, err := getPackages(dir)
+		foundPkgs, err := getAllGoPackages(dir)
 		if err != nil {
 			logger.Warn(err)
 			continue
@@ -76,13 +76,15 @@ func NewParser(opts Options) *parser {
 	}
 }
 
-func getPackages(dir string) (map[string]*ast.Package, error) {
+// getAllGoPackages fetches all the available golang packages in the target directory and subdirectories
+func getAllGoPackages(dir string) (map[string]*ast.Package, error) {
 	fset := token.NewFileSet()
 	pkgs, err := goparser.ParseDir(fset, dir, nil, goparser.ParseComments)
 	if err != nil {
 		return map[string]*ast.Package{}, err
 	}
 
+	// walk through the directories and parse the not already found go packages
 	err = filepath.WalkDir(dir, func(path string, d fs.DirEntry, err error) error {
 		if d.IsDir() {
 			foundPkgs, err := goparser.ParseDir(fset, path, nil, goparser.ParseComments)
@@ -97,42 +99,25 @@ func getPackages(dir string) (map[string]*ast.Package, error) {
 		}
 		return err
 	})
-	return pkgs, err
+	if err != nil {
+		return nil, err
+	}
+
+	if len(pkgs) == 0 {
+		return nil, errors.Errorf("no go packages were found in the target directory and subdirectories: %s", dir)
+	}
+
+	return pkgs, nil
 }
 
+// getFile returns the ast go file struct given filename or an io.Reader. If an io.Reader is passed it will take precedence
+// over the filename
 func getFile(name string, file io.ReadCloser) (*ast.File, error) {
 	fset := token.NewFileSet()
 	if file != nil {
 		defer file.Close()
 	}
 	return goparser.ParseFile(fset, name, file, goparser.ParseComments)
-}
-
-func (p parser) Parse(ctx context.Context) (*sloth.Spec, error) {
-	// collect all aloe error comments from packages and add them to the spec struct
-	if p.sourceFile != "" || p.sourceContent != nil {
-		file, err := getFile(p.sourceFile, p.sourceContent)
-		if err != nil {
-			return nil, err
-		}
-		if err := p.parseComments(file.Comments...); err != nil {
-			return nil, err
-		}
-		return p.spec, nil
-	}
-
-	if len(p.applicationPackages) > 0 {
-		for _, pkg := range p.applicationPackages {
-			for _, file := range pkg.Files {
-				if err := p.parseComments(file.Comments...); err != nil {
-					p.logger.Warn(err)
-					continue
-				}
-			}
-		}
-	}
-
-	return p.spec, nil
 }
 
 func (p parser) parseComments(comments ...*ast.CommentGroup) error {
@@ -163,4 +148,31 @@ func (p parser) parseComments(comments ...*ast.CommentGroup) error {
 		}
 	}
 	return nil
+}
+
+func (p parser) Parse(ctx context.Context) (*sloth.Spec, error) {
+	// collect all aloe error comments from packages and add them to the spec struct
+	if p.sourceFile != "" || p.sourceContent != nil {
+		file, err := getFile(p.sourceFile, p.sourceContent)
+		if err != nil {
+			return nil, err
+		}
+		if err := p.parseComments(file.Comments...); err != nil {
+			return nil, err
+		}
+		return p.spec, nil
+	}
+
+	if len(p.applicationPackages) > 0 {
+		for _, pkg := range p.applicationPackages {
+			for _, file := range pkg.Files {
+				if err := p.parseComments(file.Comments...); err != nil {
+					p.logger.Warn(err)
+					continue
+				}
+			}
+		}
+	}
+
+	return p.spec, nil
 }
