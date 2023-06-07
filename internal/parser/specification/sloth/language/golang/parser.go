@@ -18,12 +18,11 @@ import (
 )
 
 type parser struct {
-	spec                *sloth.Spec
-	sourceFile          string
-	sourceContent       io.ReadCloser
-	includedDirs        []string
-	applicationPackages map[string]*ast.Package
-	logger              *logging.Logger
+	spec          *sloth.Spec
+	sourceFile    string
+	sourceContent io.ReadCloser
+	includedDirs  []string
+	logger        *logging.Logger
 }
 
 // Options contains the configuration options available to the Parser
@@ -34,32 +33,27 @@ type Options struct {
 	InputDirectories []string
 }
 
+func NewOptions() *Options {
+	l := logging.NewStandardLogger()
+	return &Options{
+		Logger:           &l,
+		SourceFile:       "",
+		SourceContent:    nil,
+		InputDirectories: nil,
+	}
+}
+
 // NewParser client parser performs all checks at initialization time
-func NewParser(opts Options) *parser {
+func NewParser(opts *Options) *parser {
+	// create default options, these will be overridden
+	if opts == nil {
+		opts = NewOptions()
+	}
+
 	logger := opts.Logger
 	dirs := opts.InputDirectories
 	sourceFile := opts.SourceFile
 	sourceContent := opts.SourceContent
-
-	pkgs := map[string]*ast.Package{}
-	for _, dir := range dirs {
-		if _, err := os.Stat(dir); errors.Is(err, os.ErrNotExist) {
-			// skip if dir doesn't exists
-			continue
-		}
-
-		foundPkgs, err := getAllGoPackages(dir)
-		if err != nil {
-			logger.Warn(err)
-			continue
-		}
-
-		for pkgName, pkg := range foundPkgs {
-			if _, ok := pkgs[pkgName]; !ok {
-				pkgs[pkgName] = pkg
-			}
-		}
-	}
 
 	return &parser{
 		spec: &sloth.Spec{
@@ -68,11 +62,10 @@ func NewParser(opts Options) *parser {
 			Labels:  nil,
 			SLOs:    nil,
 		},
-		sourceFile:          sourceFile,
-		sourceContent:       sourceContent,
-		includedDirs:        dirs,
-		applicationPackages: pkgs,
-		logger:              logger,
+		sourceFile:    sourceFile,
+		sourceContent: sourceContent,
+		includedDirs:  dirs,
+		logger:        logger,
 	}
 }
 
@@ -120,14 +113,18 @@ func getFile(name string, file io.ReadCloser) (*ast.File, error) {
 	return goparser.ParseFile(fset, name, file, goparser.ParseComments)
 }
 
-func (p parser) parseComments(comments ...*ast.CommentGroup) error {
+// getSpec returns the parser specification struct
+func (p parser) getSpec() *sloth.Spec {
+	return p.spec
+}
+
+// parseSlothAnnotations parses the source code comments for sloth annotations using the sloth grammar.
+// It expects only SLO definition per comment group
+func (p parser) parseSlothAnnotations(comments ...*ast.CommentGroup) error {
 	for _, comment := range comments {
 		newSpec, err := grammar.Eval(strings.TrimSpace(comment.Text()))
-		switch {
-		case errors.Is(err, grammar.ErrParseSource):
-			continue
-		case err != nil:
-			p.logger.Warn(err)
+		if err != nil {
+			p.warn(err)
 			continue
 		}
 
@@ -150,24 +147,49 @@ func (p parser) parseComments(comments ...*ast.CommentGroup) error {
 	return nil
 }
 
+// Parse will parse the source code for sloth annotations.
+// In case of error during parsing, Parse returns an empty sloth.Spec
 func (p parser) Parse(ctx context.Context) (*sloth.Spec, error) {
-	// collect all aloe error comments from packages and add them to the spec struct
+	// collect all sloth annotations from the file and add them to the spec struct
 	if p.sourceFile != "" || p.sourceContent != nil {
 		file, err := getFile(p.sourceFile, p.sourceContent)
 		if err != nil {
+			// error hard as we can't extract more data for the spec
 			return nil, err
 		}
-		if err := p.parseComments(file.Comments...); err != nil {
+		if err := p.parseSlothAnnotations(file.Comments...); err != nil {
 			return nil, err
 		}
 		return p.spec, nil
 	}
 
-	if len(p.applicationPackages) > 0 {
-		for _, pkg := range p.applicationPackages {
+	applicationPackages := map[string]*ast.Package{}
+	for _, dir := range p.includedDirs {
+		if _, err := os.Stat(dir); errors.Is(err, os.ErrNotExist) {
+			// skip if dir doesn't exists
+			p.warn(err)
+			continue
+		}
+
+		foundPkgs, err := getAllGoPackages(dir)
+		if err != nil {
+			p.warn(err)
+			continue
+		}
+
+		for pkgName, pkg := range foundPkgs {
+			if _, ok := applicationPackages[pkgName]; !ok {
+				applicationPackages[pkgName] = pkg
+			}
+		}
+	}
+
+	// collect all sloth annotations from packages and add them to the spec struct
+	if len(applicationPackages) > 0 {
+		for _, pkg := range applicationPackages {
 			for _, file := range pkg.Files {
-				if err := p.parseComments(file.Comments...); err != nil {
-					p.logger.Warn(err)
+				if err := p.parseSlothAnnotations(file.Comments...); err != nil {
+					p.warn(err)
 					continue
 				}
 			}
@@ -175,4 +197,10 @@ func (p parser) Parse(ctx context.Context) (*sloth.Spec, error) {
 	}
 
 	return p.spec, nil
+}
+
+func (p parser) warn(err error, keyValues ...interface{}) {
+	if p.logger != nil {
+		p.logger.Warn(err, keyValues...)
+	}
 }

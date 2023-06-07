@@ -88,7 +88,7 @@ i.e:
 				return err
 			}
 
-			logger.Info("Source code was parsed!")
+			logger.Info("Source code was parsed")
 			logger.Info("Printing result specification to stdout.")
 			return generate.WriteSpecification(service, true, "", opts.Formats...)
 		},

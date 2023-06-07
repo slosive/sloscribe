@@ -39,7 +39,7 @@ New creates a new instance of the parser. See options.Option for more info on th
 func (p *Parser) Parse(ctx context.Context) (any, error)
 ```
 
-Parse parses the data source using the given parser configurations
+Parse parses the data source for the target annotations using the given parser configurations and returns a parsed specification.
 
 
 

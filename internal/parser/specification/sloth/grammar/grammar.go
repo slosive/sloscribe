@@ -101,6 +101,7 @@ func (g Grammar) parse() (*sloth.Spec, error) {
 			Plugin: nil,
 		},
 	}
+
 	for _, attr := range g.Stmts {
 		switch attr.Scope.GetType() {
 		case ".alerting.ticket":
@@ -176,7 +177,7 @@ func (g Grammar) parse() (*sloth.Spec, error) {
 	return spec, nil
 }
 
-func eval(filename, source string, options ...participle.ParseOption) (*Grammar, error) {
+func createGrammar(filename, source string, options ...participle.ParseOption) (*Grammar, error) {
 	ast, err := participle.Build[Grammar](
 		participle.Lexer(lexerDefinition),
 	)
@@ -187,9 +188,9 @@ func eval(filename, source string, options ...participle.ParseOption) (*Grammar,
 	return ast.ParseString(filename, source, options...)
 }
 
-// Eval evaluates the source input against the grammar and returns an instance of *sloth.Spec
+// Eval evaluates the source input against the grammar and returns an instance of *sloth.spec
 func Eval(source string, options ...participle.ParseOption) (*sloth.Spec, error) {
-	grammar, err := eval("", source, options...)
+	grammar, err := createGrammar("", source, options...)
 	if err != nil {
 		return nil, err
 	}

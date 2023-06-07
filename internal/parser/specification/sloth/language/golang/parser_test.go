@@ -1,11 +1,14 @@
 package golang
 
 import (
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
+	"go/ast"
 	"io"
 	"strings"
 	"testing"
+
+	sloth "github.com/slok/sloth/pkg/prometheus/api/v1"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestGetPackages(t *testing.T) {
@@ -75,5 +78,94 @@ package fixtures
 	t.Run("Fails to get comments from empty string reader", func(t *testing.T) {
 		_, err := getFile("", io.NopCloser(strings.NewReader(``)))
 		require.Error(t, err)
+	})
+}
+
+func TestParseAnnotations(t *testing.T) {
+	t.Parallel()
+
+	t.Run("Successfully parse the sloth annotations per single commentGroup", func(t *testing.T) {
+		parser := NewParser(nil)
+		require.NoError(t, parser.parseSlothAnnotations(&ast.CommentGroup{List: []*ast.Comment{
+			{
+				Text: `@sloth service foobar`,
+			},
+			{
+				Text: `@sloth.slo name availability`,
+			},
+			{
+				Text: `@sloth.slo description availability SLO`,
+			},
+			{
+				Text: `@sloth.slo objective 95.0`,
+			},
+		}}))
+		assert.Equal(t, "foobar", parser.getSpec().Service)
+		assert.Equal(t, sloth.SLO{
+			Name:        "availability",
+			Description: "availability SLO",
+			Objective:   95.0,
+			Labels:      make(map[string]string),
+			SLI:         sloth.SLI{},
+			Alerting:    sloth.Alerting{},
+		}, parser.getSpec().SLOs[0])
+	})
+
+	t.Run("Fail to parse the sloth annotations for a given SLO if no SLO name was given", func(t *testing.T) {
+		parser := NewParser(nil)
+		require.NoError(t, parser.parseSlothAnnotations(&ast.CommentGroup{List: []*ast.Comment{
+			{
+				Text: `@sloth.slo description availability SLO`,
+			},
+			{
+				Text: `@sloth.slo objective 95.0`,
+			},
+		}}))
+		assert.Len(t, parser.getSpec().SLOs, 0)
+	})
+
+	t.Run("Successfully parse the sloth annotations per multiple commentGroups", func(t *testing.T) {
+		parser := NewParser(nil)
+		require.NoError(t, parser.parseSlothAnnotations(
+			&ast.CommentGroup{List: []*ast.Comment{
+				{
+					Text: `@sloth.slo name availability`,
+				},
+				{
+					Text: `@sloth.slo description availability SLO`,
+				},
+				{
+					Text: `@sloth.slo objective 95.0`,
+				},
+			},
+			},
+			&ast.CommentGroup{List: []*ast.Comment{
+				{
+					Text: `@sloth.slo name freshness`,
+				},
+				{
+					Text: `@sloth.slo description freshness SLO`,
+				},
+				{
+					Text: `@sloth.slo objective 95.0`,
+				},
+			}},
+		))
+		assert.Equal(t, sloth.SLO{
+			Name:        "availability",
+			Description: "availability SLO",
+			Objective:   95.0,
+			Labels:      make(map[string]string),
+			SLI:         sloth.SLI{},
+			Alerting:    sloth.Alerting{},
+		}, parser.getSpec().SLOs[0])
+		assert.Equal(t, sloth.SLO{
+			Name:        "freshness",
+			Description: "freshness SLO",
+			Objective:   95.0,
+			Labels:      make(map[string]string),
+			SLI:         sloth.SLI{},
+			Alerting:    sloth.Alerting{},
+		}, parser.getSpec().SLOs[1])
 	})
 }
