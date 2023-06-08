@@ -18,7 +18,7 @@ import (
 )
 
 type parser struct {
-	spec          *sloth.Spec
+	specs         map[string]*sloth.Spec
 	sourceFile    string
 	sourceContent io.ReadCloser
 	includedDirs  []string
@@ -56,12 +56,7 @@ func NewParser(opts *Options) *parser {
 	sourceContent := opts.SourceContent
 
 	return &parser{
-		spec: &sloth.Spec{
-			Version: sloth.Version,
-			Service: "",
-			Labels:  nil,
-			SLOs:    nil,
-		},
+		specs:         map[string]*sloth.Spec{},
 		sourceFile:    sourceFile,
 		sourceContent: sourceContent,
 		includedDirs:  dirs,
@@ -113,9 +108,9 @@ func getFile(name string, file io.ReadCloser) (*ast.File, error) {
 	return goparser.ParseFile(fset, name, file, goparser.ParseComments)
 }
 
-// getSpec returns the parser specification struct
-func (p parser) getSpec() *sloth.Spec {
-	return p.spec
+// getSpecs returns the parser specification struct
+func (p parser) getSpecs() map[string]*sloth.Spec {
+	return p.specs
 }
 
 // parseSlothAnnotations parses the source code comments for sloth annotations using the sloth grammar.
@@ -128,19 +123,25 @@ func (p parser) parseSlothAnnotations(comments ...*ast.CommentGroup) error {
 			continue
 		}
 
-		if p.spec.Service == "" {
-			p.spec.Service = newSpec.Service
+		spec, ok := p.specs[newSpec.Service]
+		if !ok {
+			p.specs[newSpec.Service] = newSpec
+			spec = p.specs[newSpec.Service]
 		}
-		if p.spec.Version == "" {
-			p.spec.Version = newSpec.Version
+
+		if spec.Service == "" {
+			spec.Service = newSpec.Service
 		}
-		if p.spec.Labels == nil {
-			p.spec.Labels = newSpec.Labels
+		if spec.Version == "" {
+			spec.Version = newSpec.Version
+		}
+		if spec.Labels == nil {
+			spec.Labels = newSpec.Labels
 		}
 
 		for _, slo := range newSpec.SLOs {
 			if slo.Name != "" {
-				p.spec.SLOs = append(p.spec.SLOs, slo)
+				spec.SLOs = append(spec.SLOs, slo)
 			}
 		}
 	}
@@ -149,7 +150,7 @@ func (p parser) parseSlothAnnotations(comments ...*ast.CommentGroup) error {
 
 // Parse will parse the source code for sloth annotations.
 // In case of error during parsing, Parse returns an empty sloth.Spec
-func (p parser) Parse(ctx context.Context) (*sloth.Spec, error) {
+func (p parser) Parse(ctx context.Context) (map[string]*sloth.Spec, error) {
 	// collect all sloth annotations from the file and add them to the spec struct
 	if p.sourceFile != "" || p.sourceContent != nil {
 		file, err := getFile(p.sourceFile, p.sourceContent)
@@ -160,7 +161,7 @@ func (p parser) Parse(ctx context.Context) (*sloth.Spec, error) {
 		if err := p.parseSlothAnnotations(file.Comments...); err != nil {
 			return nil, err
 		}
-		return p.spec, nil
+		return p.specs, nil
 	}
 
 	applicationPackages := map[string]*ast.Package{}
@@ -196,7 +197,7 @@ func (p parser) Parse(ctx context.Context) (*sloth.Spec, error) {
 		}
 	}
 
-	return p.spec, nil
+	return p.specs, nil
 }
 
 func (p parser) warn(err error, keyValues ...interface{}) {
