@@ -10,10 +10,19 @@ Package generate contains utilities to generate data from a given specification
 
 ## Index
 
+- [Constants](<#constants>)
 - [Variables](<#variables>)
 - [func IsValidOutputFormat(format string) bool](<#func-isvalidoutputformat>)
 - [func WriteSpecifications(writer io.Writer, header []byte, specs map[string]any, toFile bool, outputDirectory string, formats ...string) error](<#func-writespecifications>)
 
+
+## Constants
+
+DefaultServiceDefinitionDir is the default filename for the output file
+
+```go
+const DefaultServiceDefinitionDir = "slo_definitions"
+```
 
 ## Variables
 

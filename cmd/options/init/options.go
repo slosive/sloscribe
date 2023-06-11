@@ -23,6 +23,7 @@ type (
 		SrcLanguage   lang.Target
 		Specification string
 		ToFile        bool
+		Service       string
 		*common.Options
 	}
 )
@@ -108,5 +109,11 @@ func (o *Options) addAppFlags(fs *pflag.FlagSet) {
 		"to-file",
 		false,
 		"Print the generated specifications to file, under ./slo_definitions.",
+	)
+	fs.StringVar(
+		&o.Service,
+		"service",
+		"",
+		"Outputs only the selected service specification from the resulting parsed service specification.",
 	)
 }
