@@ -2,6 +2,11 @@
 
 # Slotalk
 
+<p align="center">
+<a href="#Motivation">Motivation</a> | <a href="#Prerequisites">Prerequisites</a> | <a href="#Try-it!">Try it!</a> | <a href="#Installation">Installation</a> | <a href="#Get-Started">Get Started</a> | <a href="#Examples">Examples</a>
+</p>
+
+[![Nix Devshell](https://img.shields.io/badge/nix-devshell-blue?logo=NixOS&style=for-the-badge)](https://github.com/tfadeyi/sloth-simple-comments#Nix)
 [![Continuous Integration](https://img.shields.io/github/actions/workflow/status/tfadeyi/sloth-simple-comments/ci.yml?branch=main&style=for-the-badge)](https://github.com/tfadeyi/sloth-simple-comments/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/License-MIT-yellowgreen.svg?style=for-the-badge)](https://github.com/tfadeyi/sloth-simple-comments/blob/main/LICENSE)
 [![Language](https://img.shields.io/github/go-mod/go-version/tfadeyi/sloth-simple-comments?style=for-the-badge)](https://github.com/tfadeyi/sloth-simple-comments)
@@ -17,22 +22,6 @@ Slotalk is a CLI tool that allows developers to embed [Sloth](https://github.com
 Similar to how [Swaggo](https://github.com/swaggo/swag) does for Swagger docs,  Slotalk moves the SLO/SLI specification closer to where its relevant Prometheus metric was defined.
 
 Slotalk can be used in tandem with the [Sloth CLI](https://github.com/slok/sloth#getting-started) to generate Prometheus alerts groups from the in-code annotations, which can be used in any Prometheus/Grafana monitoring system to keep track of the service's SLOs. See examples below.
-
-## Table of Contents
-
-* [Motivation](#Motivation)
-* [Prerequisites](#Prerequisites)
-* [Try it!](#Try-it!)
-  * [Nix](#Nix)
-  * [Source](#Source)
-* [Installation](#Installation)
-* [Get Started](#Get-Started)
-* [CLI usage](#CLI-usage)
-* [Declarative Comments](#Declarative-Comments)
-* [Examples](#Examples)
-  * [Basic usage - Generate Sloth definitions using go:generate](#basic-usage---generate-sloth-definitions-using-gogenerate)
-  * [Basic usage - Generate Prometheus alert groups from code annotations](#basic-usage---generate-prometheus-alert-groups-from-code-annotations)
-* [License](#License)
 
 
 ## Motivation
@@ -115,32 +104,86 @@ scrape_configs:
 
 ## Installation
 
-### Go install
+<details>
+     <summary><strong>Go Install</strong></summary>
 
    ```shell
    # install the latest version of slotalk
    go install github.com/tfadeyi/slotalk@latest
    ```
 
-### Nix
+</details>
+
+<details>
+     <summary><strong>Nix</strong></summary>
 
 ```shell
 nix run github:tfadeyi/slotalk
 ```
 
-### Pre-released binaries
+</details>
+
+<details>
+     <summary><strong>Docker</strong></summary>
+
+```shell
+docker pull ghcr.io/tfadeyi/slotalk:latest
+```
+
+</details>
+
+
+<strong>Pre-released binaries</strong>
 
 Download a pre-compiled binary from the release page.
-   ```shell
-  curl -LJO https://github.com/tfadeyi/slotalk/releases/download/v0.0.3/slotalk-linux-amd64.tar.gz && \
-  tar -xzvf slotalk-linux-amd64.tar.gz && \
-  cd slotalk-linux-amd64
-   ```
 
-### Docker
-   ```shell
-  docker pull ghcr.io/tfadeyi/slotalk:latest
-   ```
+<details>
+     <summary><strong>Linux (x84_64)</strong></summary>
+
+```shell
+  curl -L -o slotalk https://github.com/tfadeyi/slotalk/releases/download/latest/slotalk-linux-amd64.tar.gz
+  chmod +x slotalk
+```
+
+</details>
+
+<details>
+     <summary><strong>Linux (arm)</strong></summary>
+
+```shell
+  curl -L -o slotalk https://github.com/tfadeyi/slotalk/releases/download/latest/slotalk-linux-arm.tar.gz
+  chmod +x slotalk
+```
+
+</details>
+
+<details>
+     <summary><strong>Linux (arm64)</strong></summary>
+
+```shell
+  curl -L -o slotalk https://github.com/tfadeyi/slotalk/releases/download/latest/slotalk-linux-arm64.tar.gz
+  chmod +x slotalk
+```
+
+</details>
+
+<details>
+     <summary><strong>MacOS (amd64)</strong></summary>
+
+```shell
+  curl -L -o slotalk https://github.com/tfadeyi/slotalk/releases/download/latest/slotalk-darwin-amd64.tar.gz
+```
+
+</details>
+
+<details>
+     <summary><strong>MacOS (Apple Silicon)</strong></summary>
+
+```shell
+  curl -L -o slotalk https://github.com/tfadeyi/slotalk/releases/download/latest/slotalk-darwin-arm64.tar.gz
+```
+
+</details>
 
 ## Get Started
 
@@ -194,7 +237,7 @@ The Sloth definitions are added through declarative comments, as shown below.
 ```
 
 ### Service definitions
-| annotation | description                                                     | example                                      |
+| Annotation | Description                                                     | Example                                      |
 |------------|-----------------------------------------------------------------|----------------------------------------------|
 | service    | **Required**. The name of the service the definitions refer to. | @sloth service chat-gpt                      |
 | version    | The version of the Sloth specification.                         | @sloth version prometheus/v1                 |
@@ -202,7 +245,7 @@ The Sloth definitions are added through declarative comments, as shown below.
 
 ### SLO definitions
 
-| annotation  | description                                                                                                                                                         | example                                                                                                        |
+| Annotation  | Description                                                                                                                                                         | Example                                                                                                        |
 |-------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------|
 | name        | **Required**. The name of the SLO.                                                                                                                                  | @sloth.slo name availability                                                                                   |
 | objective   | **Required**. The SLO Objective is target of the SLO the percentage (0, 100] (e.g 99.9).                                                                            | @sloth.slo objective 95.0                                                                                      |
@@ -211,7 +254,7 @@ The Sloth definitions are added through declarative comments, as shown below.
 
 ### Alerting definitions
 
-| annotation  | description                                                                                     | example                                                                                                                                               |
+| Annotation  | Description                                                                                     | Example                                                                                                                                               |
 |-------------|-------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------|
 | name        | **Required**. Name is the name used by the alerts generated for this SLO.                       | @sloth.alerting name ChatGPTAvailability                                                                                                              |
 | labels      | Labels are the Prometheus labels that will have all the alerts generated by this SLO.           | @sloth.alerting labels severity critical                                                                                                              |
@@ -219,14 +262,14 @@ The Sloth definitions are added through declarative comments, as shown below.
 
 ### Page Alerting definitions
 
-| annotation  | description                                                                                                                           | example                                           |
+| Annotation  | Description                                                                                                                           | Example                                           |
 |-------------|---------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------|
 | labels      | Labels are the Prometheus labels for the specific alert. For example can be useful to route the Page alert to specific Slack channel. | @sloth.alerting.page labels severity critical     |
 | annotations | Annotations are the Prometheus annotations for the specific alert.                                                                    | @sloth.alerting.page annotations tier application |
 
 ### Ticket Alerting definitions
 
-| annotation  | description                                                                                                                           | example                                             |
+| Annotation  | Description                                                                                                                           | Example                                             |
 |-------------|---------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------|
 | labels      | Labels are the Prometheus labels for the specific alert. For example can be useful to route the Page alert to specific Slack channel. | @sloth.alerting.ticket labels severity critical     |
 | annotations | Annotations are the Prometheus annotations for the specific alert.                                                                    | @sloth.alerting.ticket annotations tier application |
