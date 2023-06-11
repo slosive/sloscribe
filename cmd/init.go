@@ -69,22 +69,36 @@ func specInitCmd(common *commonoptions.Options) *cobra.Command {
 				options.SourceContent(inputReader),
 				options.Include(opts.IncludedDirs...))
 			if err != nil {
-				logger.Error(err, "parser initialization")
+				logger.Error(err, "Parser initialization")
 				return err
 			}
 
 			services, err := parser.Parse(cmd.Context())
 			if err != nil {
-				logger.Error(err, "parser parsing error")
+				logger.Error(err, "Parser parsing error")
 				return err
 			}
 
 			logger.Info("Source code was parsed")
 
+			// check if the user has selected a target service to output
+			selectedService := services
+			if opts.Service != "" {
+				service, ok := services[opts.Service]
+				if !ok {
+					err := errors.Errorf("selected service %q was not found in the output", opts.Service)
+					logger.Error(err, "")
+					return err
+				}
+				selectedService = map[string]any{}
+				selectedService[opts.Service] = service
+			}
+
+			// Only print to file if the user has selected the to-file option
 			if opts.ToFile {
 				logger.Info("Generating specifications files in output directory.", "directory", generate.DefaultServiceDefinitionDir)
-				if err := generate.WriteSpecifications(nil, []byte(header), services, true, ".", opts.Formats...); err != nil {
-					logger.Error(err, "writing specification error")
+				if err := generate.WriteSpecifications(nil, []byte(header), selectedService, true, ".", opts.Formats...); err != nil {
+					logger.Error(err, "Generating specification file error")
 					return err
 				}
 				return nil
@@ -93,8 +107,8 @@ func specInitCmd(common *commonoptions.Options) *cobra.Command {
 			logger.Info("Printing result specification to stdout.")
 			writer := io.WriteCloser(os.Stdout)
 			defer writer.Close()
-			if err := generate.WriteSpecifications(writer, []byte(header), services, false, "", opts.Formats...); err != nil {
-				logger.Error(err, "writing specification error")
+			if err := generate.WriteSpecifications(writer, []byte(header), selectedService, false, "", opts.Formats...); err != nil {
+				logger.Error(err, "Writing specification to stdout error")
 				return err
 			}
 			return nil
