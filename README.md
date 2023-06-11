@@ -140,14 +140,11 @@ docker pull ghcr.io/tfadeyi/slotalk:latest
 
 <strong>Pre-released binaries</strong>
 
-Download a pre-compiled binary from the release page.
-
 <details>
      <summary><strong>Linux (x84_64)</strong></summary>
 
 ```shell
-  curl -L -o slotalk https://github.com/tfadeyi/slotalk/releases/download/latest/slotalk-linux-amd64.tar.gz
-  chmod +x slotalk
+  curl -s -L https://github.com/tfadeyi/slotalk/releases/latest/download/slotalk-linux-amd64.tar.gz | tar xzv
 ```
 
 </details>
@@ -156,8 +153,7 @@ Download a pre-compiled binary from the release page.
      <summary><strong>Linux (arm)</strong></summary>
 
 ```shell
-  curl -L -o slotalk https://github.com/tfadeyi/slotalk/releases/download/latest/slotalk-linux-arm.tar.gz
-  chmod +x slotalk
+  curl -s -L https://github.com/tfadeyi/slotalk/releases/latest/download/slotalk-linux-arm.tar.gz | tar xzv
 ```
 
 </details>
@@ -166,8 +162,7 @@ Download a pre-compiled binary from the release page.
      <summary><strong>Linux (arm64)</strong></summary>
 
 ```shell
-  curl -L -o slotalk https://github.com/tfadeyi/slotalk/releases/download/latest/slotalk-linux-arm64.tar.gz
-  chmod +x slotalk
+  curl -s -L https://github.com/tfadeyi/slotalk/releases/latest/download/slotalk-linux-arm64.tar.gz | tar xzv
 ```
 
 </details>
@@ -176,7 +171,7 @@ Download a pre-compiled binary from the release page.
      <summary><strong>MacOS (amd64)</strong></summary>
 
 ```shell
-  curl -L -o slotalk https://github.com/tfadeyi/slotalk/releases/download/latest/slotalk-darwin-amd64.tar.gz
+  curl -s -L https://github.com/tfadeyi/slotalk/releases/latest/download/slotalk-darwin-amd64.tar.gz | tar xzv
 ```
 
 </details>
@@ -185,7 +180,7 @@ Download a pre-compiled binary from the release page.
      <summary><strong>MacOS (Apple Silicon)</strong></summary>
 
 ```shell
-  curl -L -o slotalk https://github.com/tfadeyi/slotalk/releases/download/latest/slotalk-darwin-arm64.tar.gz
+  curl -s -L https://github.com/tfadeyi/slotalk/releases/latest/download/slotalk-darwin-arm64.tar.gz | tar xzv
 ```
 
 </details>
