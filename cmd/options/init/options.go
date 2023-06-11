@@ -22,6 +22,7 @@ type (
 		Source        string
 		SrcLanguage   lang.Target
 		Specification string
+		ToFile        bool
 		*common.Options
 	}
 )
@@ -101,5 +102,11 @@ func (o *Options) addAppFlags(fs *pflag.FlagSet) {
 		"f",
 		"",
 		"Source file to parse.",
+	)
+	fs.BoolVar(
+		&o.ToFile,
+		"to-file",
+		false,
+		"Print the generated specifications to file, under ./slo_definitions.",
 	)
 }

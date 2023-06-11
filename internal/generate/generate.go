@@ -14,8 +14,8 @@ import (
 	"strings"
 )
 
-// defaultServiceDefinitionDir is the default filename for the output file
-const defaultServiceDefinitionDir = "slo_definitions"
+// DefaultServiceDefinitionDir is the default filename for the output file
+const DefaultServiceDefinitionDir = "slo_definitions"
 
 // ErrUnsupportedFormat is returned if the output format is unsupported
 var ErrUnsupportedFormat = errors.New("the specification is in an invalid format")
@@ -42,7 +42,7 @@ func WriteSpecifications(writer io.Writer, header []byte, specs map[string]any, 
 				if err != nil {
 					return err
 				}
-				file := filepath.Join([]string{outputDirectory, defaultServiceDefinitionDir, fmt.Sprintf("%s.%s", specName, format)}...)
+				file := filepath.Join([]string{outputDirectory, DefaultServiceDefinitionDir, fmt.Sprintf("%s.%s", specName, format)}...)
 				files[file] = bytes.Join([][]byte{header, body}, []byte("\n"))
 				if err := clean(file); err != nil {
 					// @aloe code clean_artefacts_error
@@ -57,7 +57,7 @@ func WriteSpecifications(writer io.Writer, header []byte, specs map[string]any, 
 				if err != nil {
 					return err
 				}
-				file := filepath.Join([]string{outputDirectory, defaultServiceDefinitionDir, fmt.Sprintf("%s.%s", specName, format)}...)
+				file := filepath.Join([]string{outputDirectory, DefaultServiceDefinitionDir, fmt.Sprintf("%s.%s", specName, format)}...)
 				files[file] = bytes.Join([][]byte{header, body}, []byte("\n"))
 				if err := clean(file); err != nil {
 					return goaloe.DefaultOrDie().Error(err, "clean_artefacts_error")
