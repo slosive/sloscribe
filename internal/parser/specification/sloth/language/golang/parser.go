@@ -108,41 +108,58 @@ func getFile(name string, file io.ReadCloser) (*ast.File, error) {
 	return goparser.ParseFile(fset, name, file, goparser.ParseComments)
 }
 
-// getSpecs returns the parser specification struct
-func (p parser) getSpecs() map[string]*sloth.Spec {
-	return p.specs
-}
-
 // parseSlothAnnotations parses the source code comments for sloth annotations using the sloth grammar.
 // It expects only SLO definition per comment group
 func (p parser) parseSlothAnnotations(comments ...*ast.CommentGroup) error {
+	var currentServiceSpec *sloth.Spec
+
 	for _, comment := range comments {
-		newSpec, err := grammar.Eval(strings.TrimSpace(comment.Text()))
+		// partialServiceSpec contains the partially parsed sloth Specification for a given comment group
+		// this means the parsed spec will only contain data for the fields that are present in the comments, making the spec only partially accurate
+		partialServiceSpec, err := grammar.Eval(strings.TrimSpace(comment.Text()))
 		if err != nil {
 			p.warn(err)
 			continue
 		}
 
-		spec, ok := p.specs[newSpec.Service]
-		if !ok {
-			p.specs[newSpec.Service] = newSpec
-			spec = p.specs[newSpec.Service]
-		}
-
-		if spec.Service == "" {
-			spec.Service = newSpec.Service
-		}
-		if spec.Version == "" {
-			spec.Version = newSpec.Version
-		}
-		if spec.Labels == nil {
-			spec.Labels = newSpec.Labels
-		}
-
-		for _, slo := range newSpec.SLOs {
-			if slo.Name != "" {
-				spec.SLOs = append(spec.SLOs, slo)
+		// if the comment group contains a reference to the service name
+		// check if service was parsed before else add it the collection of specs.
+		// Set the found service spec as the current service spec.
+		if partialServiceSpec.Service != "" {
+			if currentServiceSpec != nil && (currentServiceSpec.Service == partialServiceSpec.Service || currentServiceSpec.Service == "") {
+				p.specs[partialServiceSpec.Service] = currentServiceSpec
 			}
+			spec, ok := p.specs[partialServiceSpec.Service]
+			if !ok {
+				p.specs[partialServiceSpec.Service] = partialServiceSpec
+				currentServiceSpec = partialServiceSpec
+			} else {
+				currentServiceSpec = spec
+			}
+		}
+
+		if currentServiceSpec == nil {
+			currentServiceSpec = &sloth.Spec{
+				Version: "",
+				Service: "",
+				Labels:  nil,
+				SLOs:    nil,
+			}
+		}
+
+		if currentServiceSpec.Service == "" {
+			currentServiceSpec.Service = partialServiceSpec.Service
+		}
+		if currentServiceSpec.Version == "" {
+			currentServiceSpec.Version = partialServiceSpec.Version
+		}
+		if currentServiceSpec.Labels == nil {
+			for key, label := range partialServiceSpec.Labels {
+				currentServiceSpec.Labels[key] = label
+			}
+		}
+		if currentServiceSpec.SLOs == nil {
+			currentServiceSpec.SLOs = append(currentServiceSpec.SLOs, partialServiceSpec.SLOs...)
 		}
 	}
 	return nil
@@ -166,6 +183,12 @@ func (p parser) Parse(ctx context.Context) (map[string]*sloth.Spec, error) {
 
 	applicationPackages := map[string]*ast.Package{}
 	for _, dir := range p.includedDirs {
+		// handle signals with context
+		select {
+		case <-ctx.Done():
+			return nil, errors.New("termination signal was received, terminating process...")
+		default:
+		}
 		if _, err := os.Stat(dir); errors.Is(err, os.ErrNotExist) {
 			// skip if dir doesn't exists
 			p.warn(err)
@@ -189,6 +212,12 @@ func (p parser) Parse(ctx context.Context) (map[string]*sloth.Spec, error) {
 	if len(applicationPackages) > 0 {
 		for _, pkg := range applicationPackages {
 			for _, file := range pkg.Files {
+				// handle signals with context
+				select {
+				case <-ctx.Done():
+					return nil, errors.New("termination signal was received, terminating process...")
+				default:
+				}
 				if err := p.parseSlothAnnotations(file.Comments...); err != nil {
 					p.warn(err)
 					continue

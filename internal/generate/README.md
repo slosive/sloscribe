@@ -12,7 +12,7 @@ Package generate contains utilities to generate data from a given specification
 
 - [Variables](<#variables>)
 - [func IsValidOutputFormat(format string) bool](<#func-isvalidoutputformat>)
-- [func WriteSpecification(spec any, stdout bool, out string, formats ...string) error](<#func-writespecification>)
+- [func WriteSpecifications(writer io.Writer, header []byte, specs map[string]any, toFile bool, outputDirectory string, formats ...string) error](<#func-writespecifications>)
 
 
 ## Variables
@@ -23,19 +23,19 @@ ErrUnsupportedFormat is returned if the output format is unsupported
 var ErrUnsupportedFormat = errors.New("the specification is in an invalid format")
 ```
 
-## func [IsValidOutputFormat](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/generate/generate.go#L24>)
+## func [IsValidOutputFormat](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/generate/generate.go#L23>)
 
 ```go
 func IsValidOutputFormat(format string) bool
 ```
 
-## func [WriteSpecification](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/generate/generate.go#L34>)
+## func [WriteSpecifications](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/generate/generate.go#L33>)
 
 ```go
-func WriteSpecification(spec any, stdout bool, out string, formats ...string) error
+func WriteSpecifications(writer io.Writer, header []byte, specs map[string]any, toFile bool, outputDirectory string, formats ...string) error
 ```
 
-WriteSpecification write the application bytes to a given writer
+WriteSpecifications write the service spec bytes to a specific writer, stdout or file
 
 
 

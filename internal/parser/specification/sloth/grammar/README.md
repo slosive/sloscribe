@@ -27,7 +27,7 @@ var (
 )
 ```
 
-## func [Eval](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/specification/sloth/grammar/grammar.go#L192>)
+## func [Eval](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/specification/sloth/grammar/grammar.go#L195>)
 
 ```go
 func Eval(source string, options ...participle.ParseOption) (*sloth.Spec, error)

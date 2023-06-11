@@ -34,6 +34,16 @@ func newParser(opts Options) *parser {
 }
 
 // Parse parses the sloth specification using the target language parser
-func (p parser) Parse(ctx context.Context) (any, error) {
-	return p.languageParser.Parse(ctx)
+func (p parser) Parse(ctx context.Context) (map[string]any, error) {
+	specs, err := p.languageParser.Parse(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	var results = make(map[string]any, len(specs))
+	for key, spec := range specs {
+		results[key] = spec
+	}
+
+	return results, nil
 }

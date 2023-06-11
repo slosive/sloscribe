@@ -9,9 +9,9 @@ code: write_artefacts_error
 
 ### Summary
 
-The tool has failed to print out the Sloth definitions for service.
+The tool has failed to print outputDirectory the Sloth definitions for service.
 
 ### Details
 
-The tool has failed to print out the Sloth definitions for service.
+The tool has failed to print outputDirectory the Sloth definitions for service.
 

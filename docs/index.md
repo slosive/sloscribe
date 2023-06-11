@@ -5,7 +5,7 @@ title: slotalk
 ## slotalk
 
 **Application**: slotalk
-**Version**: v0.0.3
+**Version**: v0.1.0-alpha.1
 
 ### Description
 
@@ -22,5 +22,5 @@ Generate Sloth SLO/SLI definitions from code annotations.
 
   * [**unsupported_output_format**](./errors_definitions/unsupported_output_format): The format passed to the --format flag is not supported.
 
-  * [**write_artefacts_error**](./errors_definitions/write_artefacts_error): The tool has failed to print out the Sloth definitions for service.
+  * [**write_artefacts_error**](./errors_definitions/write_artefacts_error): The tool has failed to print outputDirectory the Sloth definitions for service.
 

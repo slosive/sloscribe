@@ -173,7 +173,10 @@ func (g Grammar) parse() (*sloth.Spec, error) {
 		}
 	}
 
-	spec.SLOs = []sloth.SLO{*slo}
+	if slo.Name != "" {
+		spec.SLOs = []sloth.SLO{*slo}
+	}
+
 	return spec, nil
 }
 

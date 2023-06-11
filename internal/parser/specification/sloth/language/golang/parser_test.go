@@ -84,7 +84,32 @@ package fixtures
 func TestParseAnnotations(t *testing.T) {
 	t.Parallel()
 
-	t.Run("Successfully parse the sloth annotations per single commentGroup", func(t *testing.T) {
+	t.Run("Successfully parse the sloth annotations per single commentGroup, should return 1 specification", func(t *testing.T) {
+		parser := NewParser(nil)
+		require.NoError(t, parser.parseSlothAnnotations(&ast.CommentGroup{List: []*ast.Comment{{Text: `@sloth service foobar`}}},
+			&ast.CommentGroup{List: []*ast.Comment{
+				{
+					Text: `@sloth.slo name availability`,
+				},
+				{
+					Text: `@sloth.slo description availability SLO`,
+				},
+				{
+					Text: `@sloth.slo objective 95.0`,
+				},
+			}}))
+		assert.Equal(t, "foobar", parser.specs["foobar"].Service)
+		assert.Equal(t, sloth.SLO{
+			Name:        "availability",
+			Description: "availability SLO",
+			Objective:   95.0,
+			Labels:      make(map[string]string),
+			SLI:         sloth.SLI{},
+			Alerting:    sloth.Alerting{},
+		}, parser.specs["foobar"].SLOs[0])
+	})
+
+	t.Run("Successfully parse the sloth annotations per single commentGroup, should return 1 specification", func(t *testing.T) {
 		parser := NewParser(nil)
 		require.NoError(t, parser.parseSlothAnnotations(&ast.CommentGroup{List: []*ast.Comment{
 			{
@@ -100,7 +125,7 @@ func TestParseAnnotations(t *testing.T) {
 				Text: `@sloth.slo objective 95.0`,
 			},
 		}}))
-		assert.Equal(t, "foobar", parser.getSpecs()["foobar"].Service)
+		assert.Equal(t, "foobar", parser.specs["foobar"].Service)
 		assert.Equal(t, sloth.SLO{
 			Name:        "availability",
 			Description: "availability SLO",
@@ -108,26 +133,108 @@ func TestParseAnnotations(t *testing.T) {
 			Labels:      make(map[string]string),
 			SLI:         sloth.SLI{},
 			Alerting:    sloth.Alerting{},
-		}, parser.getSpecs()["foobar"].SLOs[0])
+		}, parser.specs["foobar"].SLOs[0])
 	})
 
-	t.Run("Successfully parse multiple Sloth services, should return 3", func(t *testing.T) {
+	t.Run("Successfully parse sloth service if service name is defined after slo definition", func(t *testing.T) {
 		parser := NewParser(nil)
-		require.NoError(t, parser.parseSlothAnnotations(&ast.CommentGroup{List: []*ast.Comment{
+		comments := []*ast.CommentGroup{
+			{List: []*ast.Comment{
+				{
+					Text: `@sloth.slo name availability`,
+				},
+				{
+					Text: `@sloth.slo description availability SLO for foobar service`,
+				},
+				{
+					Text: `@sloth.slo objective 95.0`,
+				},
+			}},
+			{List: []*ast.Comment{
+				{
+					Text: `@sloth service foobar`,
+				},
+			}},
+		}
+		require.NoError(t, parser.parseSlothAnnotations(comments...))
+		require.Len(t, parser.specs, 1)
+		resultSpec := parser.specs
+
+		expected := []*sloth.Spec{
 			{
-				Text: `@sloth service foo`,
+				Version: sloth.Version,
+				Service: "foobar",
+				Labels:  nil,
+				SLOs: []sloth.SLO{
+					{
+						Name:        "availability",
+						Description: "availability SLO for foobar service",
+						Objective:   95.0,
+						Labels:      make(map[string]string),
+						SLI: sloth.SLI{
+							Raw:    nil,
+							Events: nil,
+							Plugin: nil,
+						},
+						Alerting: sloth.Alerting{
+							Name:        "",
+							Labels:      nil,
+							Annotations: nil,
+							PageAlert: sloth.Alert{
+								Disable:     false,
+								Labels:      nil,
+								Annotations: nil,
+							},
+							TicketAlert: sloth.Alert{
+								Disable:     false,
+								Labels:      nil,
+								Annotations: nil,
+							},
+						},
+					},
+				},
 			},
-			{
-				Text: `@sloth.slo name availability`,
-			},
-			{
-				Text: `@sloth.slo description availability SLO`,
-			},
-			{
-				Text: `@sloth.slo objective 95.0`,
-			},
-		}},
-			&ast.CommentGroup{List: []*ast.Comment{
+		}
+
+		for _, exp := range expected {
+			actual, ok := resultSpec[exp.Service]
+			require.True(t, ok)
+			assert.Equal(t, exp, actual)
+		}
+	})
+
+	t.Run("Successfully parse multiple Sloth services, should return 3 specifications", func(t *testing.T) {
+		parser := NewParser(nil)
+		comments := []*ast.CommentGroup{
+			{List: []*ast.Comment{
+				{
+					Text: `@sloth service foobar`,
+				},
+				{
+					Text: `@sloth.slo name availability`,
+				},
+				{
+					Text: `@sloth.slo description availability SLO for foobar service`,
+				},
+				{
+					Text: `@sloth.slo objective 95.0`,
+				},
+			}},
+			{List: []*ast.Comment{
+				{
+					Text: `@sloth service foo`,
+				},
+				{
+					Text: `@sloth.slo name availability`,
+				},
+				{
+					Text: `@sloth.slo description availability SLO for foo service`,
+				},
+				{
+					Text: `@sloth.slo objective 95.0`,
+				},
+			}},
+			{List: []*ast.Comment{
 				{
 					Text: `@sloth service bar`,
 				},
@@ -135,80 +242,218 @@ func TestParseAnnotations(t *testing.T) {
 					Text: `@sloth.slo name availability`,
 				},
 				{
-					Text: `@sloth.slo description availability SLO`,
+					Text: `@sloth.slo description availability SLO for bar service`,
 				},
 				{
 					Text: `@sloth.slo objective 95.0`,
 				},
 			}},
-		))
-		assert.Len(t, parser.getSpecs(), 3)
-		//assert.Equal(t, "foobar", parser.getSpecs()["foobar"].Service)
-		//assert.Equal(t, sloth.SLO{
-		//	Name:        "availability",
-		//	Description: "availability SLO",
-		//	Objective:   95.0,
-		//	Labels:      make(map[string]string),
-		//	SLI:         sloth.SLI{},
-		//	Alerting:    sloth.Alerting{},
-		//}, parser.getSpecs()["foobar"].SLOs[0])
+		}
+		require.NoError(t, parser.parseSlothAnnotations(comments...))
+		require.Len(t, parser.specs, 3)
+		resultSpec := parser.specs
+
+		expected := []*sloth.Spec{
+			{
+				Version: sloth.Version,
+				Service: "foo",
+				Labels:  nil,
+				SLOs: []sloth.SLO{
+					{
+						Name:        "availability",
+						Description: "availability SLO for foo service",
+						Objective:   95.0,
+						Labels:      make(map[string]string),
+						SLI: sloth.SLI{
+							Raw:    nil,
+							Events: nil,
+							Plugin: nil,
+						},
+						Alerting: sloth.Alerting{
+							Name:        "",
+							Labels:      nil,
+							Annotations: nil,
+							PageAlert: sloth.Alert{
+								Disable:     false,
+								Labels:      nil,
+								Annotations: nil,
+							},
+							TicketAlert: sloth.Alert{
+								Disable:     false,
+								Labels:      nil,
+								Annotations: nil,
+							},
+						},
+					},
+				},
+			},
+			{
+				Version: sloth.Version,
+				Service: "bar",
+				Labels:  nil,
+				SLOs: []sloth.SLO{
+					{
+						Name:        "availability",
+						Description: "availability SLO for bar service",
+						Objective:   95.0,
+						Labels:      make(map[string]string),
+						SLI: sloth.SLI{
+							Raw:    nil,
+							Events: nil,
+							Plugin: nil,
+						},
+						Alerting: sloth.Alerting{
+							Name:        "",
+							Labels:      nil,
+							Annotations: nil,
+							PageAlert: sloth.Alert{
+								Disable:     false,
+								Labels:      nil,
+								Annotations: nil,
+							},
+							TicketAlert: sloth.Alert{
+								Disable:     false,
+								Labels:      nil,
+								Annotations: nil,
+							},
+						},
+					},
+				},
+			},
+			{
+				Version: sloth.Version,
+				Service: "foobar",
+				Labels:  nil,
+				SLOs: []sloth.SLO{
+					{
+						Name:        "availability",
+						Description: "availability SLO for foobar service",
+						Objective:   95.0,
+						Labels:      make(map[string]string),
+						SLI: sloth.SLI{
+							Raw:    nil,
+							Events: nil,
+							Plugin: nil,
+						},
+						Alerting: sloth.Alerting{
+							Name:        "",
+							Labels:      nil,
+							Annotations: nil,
+							PageAlert: sloth.Alert{
+								Disable:     false,
+								Labels:      nil,
+								Annotations: nil,
+							},
+							TicketAlert: sloth.Alert{
+								Disable:     false,
+								Labels:      nil,
+								Annotations: nil,
+							},
+						},
+					},
+				},
+			},
+		}
+
+		for _, exp := range expected {
+			actual, ok := resultSpec[exp.Service]
+			require.True(t, ok)
+			assert.Equal(t, exp, actual)
+		}
 	})
 
-	//t.Run("Fail to parse the sloth annotations for a given SLO if no SLO name was given", func(t *testing.T) {
-	//	parser := NewParser(nil)
-	//	require.NoError(t, parser.parseSlothAnnotations(&ast.CommentGroup{List: []*ast.Comment{
-	//		{
-	//			Text: `@sloth.slo description availability SLO`,
-	//		},
-	//		{
-	//			Text: `@sloth.slo objective 95.0`,
-	//		},
-	//	}}))
-	//	assert.Len(t, parser.getSpecs().SLOs, 0)
-	//})
-	//
-	//t.Run("Successfully parse the sloth annotations per multiple commentGroups", func(t *testing.T) {
-	//	parser := NewParser(nil)
-	//	require.NoError(t, parser.parseSlothAnnotations(
-	//		&ast.CommentGroup{List: []*ast.Comment{
-	//			{
-	//				Text: `@sloth.slo name availability`,
-	//			},
-	//			{
-	//				Text: `@sloth.slo description availability SLO`,
-	//			},
-	//			{
-	//				Text: `@sloth.slo objective 95.0`,
-	//			},
-	//		},
-	//		},
-	//		&ast.CommentGroup{List: []*ast.Comment{
-	//			{
-	//				Text: `@sloth.slo name freshness`,
-	//			},
-	//			{
-	//				Text: `@sloth.slo description freshness SLO`,
-	//			},
-	//			{
-	//				Text: `@sloth.slo objective 95.0`,
-	//			},
-	//		}},
-	//	))
-	//	assert.Equal(t, sloth.SLO{
-	//		Name:        "availability",
-	//		Description: "availability SLO",
-	//		Objective:   95.0,
-	//		Labels:      make(map[string]string),
-	//		SLI:         sloth.SLI{},
-	//		Alerting:    sloth.Alerting{},
-	//	}, parser.getSpecs().SLOs[0])
-	//	assert.Equal(t, sloth.SLO{
-	//		Name:        "freshness",
-	//		Description: "freshness SLO",
-	//		Objective:   95.0,
-	//		Labels:      make(map[string]string),
-	//		SLI:         sloth.SLI{},
-	//		Alerting:    sloth.Alerting{},
-	//	}, parser.getSpecs().SLOs[1])
-	//})
+	t.Run("Fail to parse the sloth spec SLO item if sloth annotation name for a given SLO is missing", func(t *testing.T) {
+		parser := NewParser(nil)
+		require.NoError(t, parser.parseSlothAnnotations(&ast.CommentGroup{List: []*ast.Comment{
+			{
+				Text: `@sloth service bar`,
+			},
+			{
+				Text: `@sloth.slo description availability SLO`,
+			},
+			{
+				Text: `@sloth.slo objective 95.0`,
+			},
+		}}))
+		assert.Len(t, parser.specs["bar"].SLOs, 0)
+	})
+
+	t.Run("Successfully parse duplicate Sloth service without overriding the original service", func(t *testing.T) {
+		parser := NewParser(nil)
+		comments := []*ast.CommentGroup{
+			{List: []*ast.Comment{
+				{
+					Text: `@sloth service foobar`,
+				},
+				{
+					Text: `@sloth.slo name availability`,
+				},
+				{
+					Text: `@sloth.slo description availability SLO for foobar service`,
+				},
+				{
+					Text: `@sloth.slo objective 95.0`,
+				},
+			}},
+			{List: []*ast.Comment{
+				{
+					Text: `@sloth service foobar`,
+				},
+				{
+					Text: `@sloth.slo name foobar_availability`,
+				},
+				{
+					Text: `@sloth.slo description availability SLO for foobar service`,
+				},
+				{
+					Text: `@sloth.slo objective 99.0`,
+				},
+			}},
+		}
+		require.NoError(t, parser.parseSlothAnnotations(comments...))
+		require.Len(t, parser.specs, 1)
+		resultSpec := parser.specs
+
+		expected := []*sloth.Spec{
+			{
+				Version: sloth.Version,
+				Service: "foobar",
+				Labels:  nil,
+				SLOs: []sloth.SLO{
+					{
+						Name:        "availability",
+						Description: "availability SLO for foobar service",
+						Objective:   95.0,
+						Labels:      make(map[string]string),
+						SLI: sloth.SLI{
+							Raw:    nil,
+							Events: nil,
+							Plugin: nil,
+						},
+						Alerting: sloth.Alerting{
+							Name:        "",
+							Labels:      nil,
+							Annotations: nil,
+							PageAlert: sloth.Alert{
+								Disable:     false,
+								Labels:      nil,
+								Annotations: nil,
+							},
+							TicketAlert: sloth.Alert{
+								Disable:     false,
+								Labels:      nil,
+								Annotations: nil,
+							},
+						},
+					},
+				},
+			},
+		}
+
+		for _, exp := range expected {
+			actual, ok := resultSpec[exp.Service]
+			require.True(t, ok)
+			assert.Equal(t, exp, actual)
+		}
+	})
 }

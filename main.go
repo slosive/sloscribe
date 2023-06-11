@@ -38,7 +38,7 @@ import (
 
 // @aloe name slotalk
 // @aloe url https://tfadeyi.github.io
-// @aloe version v0.0.3
+// @aloe version v0.1.0-alpha.1
 // @aloe description Generate Sloth SLO/SLI definitions from code annotations.
 
 func main() {

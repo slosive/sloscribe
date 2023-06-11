@@ -43,9 +43,6 @@ schema = 3
   [mod."github.com/stretchr/testify"]
     version = "v1.8.3"
     hash = "sha256-7U008LCuOyALE/T2mw4Ag7CVoAE2xUe/DNYzgbWfMtM="
-  [mod."github.com/tetratelabs/wazero"]
-    version = "v1.1.0"
-    hash = "sha256-kU6hubNum7bBFkKo6VqNUkA7xm9iKhY49GbpZ6oUMck="
   [mod."github.com/tfadeyi/go-aloe"]
     version = "v0.0.2"
     hash = "sha256-ysaV7IF6m9p2MYzy15YfCLnpgliSzhj1fDxCdEA1T7g="

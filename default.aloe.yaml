@@ -31,8 +31,8 @@ errors_definitions:
         title: Unsupported Output Format Error
     write_artefacts_error:
         code: write_artefacts_error
-        details: The tool has failed to print out the Sloth definitions for service.
-        summary: The tool has failed to print out the Sloth definitions for service.
+        details: The tool has failed to print outputDirectory the Sloth definitions for service.
+        summary: The tool has failed to print outputDirectory the Sloth definitions for service.
         title: Error Creating Artefacts
 name: slotalk
-version: v0.0.3
+version: v0.1.0-alpha.1

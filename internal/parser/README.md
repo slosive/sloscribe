@@ -10,7 +10,7 @@ import "github.com/tfadeyi/slotalk/internal/parser"
 
 - [type Parser](<#type-parser>)
   - [func New(opts ...options.Option) (*Parser, error)](<#func-new>)
-  - [func (p *Parser) Parse(ctx context.Context) (any, error)](<#func-parser-parse>)
+  - [func (p *Parser) Parse(ctx context.Context) (map[string]any, error)](<#func-parser-parse>)
 
 
 ## type [Parser](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/parser.go#L12-L16>)
@@ -36,7 +36,7 @@ New creates a new instance of the parser. See options.Option for more info on th
 ### func \(\*Parser\) [Parse](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/parser.go#L37>)
 
 ```go
-func (p *Parser) Parse(ctx context.Context) (any, error)
+func (p *Parser) Parse(ctx context.Context) (map[string]any, error)
 ```
 
 Parse parses the data source for the target annotations using the given parser configurations and returns a parsed specification.

@@ -18,7 +18,7 @@ Target is the specification target interface, it defines the specification targe
 ```go
 type Target interface {
     // Parse returns a specification struct given a data source, returns error if parsing fails
-    Parse(ctx context.Context) (any, error)
+    Parse(ctx context.Context) (map[string]any, error)
 }
 ```
 
