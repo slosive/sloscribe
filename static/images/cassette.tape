@@ -1,8 +1,10 @@
 Output simple-usage-example.gif
 
 Set TypingSpeed 100ms
-Set Height 1000
-Set Width 1000
+Set Height 500
+Set Width 700
+Set FontSize 10
+Set Theme "Aurora"
 Require slotalk
 
 Type "tree"
@@ -23,9 +25,6 @@ Sleep 1s
 Type "tree"
 Enter
 Sleep 3.5s
-Type "cat slo_definitions/app1.yaml"
-Enter
-Sleep 500ms
 Type "cat slo_definitions/app1.yaml"
 Enter
 Sleep 500ms
