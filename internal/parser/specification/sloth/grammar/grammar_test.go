@@ -10,7 +10,8 @@ func TestGrammar(t *testing.T) {
 	t.Parallel()
 
 	t.Run("Successfully parse sloth definitions for slo description in multiline comment", func(t *testing.T) {
-		spec, err := Eval(`@sloth.slo description Common SLO
+		spec, err := Eval(`@sloth.slo name common
+@sloth.slo description Common SLO
 based on availability
 for Kubernetes apiserver
 HTTP request responses`)

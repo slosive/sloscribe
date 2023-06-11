@@ -18,7 +18,7 @@ import (
 )
 
 type parser struct {
-	spec          *sloth.Spec
+	specs         map[string]*sloth.Spec
 	sourceFile    string
 	sourceContent io.ReadCloser
 	includedDirs  []string
@@ -56,12 +56,7 @@ func NewParser(opts *Options) *parser {
 	sourceContent := opts.SourceContent
 
 	return &parser{
-		spec: &sloth.Spec{
-			Version: sloth.Version,
-			Service: "",
-			Labels:  nil,
-			SLOs:    nil,
-		},
+		specs:         map[string]*sloth.Spec{},
 		sourceFile:    sourceFile,
 		sourceContent: sourceContent,
 		includedDirs:  dirs,
@@ -113,35 +108,58 @@ func getFile(name string, file io.ReadCloser) (*ast.File, error) {
 	return goparser.ParseFile(fset, name, file, goparser.ParseComments)
 }
 
-// getSpec returns the parser specification struct
-func (p parser) getSpec() *sloth.Spec {
-	return p.spec
-}
-
 // parseSlothAnnotations parses the source code comments for sloth annotations using the sloth grammar.
 // It expects only SLO definition per comment group
 func (p parser) parseSlothAnnotations(comments ...*ast.CommentGroup) error {
+	var currentServiceSpec *sloth.Spec
+
 	for _, comment := range comments {
-		newSpec, err := grammar.Eval(strings.TrimSpace(comment.Text()))
+		// partialServiceSpec contains the partially parsed sloth Specification for a given comment group
+		// this means the parsed spec will only contain data for the fields that are present in the comments, making the spec only partially accurate
+		partialServiceSpec, err := grammar.Eval(strings.TrimSpace(comment.Text()))
 		if err != nil {
 			p.warn(err)
 			continue
 		}
 
-		if p.spec.Service == "" {
-			p.spec.Service = newSpec.Service
-		}
-		if p.spec.Version == "" {
-			p.spec.Version = newSpec.Version
-		}
-		if p.spec.Labels == nil {
-			p.spec.Labels = newSpec.Labels
+		// if the comment group contains a reference to the service name
+		// check if service was parsed before else add it the collection of specs.
+		// Set the found service spec as the current service spec.
+		if partialServiceSpec.Service != "" {
+			if currentServiceSpec != nil && (currentServiceSpec.Service == partialServiceSpec.Service || currentServiceSpec.Service == "") {
+				p.specs[partialServiceSpec.Service] = currentServiceSpec
+			}
+			spec, ok := p.specs[partialServiceSpec.Service]
+			if !ok {
+				p.specs[partialServiceSpec.Service] = partialServiceSpec
+				currentServiceSpec = partialServiceSpec
+			} else {
+				currentServiceSpec = spec
+			}
 		}
 
-		for _, slo := range newSpec.SLOs {
-			if slo.Name != "" {
-				p.spec.SLOs = append(p.spec.SLOs, slo)
+		if currentServiceSpec == nil {
+			currentServiceSpec = &sloth.Spec{
+				Version: "",
+				Service: "",
+				Labels:  nil,
+				SLOs:    nil,
 			}
+		}
+
+		if currentServiceSpec.Service == "" {
+			currentServiceSpec.Service = partialServiceSpec.Service
+		}
+		if currentServiceSpec.Version == "" {
+			currentServiceSpec.Version = partialServiceSpec.Version
+		}
+		if currentServiceSpec.Labels == nil {
+			for key, label := range partialServiceSpec.Labels {
+				currentServiceSpec.Labels[key] = label
+			}
+		}
+		if currentServiceSpec.SLOs == nil {
+			currentServiceSpec.SLOs = append(currentServiceSpec.SLOs, partialServiceSpec.SLOs...)
 		}
 	}
 	return nil
@@ -149,7 +167,7 @@ func (p parser) parseSlothAnnotations(comments ...*ast.CommentGroup) error {
 
 // Parse will parse the source code for sloth annotations.
 // In case of error during parsing, Parse returns an empty sloth.Spec
-func (p parser) Parse(ctx context.Context) (*sloth.Spec, error) {
+func (p parser) Parse(ctx context.Context) (map[string]*sloth.Spec, error) {
 	// collect all sloth annotations from the file and add them to the spec struct
 	if p.sourceFile != "" || p.sourceContent != nil {
 		file, err := getFile(p.sourceFile, p.sourceContent)
@@ -160,11 +178,17 @@ func (p parser) Parse(ctx context.Context) (*sloth.Spec, error) {
 		if err := p.parseSlothAnnotations(file.Comments...); err != nil {
 			return nil, err
 		}
-		return p.spec, nil
+		return p.specs, nil
 	}
 
 	applicationPackages := map[string]*ast.Package{}
 	for _, dir := range p.includedDirs {
+		// handle signals with context
+		select {
+		case <-ctx.Done():
+			return nil, errors.New("termination signal was received, terminating process...")
+		default:
+		}
 		if _, err := os.Stat(dir); errors.Is(err, os.ErrNotExist) {
 			// skip if dir doesn't exists
 			p.warn(err)
@@ -188,6 +212,12 @@ func (p parser) Parse(ctx context.Context) (*sloth.Spec, error) {
 	if len(applicationPackages) > 0 {
 		for _, pkg := range applicationPackages {
 			for _, file := range pkg.Files {
+				// handle signals with context
+				select {
+				case <-ctx.Done():
+					return nil, errors.New("termination signal was received, terminating process...")
+				default:
+				}
 				if err := p.parseSlothAnnotations(file.Comments...); err != nil {
 					p.warn(err)
 					continue
@@ -196,7 +226,7 @@ func (p parser) Parse(ctx context.Context) (*sloth.Spec, error) {
 		}
 	}
 
-	return p.spec, nil
+	return p.specs, nil
 }
 
 func (p parser) warn(err error, keyValues ...interface{}) {

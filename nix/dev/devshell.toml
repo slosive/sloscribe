@@ -29,7 +29,8 @@ echo "preparing the project:" \
 go fmt ./... && \
 make generate && \
 make lint && \
-make test
+make test &&
+gomod2nix
 '
 """
 startup.build.text = "alias build='make build'"
