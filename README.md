@@ -19,9 +19,14 @@
 
 Slotalk is a CLI tool that allows developers to embed [Sloth](https://github.com/slok/sloth) SLO/SLI [specifications](https://github.com/slok/sloth/blob/main/pkg/prometheus/api/v1/README.md) as in-code annotations rather than a YAML file.
 
+<p align="center">
+<img src="./static/images/simple-usage-example.gif">
+</p>
+
 Similar to how [Swaggo](https://github.com/swaggo/swag) does for Swagger docs,  Slotalk moves the SLO/SLI specification closer to where its relevant Prometheus metric was defined.
 
 Slotalk can be used in tandem with the [Sloth CLI](https://github.com/slok/sloth#getting-started) to generate Prometheus alerts groups from the in-code annotations, which can be used in any Prometheus/Grafana monitoring system to keep track of the service's SLOs. See examples below.
+
 
 
 ## Motivation
