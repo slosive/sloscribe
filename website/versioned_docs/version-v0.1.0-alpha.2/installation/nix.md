@@ -2,15 +2,38 @@
 sidebar_position: 2
 ---
 
-# Help Command
+# Nix
 
-The `help` command will return the list of available CLI commands.
+You can run **slotalk** into your machine using `nix`.
+
+This method won't install the binary in the host machine per se, nix gives you an ephemeral way of running the binary
+but work is coming that will the tool available through `nixpkgs`.
+
+## Requirements
+
+To install the tool using this method you'll require:
+
+* Nix 2.+
+
+Present on your host machine.
+
+## Running slotalk with Nix
+
+Simply run, in your terminal:
 
 ```shell
-slotalk help
+nix run github:tfadeyi/slotalk
 ```
 
-Output:
+This gives you an ephemeral way to run slotalk, so you can try out the tool without installing it.
+
+## Try it!
+
+```shell
+nix run github:tfadeyi/slotalk --help
+```
+
+The binary should return something similar to:
 
 ```shell
 Generate Sloth SLO/SLI definitions from code annotations.
@@ -29,26 +52,4 @@ Flags:
       --log-level string   Only log messages with the given severity or above. One of: [none, debug, info, warn], errors will always be printed (default "info")
 
 Use "slotalk [command] --help" for more information about a command.
-```
-
-To view information about a specific command the `--help` flag can be passed, this will return
-the list child commands and flags.
-
-```shell
-slotalk version --help
-```
-
-Output:
-
-```shell
-Returns the binary build information.
-
-Usage:
-  slotalk version [flags]
-
-Flags:
-  -h, --help   help for version
-
-Global Flags:
-      --log-level string   Only log messages with the given severity or above. One of: [none, debug, info, warn], errors will always be printed (default "info")
 ```

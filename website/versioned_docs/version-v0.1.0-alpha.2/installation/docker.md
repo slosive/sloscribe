@@ -1,16 +1,38 @@
 ---
-sidebar_position: 2
+sidebar_position: 3
 ---
 
-# Help Command
+# Docker 🐋
 
-The `help` command will return the list of available CLI commands.
+You can run **slotalk** into your machine using `docker`.
+
+This method won't install the binary in the host machine per se, but it will run the binary in a container.
+
+## Requirements
+
+To install the tool using this method you'll require:
+
+* Docker
+
+Present on your host machine.
+
+## Running slotalk with Nix
+
+Simply run, in your terminal:
 
 ```shell
-slotalk help
+docker run docker ghcr.io/tfadeyi/slotalk:latest
 ```
 
-Output:
+This gives you an ephemeral way to run slotalk, so you can try out the tool without installing it.
+
+## Try it!
+
+```shell
+docker run docker ghcr.io/tfadeyi/slotalk:latest --help
+```
+
+The binary should return something similar to:
 
 ```shell
 Generate Sloth SLO/SLI definitions from code annotations.
@@ -29,26 +51,4 @@ Flags:
       --log-level string   Only log messages with the given severity or above. One of: [none, debug, info, warn], errors will always be printed (default "info")
 
 Use "slotalk [command] --help" for more information about a command.
-```
-
-To view information about a specific command the `--help` flag can be passed, this will return
-the list child commands and flags.
-
-```shell
-slotalk version --help
-```
-
-Output:
-
-```shell
-Returns the binary build information.
-
-Usage:
-  slotalk version [flags]
-
-Flags:
-  -h, --help   help for version
-
-Global Flags:
-      --log-level string   Only log messages with the given severity or above. One of: [none, debug, info, warn], errors will always be printed (default "info")
 ```
