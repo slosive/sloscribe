@@ -8,10 +8,10 @@ Let's discover **Slotalk in less than 5 minutes**.
 
 ## Getting Started
 
-Get started by [**installing slotalk**](category/installation).
+Get started by [**installing slotalk**](/docs/installation/go).
 
 ## Add slotalk annotations to your codebase
-Add comments to your source code. See [**declarative comments**](category/annotations/sloth).
+Add comments to your source code. See [**declarative comments**](/docs/annotations/sloth/service).
 
 **metric.go**
 ```go
