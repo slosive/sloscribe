@@ -137,6 +137,14 @@ docker pull ghcr.io/tfadeyi/slotalk:latest
 
 </details>
 
+<details>
+     <summary><strong>Install Script</strong></summary>
+
+```shell
+curl -sfL https://raw.githubusercontent.com/tfadeyi/slotalk/main/install.sh | sh -
+```
+
+</details>
 
 <strong>Pre-released binaries</strong>
 
