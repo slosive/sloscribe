@@ -10,8 +10,21 @@ Package version, returns the build info of the binary
 
 ## Index
 
+- [Variables](<#variables>)
 - [func BuildInfo\(\) string](<#BuildInfo>)
 
+
+## Variables
+
+<a name="Version"></a>Values injected at build\-time
+
+```go
+var (
+    Version string = "dev"
+    Commit  string = "unknown"
+    Date    string = "unknown"
+)
+```
 
 <a name="BuildInfo"></a>
 ## func [BuildInfo](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/version/version.go#L13>)

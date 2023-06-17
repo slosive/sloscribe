@@ -62,7 +62,7 @@ func (l *Logger) Warn(err error, keysAndValues ...interface{}) {
 
 // Debug logs the message using the info debug level (1)
 func (l *Logger) Debug(msg string, keysAndValues ...interface{}) {
-	l.V(int(stdr.All)).Info(msg, keysAndValues...)
+	l.V(5).Info(msg, keysAndValues...)
 }
 
 func findLogLevel(lvl string) stdr.MessageClass {
@@ -70,7 +70,7 @@ func findLogLevel(lvl string) stdr.MessageClass {
 	case "info":
 		return stdr.Info
 	case "debug":
-		return stdr.All
+		return stdr.MessageClass(5)
 	case "warn":
 		return stdr.Error
 	case "none":

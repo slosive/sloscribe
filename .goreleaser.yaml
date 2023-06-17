@@ -10,7 +10,7 @@ builds:
     flags:
       - -trimpath
     ldflags:
-      - -s -w -X "internal/version.version={{.Version}}" -X "internal/version.commit={{.Commit}}" -X "internal/version.date={{.Date}}"
+      - -s -w -X "github.com/tfadeyi/slotalk/internal/version.Platform={{ .Os }}/{{ .Arch }}" github.com/tfadeyi/slotalk/internal/version.Version={{.Version}}" -X "github.com/tfadeyi/slotalk/internal/version.Commit={{.Commit}}" -X "github.com/tfadeyi/slotalk/internal/version.Date={{.Date}}"
     binary: "{{ .ProjectName }}"
     goos:
       - linux
@@ -25,7 +25,7 @@ builds:
     flags:
       - -trimpath
     ldflags:
-      - -s -w -X "internal/version.version={{.Version}}" -X "internal/version.commit={{.Commit}}" -X "internal/version.date={{.Date}}"
+      - -s -w -X "github.com/tfadeyi/slotalk/internal/version.Version={{.Version}}" -X "github.com/tfadeyi/slotalk/internal/version.Commit={{.Commit}}" -X "github.com/tfadeyi/slotalk/internal/version.Date={{.Date}}"
     binary: "{{ .ProjectName }}"
     goos:
       - darwin
