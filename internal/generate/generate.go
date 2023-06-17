@@ -58,7 +58,7 @@ func WriteSpecifications(writer io.Writer, header []byte, specs map[string]any, 
 					return err
 				}
 				file := filepath.Join([]string{outputDirectory, DefaultServiceDefinitionDir, fmt.Sprintf("%s.%s", specName, format)}...)
-				files[file] = bytes.Join([][]byte{header, body}, []byte("\n"))
+				files[file] = bytes.Join([][]byte{[]byte("---"), header, body}, []byte("\n"))
 				if err := clean(file); err != nil {
 					return goaloe.DefaultOrDie().Error(err, "clean_artefacts_error")
 				}
