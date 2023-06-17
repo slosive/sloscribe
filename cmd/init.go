@@ -82,22 +82,26 @@ func specInitCmd(common *commonoptions.Options) *cobra.Command {
 			logger.Info("Source code was parsed")
 
 			// check if the user has selected a target service to output
-			selectedService := services
-			if opts.Service != "" {
-				service, ok := services[opts.Service]
-				if !ok {
-					err := errors.Errorf("selected service %q was not found in the output", opts.Service)
-					logger.Error(err, "")
-					return err
+			selectedServices := services
+			for index, serviceName := range opts.Services {
+				// clear out the selectedServices
+				if index == 0 {
+					selectedServices = map[string]any{}
 				}
-				selectedService = map[string]any{}
-				selectedService[opts.Service] = service
+
+				service, ok := services[serviceName]
+				if !ok {
+					err := errors.Errorf("selected service %q was not found in the parser output", serviceName)
+					logger.Warn(err, "")
+				} else {
+					selectedServices[serviceName] = service
+				}
 			}
 
 			// Only print to file if the user has selected the to-file option
 			if opts.ToFile {
 				logger.Info("Generating specifications files in output directory.", "directory", generate.DefaultServiceDefinitionDir)
-				if err := generate.WriteSpecifications(nil, []byte(header), selectedService, true, ".", opts.Formats...); err != nil {
+				if err := generate.WriteSpecifications(nil, []byte(header), selectedServices, true, ".", opts.Formats...); err != nil {
 					logger.Error(err, "Generating specification file error")
 					return err
 				}
@@ -107,7 +111,7 @@ func specInitCmd(common *commonoptions.Options) *cobra.Command {
 			logger.Info("Printing result specification to stdout.")
 			writer := io.WriteCloser(os.Stdout)
 			defer writer.Close()
-			if err := generate.WriteSpecifications(writer, []byte(header), selectedService, false, "", opts.Formats...); err != nil {
+			if err := generate.WriteSpecifications(writer, []byte(header), selectedServices, false, "", opts.Formats...); err != nil {
 				logger.Error(err, "Writing specification to stdout error")
 				return err
 			}
