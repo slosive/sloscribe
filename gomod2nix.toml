@@ -62,11 +62,11 @@ schema = 3
     version = "v0.0.2"
     hash = "sha256-ysaV7IF6m9p2MYzy15YfCLnpgliSzhj1fDxCdEA1T7g="
   [mod."golang.org/x/net"]
-    version = "v0.0.0-20220920203100-d0c6ba3f52d9"
-    hash = "sha256-i6bGngrh7kI2zWX8+cusb6V8VwRKqLcxEl/CIRisjRg="
+    version = "v0.7.0"
+    hash = "sha256-LgZYZRwtMqm+soNh+esxDSeRuIDxRGb9OEfYaFJHCDI="
   [mod."golang.org/x/text"]
-    version = "v0.3.7"
-    hash = "sha256-XH2pUzzQx95O0rak00grQvfACfL+EmZiV7ZzJBkX+XY="
+    version = "v0.7.0"
+    hash = "sha256-ydgUqX+t5Qke16C6d3FP/06U/N1n+rUKpLRFj4KXjwk="
   [mod."gopkg.in/inf.v0"]
     version = "v0.9.1"
     hash = "sha256-z84XlyeWLcoYOvWLxPkPFgLkpjyb2Y4pdeGMyySOZQI="
