@@ -11,6 +11,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	k8syaml "sigs.k8s.io/yaml"
 	"strings"
 )
 
@@ -30,7 +31,7 @@ func IsValidOutputFormat(format string) bool {
 }
 
 // WriteSpecifications write the service spec bytes to a specific writer, stdout or file
-func WriteSpecifications(writer io.Writer, header []byte, specs map[string]any, toFile bool, outputDirectory string, formats ...string) error {
+func WriteSpecifications(writer io.Writer, header []byte, specs map[string]any, toFile bool, outputDirectory string, kubernetes bool, formats ...string) error {
 	for specName, spec := range specs {
 		for _, format := range formats {
 			var files = make(map[string][]byte, len(formats))
@@ -53,10 +54,17 @@ func WriteSpecifications(writer io.Writer, header []byte, specs map[string]any, 
 					return goaloe.DefaultOrDie().Error(err, "clean_artefacts_error")
 				}
 			case "yaml":
-				body, err := yaml.Marshal(spec)
+				var body []byte
+				var err error
+				if kubernetes {
+					body, err = k8syaml.Marshal(spec)
+				} else {
+					body, err = yaml.Marshal(spec)
+				}
 				if err != nil {
 					return err
 				}
+
 				file := filepath.Join([]string{outputDirectory, DefaultServiceDefinitionDir, fmt.Sprintf("%s.%s", specName, format)}...)
 				files[file] = bytes.Join([][]byte{[]byte("---"), header, body}, []byte("\n"))
 				if err := clean(file); err != nil {

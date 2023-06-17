@@ -17,13 +17,14 @@ type (
 	// Options is the list of options/flag available to the application,
 	// plus the clients needed by the application to function.
 	Options struct {
-		Formats       []string
-		IncludedDirs  []string
-		Source        string
-		SrcLanguage   lang.Target
-		Specification string
-		ToFile        bool
-		Services      []string
+		Formats        []string
+		IncludedDirs   []string
+		Source         string
+		SourceLanguage lang.Target
+		Specification  string
+		ToFile         bool
+		Services       []string
+		Target         string
 		*common.Options
 	}
 )
@@ -62,9 +63,9 @@ func (o *Options) Complete() error {
 	// @aloe summary The language passed to the --lang flag is not supported.
 	// @aloe details The source language passed to the --lang flag is not currently supported by the tool.
 	// The following are the supported languages: go, wasm(experimental).
-	if ok := lang.IsSupportedLanguage(o.SrcLanguage); !ok {
+	if ok := lang.IsSupportedLanguage(o.SourceLanguage); !ok {
 		err = goaloe.DefaultOrDie().Error(
-			multierr.Append(err, errors.Errorf("unsupported language %q was passed to --lang flag", o.SrcLanguage)),
+			multierr.Append(err, errors.Errorf("unsupported language %q was passed to --lang flag", o.SourceLanguage)),
 			"unsupported_language")
 	}
 	return err
@@ -92,7 +93,7 @@ func (o *Options) addAppFlags(fs *pflag.FlagSet) {
 		"Output format (yaml,json).",
 	)
 	fs.StringVar(
-		(*string)(&o.SrcLanguage),
+		(*string)(&o.SourceLanguage),
 		"lang",
 		"go",
 		"Language of the source files. (go)",
@@ -102,7 +103,7 @@ func (o *Options) addAppFlags(fs *pflag.FlagSet) {
 		"file",
 		"f",
 		"",
-		"Source file to parse.",
+		"Target file to parse. example: ./metrics.go",
 	)
 	fs.BoolVar(
 		&o.ToFile,
@@ -115,5 +116,11 @@ func (o *Options) addAppFlags(fs *pflag.FlagSet) {
 		"services",
 		[]string{},
 		"Comma separated list of service names. These will select the output service specifications returned by the tool.",
+	)
+	fs.StringVar(
+		&o.Target,
+		"specification",
+		"sloth",
+		"The name of the specification the tool should parse the source file for, example: sloth or sloth-k8s.",
 	)
 }

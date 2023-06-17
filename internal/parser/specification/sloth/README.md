@@ -8,7 +8,7 @@ import "github.com/tfadeyi/slotalk/internal/parser/specification/sloth"
 
 ## Index
 
-- [func Parser\(\) options.Option](<#Parser>)
+- [func Parser\(kubernetes bool\) options.Option](<#Parser>)
 - [type Options](<#Options>)
 
 
@@ -16,7 +16,7 @@ import "github.com/tfadeyi/slotalk/internal/parser/specification/sloth"
 ## func [Parser](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/specification/sloth/options.go#L9>)
 
 ```go
-func Parser() options.Option
+func Parser(kubernetes bool) options.Option
 ```
 
 Parser returns the options.Option to run the parser targeting sloth as a specification

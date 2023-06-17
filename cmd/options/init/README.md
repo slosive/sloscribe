@@ -17,25 +17,26 @@ Package spec contains the different options present under the spec generation co
 
 
 <a name="Options"></a>
-## type [Options](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/cmd/options/init/options.go#L19-L28>)
+## type [Options](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/cmd/options/init/options.go#L19-L29>)
 
 Options is the list of options/flag available to the application, plus the clients needed by the application to function.
 
 ```go
 type Options struct {
-    Formats       []string
-    IncludedDirs  []string
-    Source        string
-    SrcLanguage   lang.Target
-    Specification string
-    ToFile        bool
-    Services      []string
+    Formats        []string
+    IncludedDirs   []string
+    Source         string
+    SourceLanguage lang.Target
+    Specification  string
+    ToFile         bool
+    Services       []string
+    Target         string
     *common.Options
 }
 ```
 
 <a name="New"></a>
-### func [New](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/cmd/options/init/options.go#L32>)
+### func [New](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/cmd/options/init/options.go#L33>)
 
 ```go
 func New(c *common.Options) *Options
@@ -44,7 +45,7 @@ func New(c *common.Options) *Options
 New creates a new instance of the application's options
 
 <a name="Options.Complete"></a>
-### func \(\*Options\) [Complete](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/cmd/options/init/options.go#L45>)
+### func \(\*Options\) [Complete](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/cmd/options/init/options.go#L46>)
 
 ```go
 func (o *Options) Complete() error
@@ -53,7 +54,7 @@ func (o *Options) Complete() error
 Complete initialises the components needed for the application to function given the options
 
 <a name="Options.Prepare"></a>
-### func \(\*Options\) [Prepare](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/cmd/options/init/options.go#L39>)
+### func \(\*Options\) [Prepare](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/cmd/options/init/options.go#L40>)
 
 ```go
 func (o *Options) Prepare(cmd *cobra.Command) *Options

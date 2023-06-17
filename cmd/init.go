@@ -21,6 +21,8 @@ func specInitCmd(common *commonoptions.Options) *cobra.Command {
 	opts := initoptions.New(common)
 	var inputReader io.ReadCloser
 	var targetLanguage options.Option
+	var targetSpecParser options.Option
+	var outputKubernetes = false
 	cmd := &cobra.Command{
 		Use:           "init",
 		Short:         "Init generates the Sloth definition specification from source code comments.",
@@ -35,7 +37,15 @@ func specInitCmd(common *commonoptions.Options) *cobra.Command {
 				return err
 			}
 
-			switch opts.SrcLanguage {
+			switch opts.Target {
+			case "sloth-k8s":
+				targetSpecParser = sloth.Parser(true)
+				outputKubernetes = true
+			default:
+				targetSpecParser = sloth.Parser(false)
+			}
+
+			switch opts.SourceLanguage {
 			case lang.Rust:
 				err := errors.New("The rust parser has not been fully implemented and shouldn't be used! It will have unexpected behaviours.")
 				logger.Error(err, "")
@@ -61,7 +71,7 @@ func specInitCmd(common *commonoptions.Options) *cobra.Command {
 
 			parser, err := parser.New(
 				targetLanguage,
-				sloth.Parser(),
+				targetSpecParser,
 				options.Logger(&logger),
 				options.SourceFile(opts.Source),
 				options.SourceContent(inputReader),
@@ -99,7 +109,7 @@ func specInitCmd(common *commonoptions.Options) *cobra.Command {
 			// Only print to file if the user has selected the to-file option
 			if opts.ToFile {
 				logger.Info("Generating specifications files in output directory.", "directory", generate.DefaultServiceDefinitionDir)
-				if err := generate.WriteSpecifications(nil, []byte(header), selectedServices, true, ".", opts.Formats...); err != nil {
+				if err := generate.WriteSpecifications(nil, []byte(header), selectedServices, true, ".", outputKubernetes, opts.Formats...); err != nil {
 					logger.Error(err, "Generating specification file error")
 					return err
 				}
@@ -108,7 +118,7 @@ func specInitCmd(common *commonoptions.Options) *cobra.Command {
 
 			logger.Info("Printing result specification to stdout.")
 			writer := cmd.OutOrStdout()
-			if err := generate.WriteSpecifications(writer, []byte(header), selectedServices, false, "", opts.Formats...); err != nil {
+			if err := generate.WriteSpecifications(writer, []byte(header), selectedServices, false, "", outputKubernetes, opts.Formats...); err != nil {
 				logger.Error(err, "Writing specification to stdout error")
 				return err
 			}

@@ -6,7 +6,7 @@ import (
 )
 
 // Parser returns the options.Option to run the parser targeting sloth as a specification
-func Parser() options.Option {
+func Parser(kubernetes bool) options.Option {
 	return func(opts *options.Options) {
 		opts.TargetSpecification = newParser(Options{
 			Language: opts.TargetLanguage,
@@ -15,6 +15,7 @@ func Parser() options.Option {
 				SourceFile:       opts.SourceFile,
 				SourceContent:    opts.SourceContent,
 				InputDirectories: opts.IncludedDirs,
+				Kubernetes:       kubernetes,
 			},
 		})
 	}

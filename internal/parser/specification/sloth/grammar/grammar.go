@@ -89,6 +89,7 @@ func (g Grammar) parse() (*sloth.Spec, error) {
 	var spec = &sloth.Spec{
 		Version: sloth.Version,
 		Service: "",
+		Labels:  map[string]string{},
 	}
 	var slo = &sloth.SLO{
 		Name:        "",
@@ -101,39 +102,39 @@ func (g Grammar) parse() (*sloth.Spec, error) {
 			Plugin: nil,
 		},
 	}
+	alerting := &sloth.Alerting{
+		Name:        "",
+		Labels:      map[string]string{},
+		Annotations: map[string]string{},
+		PageAlert:   sloth.Alert{},
+		TicketAlert: sloth.Alert{},
+	}
+	page := &sloth.Alert{
+		Disable:     false,
+		Labels:      map[string]string{},
+		Annotations: map[string]string{},
+	}
+	ticket := &sloth.Alert{
+		Disable:     false,
+		Labels:      map[string]string{},
+		Annotations: map[string]string{},
+	}
 
 	for _, attr := range g.Stmts {
 		switch attr.Scope.GetType() {
 		case ".alerting.ticket":
-			alert := &sloth.Alert{
-				Disable:     false,
-				Labels:      map[string]string{},
-				Annotations: map[string]string{},
-			}
-			fields := reflect.VisibleFields(reflect.TypeOf(*alert))
-			pValue := reflect.ValueOf(alert).Elem()
+			fields := reflect.VisibleFields(reflect.TypeOf(*ticket))
+			pValue := reflect.ValueOf(ticket).Elem()
 			if err := parseAndAssignStructFields(strings.ToLower(attr.Scope.Value), strings.TrimSpace(attr.Value), fields, pValue); err == nil {
-				slo.Alerting.TicketAlert = *alert
+				slo.Alerting.TicketAlert = *ticket
 			}
 		case ".alerting.page":
-			alert := &sloth.Alert{
-				Disable:     false,
-				Labels:      map[string]string{},
-				Annotations: map[string]string{},
-			}
-			fields := reflect.VisibleFields(reflect.TypeOf(*alert))
-			pValue := reflect.ValueOf(alert).Elem()
+			fields := reflect.VisibleFields(reflect.TypeOf(*page))
+			pValue := reflect.ValueOf(page).Elem()
 			if err := parseAndAssignStructFields(strings.ToLower(attr.Scope.Value), strings.TrimSpace(attr.Value), fields, pValue); err == nil {
-				slo.Alerting.PageAlert = *alert
+				slo.Alerting.PageAlert = *page
 			}
 		case ".alerting":
-			alerting := &sloth.Alerting{
-				Name:        "",
-				Labels:      map[string]string{},
-				Annotations: map[string]string{},
-				PageAlert:   sloth.Alert{},
-				TicketAlert: sloth.Alert{},
-			}
 			fields := reflect.VisibleFields(reflect.TypeOf(*alerting))
 			pValue := reflect.ValueOf(alerting).Elem()
 			if err := parseAndAssignStructFields(strings.ToLower(attr.Scope.Value), strings.TrimSpace(attr.Value), fields, pValue); err == nil && alerting.Name != "" {
