@@ -13,7 +13,7 @@ import "github.com/tfadeyi/slotalk/internal/parser/specification/sloth/language/
 
 
 <a name="Options"></a>
-## type [Options](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/specification/sloth/language/golang/parser.go#L29-L34>)
+## type [Options](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/specification/sloth/language/golang/parser.go#L32-L38>)
 
 Options contains the configuration options available to the Parser
 
@@ -23,11 +23,12 @@ type Options struct {
     SourceFile       string
     SourceContent    io.ReadCloser
     InputDirectories []string
+    Kubernetes       bool
 }
 ```
 
 <a name="NewOptions"></a>
-### func [NewOptions](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/specification/sloth/language/golang/parser.go#L36>)
+### func [NewOptions](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/specification/sloth/language/golang/parser.go#L40>)
 
 ```go
 func NewOptions() *Options

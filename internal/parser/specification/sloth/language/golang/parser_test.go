@@ -98,7 +98,7 @@ func TestParseAnnotations(t *testing.T) {
 					Text: `@sloth.slo objective 95.0`,
 				},
 			}}))
-		assert.Equal(t, "foobar", parser.specs["foobar"].Service)
+		assert.Equal(t, "foobar", (parser.specs["foobar"].(*sloth.Spec)).Service)
 		assert.Equal(t, sloth.SLO{
 			Name:        "availability",
 			Description: "availability SLO",
@@ -106,7 +106,7 @@ func TestParseAnnotations(t *testing.T) {
 			Labels:      make(map[string]string),
 			SLI:         sloth.SLI{},
 			Alerting:    sloth.Alerting{},
-		}, parser.specs["foobar"].SLOs[0])
+		}, (parser.specs["foobar"].(*sloth.Spec)).SLOs[0])
 	})
 
 	t.Run("Successfully parse the sloth annotations per single commentGroup, should return 1 specification", func(t *testing.T) {
@@ -125,7 +125,7 @@ func TestParseAnnotations(t *testing.T) {
 				Text: `@sloth.slo objective 95.0`,
 			},
 		}}))
-		assert.Equal(t, "foobar", parser.specs["foobar"].Service)
+		assert.Equal(t, "foobar", (parser.specs["foobar"].(*sloth.Spec)).Service)
 		assert.Equal(t, sloth.SLO{
 			Name:        "availability",
 			Description: "availability SLO",
@@ -133,7 +133,7 @@ func TestParseAnnotations(t *testing.T) {
 			Labels:      make(map[string]string),
 			SLI:         sloth.SLI{},
 			Alerting:    sloth.Alerting{},
-		}, parser.specs["foobar"].SLOs[0])
+		}, (parser.specs["foobar"].(*sloth.Spec)).SLOs[0])
 	})
 
 	t.Run("Successfully parse sloth service if service name is defined after slo definition", func(t *testing.T) {
@@ -257,7 +257,7 @@ func TestParseAnnotations(t *testing.T) {
 			{
 				Version: sloth.Version,
 				Service: "foo",
-				Labels:  nil,
+				Labels:  make(map[string]string),
 				SLOs: []sloth.SLO{
 					{
 						Name:        "availability",
@@ -290,7 +290,7 @@ func TestParseAnnotations(t *testing.T) {
 			{
 				Version: sloth.Version,
 				Service: "bar",
-				Labels:  nil,
+				Labels:  make(map[string]string),
 				SLOs: []sloth.SLO{
 					{
 						Name:        "availability",
@@ -323,7 +323,7 @@ func TestParseAnnotations(t *testing.T) {
 			{
 				Version: sloth.Version,
 				Service: "foobar",
-				Labels:  nil,
+				Labels:  make(map[string]string),
 				SLOs: []sloth.SLO{
 					{
 						Name:        "availability",
@@ -375,7 +375,7 @@ func TestParseAnnotations(t *testing.T) {
 				Text: `@sloth.slo objective 95.0`,
 			},
 		}}))
-		assert.Len(t, parser.specs["bar"].SLOs, 0)
+		assert.Len(t, (parser.specs["bar"].(*sloth.Spec)).SLOs, 0)
 	})
 
 	t.Run("Successfully parse duplicate Sloth service without overriding the original service", func(t *testing.T) {
@@ -418,7 +418,7 @@ func TestParseAnnotations(t *testing.T) {
 			{
 				Version: sloth.Version,
 				Service: "foobar",
-				Labels:  nil,
+				Labels:  make(map[string]string),
 				SLOs: []sloth.SLO{
 					{
 						Name:        "availability",

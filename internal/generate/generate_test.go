@@ -102,7 +102,7 @@ version: prometheus/v1
 service: app1
 `
 		var w = bytes.NewBuffer([]byte{})
-		require.NoError(t, WriteSpecifications(w, nil, specifications, false, "", "yaml"))
+		require.NoError(t, WriteSpecifications(w, nil, specifications, false, "", false, "yaml"))
 		if expected != w.String() && expected1 != w.String() {
 			t.Errorf("unexpected error when checking results")
 		}
@@ -135,7 +135,7 @@ service: app1
 		}
 
 		var w = bytes.NewBuffer([]byte{})
-		require.ErrorIs(t, WriteSpecifications(w, nil, specifications, false, "", "toml"), ErrUnsupportedFormat)
+		require.ErrorIs(t, WriteSpecifications(w, nil, specifications, false, "", false, "toml"), ErrUnsupportedFormat)
 	})
 }
 

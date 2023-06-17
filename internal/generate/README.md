@@ -13,7 +13,7 @@ Package generate contains utilities to generate data from a given specification
 - [Constants](<#constants>)
 - [Variables](<#variables>)
 - [func IsValidOutputFormat\(format string\) bool](<#IsValidOutputFormat>)
-- [func WriteSpecifications\(writer io.Writer, header \[\]byte, specs map\[string\]any, toFile bool, outputDirectory string, formats ...string\) error](<#WriteSpecifications>)
+- [func WriteSpecifications\(writer io.Writer, header \[\]byte, specs map\[string\]any, toFile bool, outputDirectory string, kubernetes bool, formats ...string\) error](<#WriteSpecifications>)
 
 
 ## Constants
@@ -33,7 +33,7 @@ var ErrUnsupportedFormat = errors.New("the specification is in an invalid format
 ```
 
 <a name="IsValidOutputFormat"></a>
-## func [IsValidOutputFormat](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/generate/generate.go#L23>)
+## func [IsValidOutputFormat](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/generate/generate.go#L24>)
 
 ```go
 func IsValidOutputFormat(format string) bool
@@ -42,10 +42,10 @@ func IsValidOutputFormat(format string) bool
 
 
 <a name="WriteSpecifications"></a>
-## func [WriteSpecifications](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/generate/generate.go#L33>)
+## func [WriteSpecifications](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/generate/generate.go#L34>)
 
 ```go
-func WriteSpecifications(writer io.Writer, header []byte, specs map[string]any, toFile bool, outputDirectory string, formats ...string) error
+func WriteSpecifications(writer io.Writer, header []byte, specs map[string]any, toFile bool, outputDirectory string, kubernetes bool, formats ...string) error
 ```
 
 WriteSpecifications write the service spec bytes to a specific writer, stdout or file

@@ -12,17 +12,20 @@ import (
 	"strings"
 
 	"github.com/juju/errors"
+	k8sloth "github.com/slok/sloth/pkg/kubernetes/api/sloth/v1"
 	sloth "github.com/slok/sloth/pkg/prometheus/api/v1"
 	"github.com/tfadeyi/slotalk/internal/logging"
 	"github.com/tfadeyi/slotalk/internal/parser/specification/sloth/grammar"
+	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 type parser struct {
-	specs         map[string]*sloth.Spec
+	specs         map[string]any
 	sourceFile    string
 	sourceContent io.ReadCloser
 	includedDirs  []string
 	logger        *logging.Logger
+	kubernetes    bool
 }
 
 // Options contains the configuration options available to the Parser
@@ -31,6 +34,7 @@ type Options struct {
 	SourceFile       string
 	SourceContent    io.ReadCloser
 	InputDirectories []string
+	Kubernetes       bool
 }
 
 func NewOptions() *Options {
@@ -40,6 +44,7 @@ func NewOptions() *Options {
 		SourceFile:       "",
 		SourceContent:    nil,
 		InputDirectories: nil,
+		Kubernetes:       false,
 	}
 }
 
@@ -56,11 +61,12 @@ func NewParser(opts *Options) *parser {
 	sourceContent := opts.SourceContent
 
 	return &parser{
-		specs:         map[string]*sloth.Spec{},
+		specs:         map[string]any{},
 		sourceFile:    sourceFile,
 		sourceContent: sourceContent,
 		includedDirs:  dirs,
 		logger:        logger,
+		kubernetes:    opts.Kubernetes,
 	}
 }
 
@@ -108,6 +114,121 @@ func getFile(name string, file io.ReadCloser) (*ast.File, error) {
 	return goparser.ParseFile(fset, name, file, goparser.ParseComments)
 }
 
+func (p parser) parseK8SlothAnnotations(comments ...*ast.CommentGroup) error {
+	var currentServiceSpec *k8sloth.PrometheusServiceLevel
+
+	for _, comment := range comments {
+		// partialServiceSpec contains the partially parsed sloth Specification for a given comment group
+		// this means the parsed spec will only contain data for the fields that are present in the comments, making the spec only partially accurate
+		partialServiceSpec, err := grammar.Eval(strings.TrimSpace(comment.Text()))
+		if err != nil {
+			p.warn(err)
+			continue
+		}
+
+		// if the comment group contains a reference to the service name
+		// check if service was parsed before else add it the collection of specs.
+		// Set the found service spec as the current service spec.
+		if partialServiceSpec.Service != "" {
+			if currentServiceSpec != nil && (currentServiceSpec.Name == partialServiceSpec.Service || currentServiceSpec.Name == "") {
+				p.specs[partialServiceSpec.Service] = currentServiceSpec
+			}
+			spec, ok := p.specs[partialServiceSpec.Service]
+			if !ok {
+				tmpSpec := &k8sloth.PrometheusServiceLevel{
+					TypeMeta: v1.TypeMeta{
+						Kind:       "PrometheusServiceLevel",
+						APIVersion: "sloth.slok.dev/v1",
+					},
+					ObjectMeta: v1.ObjectMeta{
+						Name:   partialServiceSpec.Service,
+						Labels: map[string]string{},
+					},
+					Spec: k8sloth.PrometheusServiceLevelSpec{
+						Service: partialServiceSpec.Service,
+						Labels:  partialServiceSpec.Labels,
+						SLOs:    toKubernetes(partialServiceSpec.SLOs...),
+					},
+				}
+				p.specs[partialServiceSpec.Service] = tmpSpec
+				currentServiceSpec = tmpSpec
+			} else {
+				currentServiceSpec = spec.(*k8sloth.PrometheusServiceLevel)
+			}
+		}
+
+		if currentServiceSpec == nil {
+			currentServiceSpec = &k8sloth.PrometheusServiceLevel{
+				TypeMeta: v1.TypeMeta{
+					Kind:       "PrometheusServiceLevel",
+					APIVersion: "sloth.slok.dev/v1",
+				},
+				Spec: k8sloth.PrometheusServiceLevelSpec{
+					Service: "",
+					Labels:  nil,
+					SLOs:    nil,
+				},
+			}
+		}
+
+		if currentServiceSpec.Name == "" {
+			currentServiceSpec.Name = partialServiceSpec.Service
+		}
+		if currentServiceSpec.Labels == nil {
+			for key, label := range partialServiceSpec.Labels {
+				currentServiceSpec.Labels[key] = label
+			}
+		}
+		if currentServiceSpec.Spec.Service == "" {
+			currentServiceSpec.Spec.Service = partialServiceSpec.Service
+		}
+		if currentServiceSpec.Spec.Labels == nil {
+			for key, label := range partialServiceSpec.Labels {
+				currentServiceSpec.Spec.Labels[key] = label
+			}
+		}
+		if currentServiceSpec.Spec.SLOs == nil {
+			currentServiceSpec.Spec.SLOs = append(currentServiceSpec.Spec.SLOs, toKubernetes(partialServiceSpec.SLOs...)...)
+		}
+	}
+	return nil
+}
+
+func toKubernetes(slos ...sloth.SLO) []k8sloth.SLO {
+	var k8SLOs []k8sloth.SLO
+	for _, slo := range slos {
+		result := k8sloth.SLO{
+			Name:        slo.Name,
+			Description: slo.Description,
+			Objective:   slo.Objective,
+			Labels:      slo.Labels,
+			SLI: k8sloth.SLI{
+				Raw:    (*k8sloth.SLIRaw)(slo.SLI.Raw),
+				Events: (*k8sloth.SLIEvents)(slo.SLI.Events),
+			},
+			Alerting: k8sloth.Alerting{
+				Name:        slo.Alerting.Name,
+				Labels:      slo.Alerting.Labels,
+				Annotations: slo.Alerting.Annotations,
+				PageAlert: k8sloth.Alert{
+					Disable:     slo.Alerting.PageAlert.Disable,
+					Labels:      slo.Alerting.PageAlert.Labels,
+					Annotations: slo.Alerting.PageAlert.Annotations,
+				},
+				TicketAlert: k8sloth.Alert{
+					Disable:     slo.Alerting.TicketAlert.Disable,
+					Labels:      slo.Alerting.TicketAlert.Labels,
+					Annotations: slo.Alerting.TicketAlert.Annotations,
+				},
+			},
+		}
+
+		k8SLOs = append(k8SLOs, result)
+	}
+
+	return k8SLOs
+}
+
 // parseSlothAnnotations parses the source code comments for sloth annotations using the sloth grammar.
 // It expects only SLO definition per comment group
 func (p parser) parseSlothAnnotations(comments ...*ast.CommentGroup) error {
@@ -134,7 +255,7 @@ func (p parser) parseSlothAnnotations(comments ...*ast.CommentGroup) error {
 				p.specs[partialServiceSpec.Service] = partialServiceSpec
 				currentServiceSpec = partialServiceSpec
 			} else {
-				currentServiceSpec = spec
+				currentServiceSpec = spec.(*sloth.Spec)
 			}
 		}
 
@@ -167,7 +288,7 @@ func (p parser) parseSlothAnnotations(comments ...*ast.CommentGroup) error {
 
 // Parse will parse the source code for sloth annotations.
 // In case of error during parsing, Parse returns an empty sloth.Spec
-func (p parser) Parse(ctx context.Context) (map[string]*sloth.Spec, error) {
+func (p parser) Parse(ctx context.Context) (map[string]any, error) {
 	// collect all sloth annotations from the file and add them to the spec struct
 	if p.sourceFile != "" || p.sourceContent != nil {
 		file, err := getFile(p.sourceFile, p.sourceContent)
@@ -175,8 +296,14 @@ func (p parser) Parse(ctx context.Context) (map[string]*sloth.Spec, error) {
 			// error hard as we can't extract more data for the spec
 			return nil, err
 		}
-		if err := p.parseSlothAnnotations(file.Comments...); err != nil {
-			return nil, err
+		if p.kubernetes {
+			if err := p.parseK8SlothAnnotations(file.Comments...); err != nil {
+				return nil, err
+			}
+		} else {
+			if err := p.parseSlothAnnotations(file.Comments...); err != nil {
+				return nil, err
+			}
 		}
 		return p.specs, nil
 	}

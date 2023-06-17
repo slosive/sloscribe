@@ -12,13 +12,13 @@ import "github.com/tfadeyi/slotalk/internal/parser/specification/sloth/language"
 
 
 <a name="Language"></a>
-## type [Language](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/specification/sloth/language/language.go#L10-L12>)
+## type [Language](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/specification/sloth/language/language.go#L9-L11>)
 
 Language is the parsing strategy used by the Parser to parse comments in the different source files
 
 ```go
 type Language interface {
-    Parse(ctx context.Context) (map[string]*sloth.Spec, error)
+    Parse(ctx context.Context) (map[string]any, error)
 }
 ```
 
