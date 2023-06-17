@@ -8,5 +8,10 @@ import (
 
 func TestBuildInfo(t *testing.T) {
 	info := BuildInfo()
-	assert.Equal(t, fmt.Sprintf("%s, commit %s, built at %s", Version, Commit, Date), info)
+	assert.Equal(t, fmt.Sprintf(`
+Host machine: %s
+
+  Version:    %s
+  Commit:     %s
+  Built at:   %s`, Platform, Version, Commit, Date), info)
 }
