@@ -15,3 +15,8 @@ Host machine: %s
   Commit:     %s
   Built at:   %s`, Platform, Version, Commit, Date), info)
 }
+
+func TestInfo(t *testing.T) {
+	info := Info()
+	assert.Equal(t, Version, info)
+}

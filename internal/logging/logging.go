@@ -17,6 +17,10 @@ type (
 	}
 )
 
+const (
+	debug = stdr.MessageClass(5)
+)
+
 // ContextWithLogger wraps the logr NewContext function
 func ContextWithLogger(ctx context.Context, l Logger) context.Context {
 	return logr.NewContext(ctx, l.Logger)
@@ -62,7 +66,7 @@ func (l *Logger) Warn(err error, keysAndValues ...interface{}) {
 
 // Debug logs the message using the info debug level (1)
 func (l *Logger) Debug(msg string, keysAndValues ...interface{}) {
-	l.V(5).Info(msg, keysAndValues...)
+	l.V(int(debug)).Info(msg, keysAndValues...)
 }
 
 func findLogLevel(lvl string) stdr.MessageClass {
@@ -70,7 +74,7 @@ func findLogLevel(lvl string) stdr.MessageClass {
 	case "info":
 		return stdr.Info
 	case "debug":
-		return stdr.MessageClass(5)
+		return debug
 	case "warn":
 		return stdr.Error
 	case "none":

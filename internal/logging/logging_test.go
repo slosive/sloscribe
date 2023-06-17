@@ -46,15 +46,15 @@ func TestFindLevel(t *testing.T) {
 	t.Parallel()
 
 	t.Run("Successfully return stdr.All for debug as input", func(t *testing.T) {
-		assert.Equal(t, stdr.All, findLogLevel("debug"))
+		assert.Equal(t, debug, findLogLevel("debug"))
 	})
 
 	t.Run("Successfully return stdr.All for debug(with whitespace) as input", func(t *testing.T) {
-		assert.Equal(t, stdr.All, findLogLevel("    debug   "))
+		assert.Equal(t, debug, findLogLevel("    debug   "))
 	})
 
 	t.Run("Successfully return stdr.All for DEBUG as input", func(t *testing.T) {
-		assert.Equal(t, stdr.All, findLogLevel("DEBUG"))
+		assert.Equal(t, debug, findLogLevel("DEBUG"))
 	})
 
 	t.Run("Successfully return stdr.Error for warn as input", func(t *testing.T) {
