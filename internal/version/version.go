@@ -1,15 +1,28 @@
 package version
 
-import "fmt"
+import (
+	"fmt"
+)
 
 // Values injected at build-time
 var (
-	version string = "dev"
-	commit  string = "unknown"
-	date    string = "unknown"
+	Platform string = "unknown"
+	Version  string = "dev"
+	Commit   string = "unknown"
+	Date     string = "unknown"
 )
 
 // BuildInfo returns the binary build information
 func BuildInfo() string {
-	return fmt.Sprintf("%s, commit %s, built at %s", version, commit, date)
+	return fmt.Sprintf(`
+Host machine: %s
+
+  Version:    %s
+  Commit:     %s
+  Built at:   %s`, Platform, Version, Commit, Date)
+}
+
+// Info returns simple version information of the binary
+func Info() string {
+	return Version
 }

@@ -13,6 +13,7 @@ var versionCmd = &cobra.Command{
 		ctx := cmd.Context()
 		log := logging.LoggerFromContext(ctx)
 		log = log.WithName("version")
-		log.Info(version.BuildInfo())
+		log.Debug(version.BuildInfo())
+		log.Info(version.Info())
 	},
 }

@@ -3,10 +3,18 @@ SHELL := /bin/bash
 COMMIT:=$(shell git rev-list -1 HEAD)
 VERSION:=$(COMMIT)
 DATE:=$(shell date -uR)
+GOOS:=$(shell go env GOOS)
+GOARCH:=$(shell go env GOARCH)
+
+define LDFLAGS
+-X "github.com/tfadeyi/slotalk/internal/version.Platform=$(GOOS)/$(GOARCH)" \
+-X "github.com/tfadeyi/slotalk/internal/version.Commit=$(COMMIT)" \
+-X "github.com/tfadeyi/slotalk/internal/version.BuildDate=$(DATE)"
+endef
 
 BIN_NAME:=slotalk
 GOFLAGS:=-mod=readonly
-GO_BUILD:=go build $(GOFLAGS)
+GO_BUILD:=go build $(GOFLAGS) -ldflags '$(LDFLAGS)'
 
 # include files with the `// +build mock` annotation
 TEST_TAGS:=-tags mock -coverprofile cover.out
