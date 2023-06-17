@@ -5,7 +5,7 @@ title: slotalk
 ## slotalk
 
 **Application**: slotalk
-**Version**: v0.1.0-alpha.2
+**Version**: v0.1.0-alpha.3
 
 ### Description
 
