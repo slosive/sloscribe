@@ -67,9 +67,11 @@ func TestWriteSpecifications(t *testing.T) {
 			},
 		}
 
-		expected := `
+		expected := `---
+
 version: prometheus/v1
 service: app1
+---
 
 version: prometheus/v1
 service: app2
@@ -82,7 +84,8 @@ slos:
       alerting:
         name: ""
 `
-		expected1 := `
+		expected1 := `---
+
 version: prometheus/v1
 service: app2
 labels:
@@ -93,6 +96,7 @@ slos:
       sli: {}
       alerting:
         name: ""
+---
 
 version: prometheus/v1
 service: app1
