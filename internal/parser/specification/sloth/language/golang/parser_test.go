@@ -6,9 +6,11 @@ import (
 	"strings"
 	"testing"
 
+	k8sloth "github.com/slok/sloth/pkg/kubernetes/api/sloth/v1"
 	sloth "github.com/slok/sloth/pkg/prometheus/api/v1"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 func TestGetPackages(t *testing.T) {
@@ -452,6 +454,271 @@ func TestParseAnnotations(t *testing.T) {
 
 		for _, exp := range expected {
 			actual, ok := resultSpec[exp.Service]
+			require.True(t, ok)
+			assert.Equal(t, exp, actual)
+		}
+	})
+}
+
+func TestParseK8SAnnotations(t *testing.T) {
+	t.Parallel()
+
+	t.Run("Successfully parse sloth service if service name is defined after slo definition", func(t *testing.T) {
+		parser := NewParser(nil)
+		comments := []*ast.CommentGroup{
+			{List: []*ast.Comment{
+				{
+					Text: `@sloth.slo name availability`,
+				},
+				{
+					Text: `@sloth.slo description availability SLO for foobar service`,
+				},
+				{
+					Text: `@sloth.slo objective 95.0`,
+				},
+			}},
+			{List: []*ast.Comment{
+				{
+					Text: `@sloth service foobar`,
+				},
+			}},
+		}
+		require.NoError(t, parser.parseK8SlothAnnotations(comments...))
+		require.Len(t, parser.specs, 1)
+		resultSpec := parser.specs
+
+		expected := []*k8sloth.PrometheusServiceLevel{
+			{
+				TypeMeta: v1.TypeMeta{
+					Kind:       "PrometheusServiceLevel",
+					APIVersion: "sloth.slok.dev/v1",
+				},
+				ObjectMeta: v1.ObjectMeta{
+					Name: "foobar",
+				},
+				Spec: k8sloth.PrometheusServiceLevelSpec{
+					Service: "foobar",
+					Labels:  nil,
+					SLOs: []k8sloth.SLO{
+						{
+							Name:        "availability",
+							Description: "availability SLO for foobar service",
+							Objective:   95.0,
+							Labels:      make(map[string]string),
+							SLI: k8sloth.SLI{
+								Raw:    nil,
+								Events: nil,
+								Plugin: nil,
+							},
+							Alerting: k8sloth.Alerting{
+								Name:        "",
+								Labels:      nil,
+								Annotations: nil,
+								PageAlert: k8sloth.Alert{
+									Disable:     false,
+									Labels:      nil,
+									Annotations: nil,
+								},
+								TicketAlert: k8sloth.Alert{
+									Disable:     false,
+									Labels:      nil,
+									Annotations: nil,
+								},
+							},
+						},
+					},
+				},
+			},
+		}
+
+		for _, exp := range expected {
+			actual, ok := resultSpec[exp.Name]
+			require.True(t, ok)
+			assert.Equal(t, exp, actual)
+		}
+	})
+
+	t.Run("Successfully parse multiple Sloth services, should return 3 specifications", func(t *testing.T) {
+		parser := NewParser(nil)
+		comments := []*ast.CommentGroup{
+			{List: []*ast.Comment{
+				{
+					Text: `@sloth service foobar`,
+				},
+				{
+					Text: `@sloth.slo name availability`,
+				},
+				{
+					Text: `@sloth.slo description availability SLO for foobar service`,
+				},
+				{
+					Text: `@sloth.slo objective 95.0`,
+				},
+			}},
+			{List: []*ast.Comment{
+				{
+					Text: `@sloth service foo`,
+				},
+				{
+					Text: `@sloth.slo name availability`,
+				},
+				{
+					Text: `@sloth.slo description availability SLO for foo service`,
+				},
+				{
+					Text: `@sloth.slo objective 95.0`,
+				},
+			}},
+			{List: []*ast.Comment{
+				{
+					Text: `@sloth service bar`,
+				},
+				{
+					Text: `@sloth.slo name availability`,
+				},
+				{
+					Text: `@sloth.slo description availability SLO for bar service`,
+				},
+				{
+					Text: `@sloth.slo objective 95.0`,
+				},
+			}},
+		}
+		require.NoError(t, parser.parseK8SlothAnnotations(comments...))
+		require.Len(t, parser.specs, 3)
+		resultSpec := parser.specs
+
+		expected := []*k8sloth.PrometheusServiceLevel{
+			{
+				TypeMeta: v1.TypeMeta{
+					Kind:       "PrometheusServiceLevel",
+					APIVersion: "sloth.slok.dev/v1",
+				},
+				ObjectMeta: v1.ObjectMeta{
+					Name:   "bar",
+					Labels: make(map[string]string),
+				},
+				Spec: k8sloth.PrometheusServiceLevelSpec{
+					Service: "bar",
+					Labels:  make(map[string]string),
+					SLOs: []k8sloth.SLO{
+						{
+							Name:        "availability",
+							Description: "availability SLO for bar service",
+							Objective:   95.0,
+							Labels:      make(map[string]string),
+							SLI: k8sloth.SLI{
+								Raw:    nil,
+								Events: nil,
+								Plugin: nil,
+							},
+							Alerting: k8sloth.Alerting{
+								Name:        "",
+								Labels:      nil,
+								Annotations: nil,
+								PageAlert: k8sloth.Alert{
+									Disable:     false,
+									Labels:      nil,
+									Annotations: nil,
+								},
+								TicketAlert: k8sloth.Alert{
+									Disable:     false,
+									Labels:      nil,
+									Annotations: nil,
+								},
+							},
+						},
+					},
+				},
+			},
+			{
+				TypeMeta: v1.TypeMeta{
+					Kind:       "PrometheusServiceLevel",
+					APIVersion: "sloth.slok.dev/v1",
+				},
+				ObjectMeta: v1.ObjectMeta{
+					Name:   "foobar",
+					Labels: make(map[string]string),
+				},
+				Spec: k8sloth.PrometheusServiceLevelSpec{
+					Service: "foobar",
+					Labels:  make(map[string]string),
+					SLOs: []k8sloth.SLO{
+						{
+							Name:        "availability",
+							Description: "availability SLO for foobar service",
+							Objective:   95.0,
+							Labels:      make(map[string]string),
+							SLI: k8sloth.SLI{
+								Raw:    nil,
+								Events: nil,
+								Plugin: nil,
+							},
+							Alerting: k8sloth.Alerting{
+								Name:        "",
+								Labels:      nil,
+								Annotations: nil,
+								PageAlert: k8sloth.Alert{
+									Disable:     false,
+									Labels:      nil,
+									Annotations: nil,
+								},
+								TicketAlert: k8sloth.Alert{
+									Disable:     false,
+									Labels:      nil,
+									Annotations: nil,
+								},
+							},
+						},
+					},
+				},
+			},
+			{
+				TypeMeta: v1.TypeMeta{
+					Kind:       "PrometheusServiceLevel",
+					APIVersion: "sloth.slok.dev/v1",
+				},
+				ObjectMeta: v1.ObjectMeta{
+					Name:   "foo",
+					Labels: make(map[string]string),
+				},
+				Spec: k8sloth.PrometheusServiceLevelSpec{
+					Service: "foo",
+					Labels:  make(map[string]string),
+					SLOs: []k8sloth.SLO{
+						{
+							Name:        "availability",
+							Description: "availability SLO for foo service",
+							Objective:   95.0,
+							Labels:      make(map[string]string),
+							SLI: k8sloth.SLI{
+								Raw:    nil,
+								Events: nil,
+								Plugin: nil,
+							},
+							Alerting: k8sloth.Alerting{
+								Name:        "",
+								Labels:      nil,
+								Annotations: nil,
+								PageAlert: k8sloth.Alert{
+									Disable:     false,
+									Labels:      nil,
+									Annotations: nil,
+								},
+								TicketAlert: k8sloth.Alert{
+									Disable:     false,
+									Labels:      nil,
+									Annotations: nil,
+								},
+							},
+						},
+					},
+				},
+			},
+		}
+
+		for _, exp := range expected {
+			actual, ok := resultSpec[exp.Name]
 			require.True(t, ok)
 			assert.Equal(t, exp, actual)
 		}

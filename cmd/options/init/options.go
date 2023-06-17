@@ -17,13 +17,13 @@ type (
 	// Options is the list of options/flag available to the application,
 	// plus the clients needed by the application to function.
 	Options struct {
-		Formats       []string
-		IncludedDirs  []string
-		Source        string
-		SourceLanguage   lang.Target
-		Specification string
-		ToFile        bool
-		Services      []string
+		Formats        []string
+		IncludedDirs   []string
+		Source         string
+		SourceLanguage lang.Target
+		Specification  string
+		ToFile         bool
+		Services       []string
 		Target         string
 		*common.Options
 	}
