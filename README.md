@@ -30,23 +30,13 @@ Similar to how [Swaggo](https://github.com/swaggo/swag) does for Swagger docs,  
 
 Slotalk can be used in tandem with the [Sloth CLI](https://github.com/slok/sloth#getting-started) to generate Prometheus alerts groups from the in-code annotations, which can be used in any Prometheus/Grafana monitoring system to keep track of the service's SLOs. See examples below.
 
-
-## Motivation
-
-* **Experimentation**, this was the main motivation behind development, testing libraries like: [go/ast](https://pkg.go.dev/go/ast), [wazero](https://github.com/tetratelabs/wazero), [participle](https://github.com/alecthomas/participle).
-* **Developer experience**, finding ways to improve developer experience when it comes to more platform engineering concepts like SLIs and SLOs. I want to see if moving these concepts closer to devs,
-  would make them less of an afterthought.
-* **More Experimentation**, many of the cloud native tools I've seen, and I've worked on have been very targeted towards DevOps/SecOps and Platform Engineering personas,
-  so I wanted try my hand on building something for developers.
-* Trying ways to avoid writing YAML...
-
 ## Prerequisites
 
 * [Sloth CLI](https://github.com/slok/sloth) (optional)
 * [Go](https://go.dev/doc/install)
 * [Nix](https://zero-to-nix.com/start/install) (optional)
 
-## Basic example - Generate Prometheus alert groups from code annotations
+## 📚 Basic example - Generate Prometheus alert groups from code annotations
 
 This example shows how sloth's comments can be added next to the prometheus metrics defined in a `metrics.go` file.
 ```go
@@ -309,7 +299,7 @@ groups:
 
 </details>
 
-## Install
+## 🔽 Install
 
 The tool can be installed easily via the installation script.
 
@@ -321,7 +311,7 @@ This will install the required binary for machine (Linux/Mac only).
 
 For other ways of installing the tool please check the [installation guide](https://slotalk.fadey.io/docs/category/installation).
 
-## Get Started
+## 🚀 Get Started
 
 1. Add comments to your source code. See [Declarative Comments](https://slotalk.fadey.io/docs/category/sloth-annotations).
 2. Run `slotalk` init in the project's root. This will parse your source code annotations and print the sloth definitions to standard out.
@@ -341,7 +331,7 @@ For other ways of installing the tool please check the [installation guide](http
     cat metrics.go | ./slotalk init -f -
     ```
 
-## CLI usage
+## 🖥️ CLI usage
 
 ```text
 Usage:
@@ -366,6 +356,15 @@ Generate Prometheus SLO alert rules from an example [metrics.go](https://gist.gi
    # creates a nix demo shell with slotalk and sloth. just follow the shell instructions
    nix develop github:tfadeyi/slotalk#demo
    ```
+
+## Motivation
+
+* **Experimentation**, this was the main motivation behind development, testing libraries like: [go/ast](https://pkg.go.dev/go/ast), [wazero](https://github.com/tetratelabs/wazero), [participle](https://github.com/alecthomas/participle).
+* **Developer experience**, finding ways to improve developer experience when it comes to more platform engineering concepts like SLIs and SLOs. I want to see if moving these concepts closer to devs,
+  would make them less of an afterthought.
+* **More Experimentation**, many of the cloud native tools I've seen, and I've worked on have been very targeted towards DevOps/SecOps and Platform Engineering personas,
+  so I wanted try my hand on building something for developers.
+* Trying ways to avoid writing YAML...
 
 ## License
 MIT, see [LICENSE.md](./LICENSE).
