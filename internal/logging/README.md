@@ -10,18 +10,19 @@ Package logging uses the logr.Logger interface to integrate with different loggi
 
 ## Index
 
-- [func ContextWithLogger(ctx context.Context, l Logger) context.Context](<#func-contextwithlogger>)
-- [func IsValidLevel(lvl string) bool](<#func-isvalidlevel>)
-- [type Logger](<#type-logger>)
-  - [func LoggerFromContext(ctx context.Context) Logger](<#func-loggerfromcontext>)
-  - [func NewStandardLogger() Logger](<#func-newstandardlogger>)
-  - [func (l *Logger) Debug(msg string, keysAndValues ...interface{})](<#func-logger-debug>)
-  - [func (l *Logger) Info(msg string, keysAndValues ...interface{})](<#func-logger-info>)
-  - [func (l *Logger) SetLevel(lvl string) Logger](<#func-logger-setlevel>)
-  - [func (l *Logger) Warn(err error, keysAndValues ...interface{})](<#func-logger-warn>)
-  - [func (l *Logger) WithName(name string) Logger](<#func-logger-withname>)
+- [func ContextWithLogger\(ctx context.Context, l Logger\) context.Context](<#ContextWithLogger>)
+- [func IsValidLevel\(lvl string\) bool](<#IsValidLevel>)
+- [type Logger](<#Logger>)
+  - [func LoggerFromContext\(ctx context.Context\) Logger](<#LoggerFromContext>)
+  - [func NewStandardLogger\(\) Logger](<#NewStandardLogger>)
+  - [func \(l \*Logger\) Debug\(msg string, keysAndValues ...interface\{\}\)](<#Logger.Debug>)
+  - [func \(l \*Logger\) Info\(msg string, keysAndValues ...interface\{\}\)](<#Logger.Info>)
+  - [func \(l \*Logger\) SetLevel\(lvl string\) Logger](<#Logger.SetLevel>)
+  - [func \(l \*Logger\) Warn\(err error, keysAndValues ...interface\{\}\)](<#Logger.Warn>)
+  - [func \(l \*Logger\) WithName\(name string\) Logger](<#Logger.WithName>)
 
 
+<a name="ContextWithLogger"></a>
 ## func [ContextWithLogger](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/logging/logging.go#L21>)
 
 ```go
@@ -30,6 +31,7 @@ func ContextWithLogger(ctx context.Context, l Logger) context.Context
 
 ContextWithLogger wraps the logr NewContext function
 
+<a name="IsValidLevel"></a>
 ## func [IsValidLevel](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/logging/logging.go#L83>)
 
 ```go
@@ -38,7 +40,10 @@ func IsValidLevel(lvl string) bool
 
 IsValidLevel returns true if the input level is one of the valid values \("info", "debug", "warn", "none"\)
 
+<a name="Logger"></a>
 ## type [Logger](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/logging/logging.go#L14-L17>)
+
+
 
 ```go
 type Logger struct {
@@ -47,6 +52,7 @@ type Logger struct {
 }
 ```
 
+<a name="LoggerFromContext"></a>
 ### func [LoggerFromContext](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/logging/logging.go#L26>)
 
 ```go
@@ -55,6 +61,7 @@ func LoggerFromContext(ctx context.Context) Logger
 
 LoggerFromContext wraps the LoggerFromContext or creates a Zap production logger
 
+<a name="NewStandardLogger"></a>
 ### func [NewStandardLogger](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/logging/logging.go#L35>)
 
 ```go
@@ -63,6 +70,7 @@ func NewStandardLogger() Logger
 
 NewStandardLogger wraps the creation of a Golang standard logger
 
+<a name="Logger.Debug"></a>
 ### func \(\*Logger\) [Debug](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/logging/logging.go#L64>)
 
 ```go
@@ -71,6 +79,7 @@ func (l *Logger) Debug(msg string, keysAndValues ...interface{})
 
 Debug logs the message using the info debug level \(1\)
 
+<a name="Logger.Info"></a>
 ### func \(\*Logger\) [Info](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/logging/logging.go#L54>)
 
 ```go
@@ -79,6 +88,7 @@ func (l *Logger) Info(msg string, keysAndValues ...interface{})
 
 Info logs the message using the info log level \(2\)
 
+<a name="Logger.SetLevel"></a>
 ### func \(\*Logger\) [SetLevel](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/logging/logging.go#L46>)
 
 ```go
@@ -87,6 +97,7 @@ func (l *Logger) SetLevel(lvl string) Logger
 
 SetLevel sets the global level against which all info logs will be compared. If this is greater than or equal to the "V" of the logger, the message will be logged. A higher value here means more logs will be written
 
+<a name="Logger.Warn"></a>
 ### func \(\*Logger\) [Warn](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/logging/logging.go#L59>)
 
 ```go
@@ -95,6 +106,7 @@ func (l *Logger) Warn(err error, keysAndValues ...interface{})
 
 Warn logs the error using the warning log level \(3\)
 
+<a name="Logger.WithName"></a>
 ### func \(\*Logger\) [WithName](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/logging/logging.go#L39>)
 
 ```go

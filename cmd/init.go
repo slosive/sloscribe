@@ -84,7 +84,7 @@ func specInitCmd(common *commonoptions.Options) *cobra.Command {
 			// check if the user has selected a target service to output
 			selectedServices := services
 			for index, serviceName := range opts.Services {
-				//clear out the selectedServices
+				// clear out the selectedServices
 				if index == 0 {
 					selectedServices = map[string]any{}
 				}
