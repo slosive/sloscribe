@@ -3,7 +3,10 @@
 # Slotalk
 
 <p align="center">
-<a href="#Motivation">Motivation</a> | <a href="https://slotalk.fadey.io/docs/intro">Docs</a> | <a href="#Prerequisites">Prerequisites</a> | <a href="#Try-it!">Try it!</a> | <a href="#Installation">Installation</a> | <a href="#Get-Started">Get Started</a> | <a href="#Examples">Examples</a>
+<a href="https://slotalk.fadey.io/docs/intro"><strong>Docs</strong></a> |
+<a href="#Try-it!"><strong>Try it!</strong></a> |
+<a href="#Install"><strong>Install</strong></a> |
+<a href="#Get-Started"><strong>Get Started</strong></a>
 </p>
 
 [![Nix Devshell](https://img.shields.io/badge/nix-devshell-blue?logo=NixOS&style=for-the-badge)](https://github.com/tfadeyi/sloth-simple-comments#Nix)
@@ -306,7 +309,7 @@ groups:
 
 </details>
 
-## Installation
+## Install
 
 The tool can be installed easily via the installation script.
 
