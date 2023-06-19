@@ -1,10 +1,10 @@
 ---
-title: slotalk
+title: slosive
 ---
 
-## slotalk
+## slosive
 
-**Application**: slotalk
+**Application**: slosive
 **Version**: v0.1.0-alpha.3
 
 ### Description

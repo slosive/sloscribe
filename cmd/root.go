@@ -8,8 +8,8 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
-	commonoptions "github.com/tfadeyi/slotalk/cmd/options/common"
-	"github.com/tfadeyi/slotalk/internal/logging"
+	commonoptions "github.com/tfadeyi/slosive/cmd/options/common"
+	"github.com/tfadeyi/slosive/internal/logging"
 )
 
 // rootCmd represents the base command when called without any subcommands
@@ -17,7 +17,7 @@ var rootCmd *cobra.Command
 
 func cmd(opts *commonoptions.Options) *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "slotalk",
+		Use:   "xslosive",
 		Short: "Generate Sloth SLO/SLI definitions from code annotations.",
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 			logger := logging.LoggerFromContext(cmd.Context())

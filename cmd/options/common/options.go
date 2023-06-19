@@ -6,7 +6,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 	goaloe "github.com/tfadeyi/go-aloe"
-	"github.com/tfadeyi/slotalk/internal/logging"
+	"github.com/tfadeyi/slosive/internal/logging"
 )
 
 type (

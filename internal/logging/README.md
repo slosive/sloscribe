@@ -3,7 +3,7 @@
 # logging
 
 ```go
-import "github.com/tfadeyi/slotalk/internal/logging"
+import "github.com/tfadeyi/slosive/internal/logging"
 ```
 
 Package logging uses the logr.Logger interface to integrate with different logging implementation for structured logging

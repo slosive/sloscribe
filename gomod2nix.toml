@@ -46,6 +46,9 @@ schema = 3
   [mod."github.com/pmezard/go-difflib"]
     version = "v1.0.0"
     hash = "sha256-/FtmHnaGjdvEIKAJtrUfEhV7EVo5A/eYrtdnUkuxLDA="
+  [mod."github.com/rogpeppe/go-internal"]
+    version = "v1.10.0"
+    hash = "sha256-vR7+d0aoKTuKeTYSgZxsGhH9e5Zvxix3Zrq9SPm5+NQ="
   [mod."github.com/slok/sloth"]
     version = "v0.11.0"
     hash = "sha256-2eA+M942CpJjHVT5EhFTITNgU0uf5EISFZ5k7BQpfBk="
@@ -62,11 +65,11 @@ schema = 3
     version = "v0.0.2"
     hash = "sha256-ysaV7IF6m9p2MYzy15YfCLnpgliSzhj1fDxCdEA1T7g="
   [mod."golang.org/x/net"]
-    version = "v0.7.0"
-    hash = "sha256-LgZYZRwtMqm+soNh+esxDSeRuIDxRGb9OEfYaFJHCDI="
+    version = "v0.8.0"
+    hash = "sha256-2cOtqa7aJ5mn64kZ+8+PVjJ4uGbhpXTpC1vm/+iaZzM="
   [mod."golang.org/x/text"]
-    version = "v0.7.0"
-    hash = "sha256-ydgUqX+t5Qke16C6d3FP/06U/N1n+rUKpLRFj4KXjwk="
+    version = "v0.8.0"
+    hash = "sha256-hgWFnT01DRmywBEXKYEVaOee7i6z8Ydz7zGbjcWwOgI="
   [mod."gopkg.in/inf.v0"]
     version = "v0.9.1"
     hash = "sha256-z84XlyeWLcoYOvWLxPkPFgLkpjyb2Y4pdeGMyySOZQI="
@@ -77,17 +80,17 @@ schema = 3
     version = "v3.0.1"
     hash = "sha256-FqL9TKYJ0XkNwJFnq9j0VvJ5ZUU1RvH/52h/f5bkYAU="
   [mod."k8s.io/apimachinery"]
-    version = "v0.25.1"
-    hash = "sha256-xTCkadSFoZYxlOh5KtUgY0s0ht2M56EfGsrQg6TnaZI="
+    version = "v0.27.3"
+    hash = "sha256-uEo+7vIY7fTU2yjQQTmL3/GIuWgeMhbqbxxvir1Czes="
   [mod."k8s.io/klog/v2"]
-    version = "v2.80.0"
-    hash = "sha256-MZ7DADUmO6KLioNYWug/l55kunnjpv77f67L5HEJHI8="
+    version = "v2.90.1"
+    hash = "sha256-04i9N6khNBIPI2lACqKVr3lGOItGIiCZJOfhggxdK60="
   [mod."k8s.io/utils"]
-    version = "v0.0.0-20220823124924-e9cbc92d1a73"
-    hash = "sha256-6lC+/94tePMlxEScIB+UpanhWZrtyEog3orIYAvbPjQ="
+    version = "v0.0.0-20230209194617-a36077c30491"
+    hash = "sha256-qDkm4TIx1OelToEACzvMV8NPDy+g7TmWag3xCn51u6Y="
   [mod."sigs.k8s.io/json"]
-    version = "v0.0.0-20220713155537-f223a00ba0e2"
-    hash = "sha256-hWhSoc0Y7YbWfUbesf0tOgEPK61F/tNQo2zN6RcYgro="
+    version = "v0.0.0-20221116044647-bc3834ca7abd"
+    hash = "sha256-XDBMN2o450IHiAwEpBVsvo9e7tYZa+EXWrifUNTdNMU="
   [mod."sigs.k8s.io/structured-merge-diff/v4"]
     version = "v4.2.3"
     hash = "sha256-v6u6ZqnrEeQ2c7BYkltPKuBFL7+939OT1EbWw0mUE7U="

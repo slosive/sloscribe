@@ -26,7 +26,7 @@ Development can be done using Make and Go on the host machine or using the Nix d
 3. Change directory to the cloned repository.
 
 ```shell
-cd slotalk
+cd ./slosive
 ```
 
 ## Local Development

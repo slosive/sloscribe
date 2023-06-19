@@ -32,11 +32,11 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/tfadeyi/slotalk/cmd"
-	"github.com/tfadeyi/slotalk/internal/logging"
+	"github.com/tfadeyi/slosive/cmd"
+	"github.com/tfadeyi/slosive/internal/logging"
 )
 
-// @aloe name slotalk
+// @aloe name slosive
 // @aloe url https://tfadeyi.github.io
 // @aloe version v0.1.0-alpha.3
 // @aloe description Generate Sloth SLO/SLI definitions from code annotations.

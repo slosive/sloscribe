@@ -1,4 +1,4 @@
-module github.com/tfadeyi/slotalk
+module github.com/tfadeyi/slosive
 
 go 1.20
 

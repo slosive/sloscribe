@@ -7,12 +7,12 @@ GOOS:=$(shell go env GOOS)
 GOARCH:=$(shell go env GOARCH)
 
 define LDFLAGS
--X "github.com/tfadeyi/slotalk/internal/version.Platform=$(GOOS)/$(GOARCH)" \
--X "github.com/tfadeyi/slotalk/internal/version.Commit=$(COMMIT)" \
--X "github.com/tfadeyi/slotalk/internal/version.BuildDate=$(DATE)"
+-X "github.com/tfadeyi/slosive/internal/version.Platform=$(GOOS)/$(GOARCH)" \
+-X "github.com/tfadeyi/slosive/internal/version.Commit=$(COMMIT)" \
+-X "github.com/tfadeyi/slosive/internal/version.BuildDate=$(DATE)"
 endef
 
-BIN_NAME:=slotalk
+BIN_NAME:=xslosive
 GOFLAGS:=-mod=readonly
 GO_BUILD:=go build $(GOFLAGS) -ldflags '$(LDFLAGS)'
 

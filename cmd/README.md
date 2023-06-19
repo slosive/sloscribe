@@ -3,7 +3,7 @@
 # cmd
 
 ```go
-import "github.com/tfadeyi/slotalk/cmd"
+import "github.com/tfadeyi/slosive/cmd"
 ```
 
 Copyright © 2023 Oluwole Fadeyi

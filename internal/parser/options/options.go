@@ -3,9 +3,9 @@ package options
 import (
 	"io"
 
-	"github.com/tfadeyi/slotalk/internal/logging"
-	"github.com/tfadeyi/slotalk/internal/parser/lang"
-	"github.com/tfadeyi/slotalk/internal/parser/specification"
+	"github.com/tfadeyi/slosive/internal/logging"
+	"github.com/tfadeyi/slosive/internal/parser/lang"
+	"github.com/tfadeyi/slosive/internal/parser/specification"
 )
 
 type (

@@ -1,6 +1,6 @@
 <div align="center">
 
-# Slotalk
+# SLOsive
 
 <p align="center">
 <a href="https://slotalk.fadey.io/docs/intro"><strong>Docs</strong></a> |
@@ -20,15 +20,15 @@
 
 > ⚠ The tool is still not ready for real production use yet.
 
-Slotalk is a CLI tool that allows developers to embed [Sloth](https://github.com/slok/sloth) SLO/SLI [specifications](https://github.com/slok/sloth/blob/main/pkg/prometheus/api/v1/README.md) as in-code annotations rather than a YAML file.
+SLOsive is a CLI tool that allows developers to embed [Sloth](https://github.com/slok/sloth) SLO/SLI [specifications](https://github.com/slok/sloth/blob/main/pkg/prometheus/api/v1/README.md) as in-code annotations rather than a YAML file.
 
 <p align="center">
 <img src="./static/images/simple-usage-example.gif">
 </p>
 
-Similar to how [Swaggo](https://github.com/swaggo/swag) does for Swagger docs,  Slotalk moves the SLO/SLI specification closer to where its relevant Prometheus metric was defined.
+Similar to how [Swaggo](https://github.com/swaggo/swag) does for Swagger docs,  SLOsive moves the SLO/SLI specification closer to where its relevant Prometheus metric was defined.
 
-Slotalk can be used in tandem with the [Sloth CLI](https://github.com/slok/sloth#getting-started) to generate Prometheus alerts groups from the in-code annotations, which can be used in any Prometheus/Grafana monitoring system to keep track of the service's SLOs. See examples below.
+SLOsive can be used in tandem with the [Sloth CLI](https://github.com/slok/sloth#getting-started) to generate Prometheus alerts groups from the in-code annotations, which can be used in any Prometheus/Grafana monitoring system to keep track of the service's SLOs. See examples below.
 
 ## Prerequisites
 
@@ -67,7 +67,7 @@ This example shows how sloth's comments can be added next to the prometheus metr
 Now running the following command from the root of the project.
 
 ```shell
-./slotalk init
+./xslosive init
 ```
 
 This will generate the following sloth definitions being outputted to standard out.
@@ -90,7 +90,7 @@ slos:
 This specification can then be passed to the Sloth CLI to generate Prometheus alerting groups.
 
 ```shell
-./slotalk init > sloth_defs.yaml && sloth generate -i sloth_defs.yaml
+./xslosive init > sloth_defs.yaml && sloth generate -i sloth_defs.yaml
 ```
 
 <details>
@@ -301,48 +301,51 @@ groups:
 
 ## 🔽 Install
 
-The tool can be installed easily via the installation script.
+SLOsive's xslosive CLI can be installed easily via the installation script.
 
 ```shell
-curl -sfL https://raw.githubusercontent.com/tfadeyi/slotalk/main/install.sh | sh -
+curl -sfL https://raw.githubusercontent.com/tfadeyi/slosive/main/install.sh | sh -
 ```
 
-This will install the required binary for machine (Linux/Mac only).
+This will install the required binary for your machine (Linux/Mac only).
 
 For other ways of installing the tool please check the [installation guide](https://slotalk.fadey.io/docs/category/installation).
 
 ## 🚀 Get Started
 
 1. Add comments to your source code. See [Declarative Comments](https://slotalk.fadey.io/docs/category/sloth-annotations).
-2. Run `slotalk` init in the project's root. This will parse your source code annotations and print the sloth definitions to standard out.
+2. Run `xslosive` init in the project's root. This will parse your source code annotations and print the sloth definitions to standard out.
     ```shell
-    ./slotalk init
+    ./xslosive init
     ```
 
    You can also specify the specific file to parse by using the `-f` flag.
 
     ```shell
-    ./slotalk init -f metrics.go
+    ./xslosive init -f metrics.go
     ```
 
    Another way would be to pass the input file through pipe.
 
     ```shell
-    cat metrics.go | ./slotalk init -f -
+    cat metrics.go | ./xslosive init -f -
     ```
 
 ## 🖥️ CLI usage
 
 ```text
 Usage:
-  slotalk init [flags]
+  xslosive init [flags]
 
 Flags:
-      --dirs strings     Comma separated list of directories to be parses by the tool (default [/home/jetstack-oluwole/go/src/github.com/tfadeyi/slotalk])
-  -f, --file string      Source file to parse.
-      --format strings   Output format (yaml,json). (default [yaml])
-  -h, --help             help for init
-      --lang string      Language of the source files. (go) (default "go")
+      --dirs strings     Comma separated list of directories to be parses by the tool (default [...])
+  -f, --file string            Target file to parse. example: ./metrics.go
+      --format strings         Output format (yaml,json). (default [yaml])
+  -h, --help                   help for init
+      --lang string            Language of the source files. (go) (default "go")
+      --services strings       Comma separated list of service names. These will select the output service specifications returned by the tool.
+      --specification string   The name of the specification the tool should parse the source file for, example: sloth or sloth-k8s. (default "sloth")
+      --to-file                Print the generated specifications to file, under ./slo_definitions.
 
 Global Flags:
       --log-level string   Only log messages with the given severity or above. One of: [none, debug, info, warn], errors will always be printed (default "info")
@@ -353,8 +356,8 @@ Global Flags:
 ### Nix
 Generate Prometheus SLO alert rules from an example [metrics.go](https://gist.githubusercontent.com/tfadeyi/df60aebd858d1c76428c045d4df7b114/raw/dfb96773dfb64086280845b9a0776012cbd7d26b/metrics.go).
    ```shell
-   # creates a nix demo shell with slotalk and sloth. just follow the shell instructions
-   nix develop github:tfadeyi/slotalk#demo
+   # creates a nix demo shell with slosive and sloth. just follow the shell instructions
+   nix develop github:tfadeyi/slosive#demo
    ```
 
 ## Motivation

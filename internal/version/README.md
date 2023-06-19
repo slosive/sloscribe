@@ -3,7 +3,7 @@
 # version
 
 ```go
-import "github.com/tfadeyi/slotalk/internal/version"
+import "github.com/tfadeyi/slosive/internal/version"
 ```
 
 Package version, returns the build info of the binary

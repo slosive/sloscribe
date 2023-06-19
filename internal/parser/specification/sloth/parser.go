@@ -3,9 +3,9 @@ package sloth
 import (
 	"context"
 
-	"github.com/tfadeyi/slotalk/internal/parser/lang"
-	"github.com/tfadeyi/slotalk/internal/parser/specification/sloth/language"
-	"github.com/tfadeyi/slotalk/internal/parser/specification/sloth/language/golang"
+	"github.com/tfadeyi/slosive/internal/parser/lang"
+	"github.com/tfadeyi/slosive/internal/parser/specification/sloth/language"
+	"github.com/tfadeyi/slosive/internal/parser/specification/sloth/language/golang"
 )
 
 // Parser struct, stores the language parser used to parse the data source
