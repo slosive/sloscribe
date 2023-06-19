@@ -1,4 +1,4 @@
-project_name: slotalk
+project_name: slosive
 before:
   hooks:
     - go mod tidy
@@ -10,8 +10,8 @@ builds:
     flags:
       - -trimpath
     ldflags:
-      - -s -w -X "github.com/tfadeyi/slotalk/internal/version.Platform={{ .Os }}/{{ .Arch }}" github.com/tfadeyi/slotalk/internal/version.Version={{.Version}}" -X "github.com/tfadeyi/slotalk/internal/version.Commit={{.Commit}}" -X "github.com/tfadeyi/slotalk/internal/version.Date={{.Date}}"
-    binary: "{{ .ProjectName }}"
+      - -s -w -X "github.com/tfadeyi/slosive/internal/version.Platform={{ .Os }}/{{ .Arch }}" github.com/tfadeyi/slosive/internal/version.Version={{.Version}}" -X "github.com/tfadeyi/slosive/internal/version.Commit={{.Commit}}" -X "github.com/tfadeyi/slosive/internal/version.Date={{.Date}}"
+    binary: "xslosive"
     goos:
       - linux
     goarch:
@@ -25,8 +25,8 @@ builds:
     flags:
       - -trimpath
     ldflags:
-      - -s -w -X "github.com/tfadeyi/slotalk/internal/version.Version={{.Version}}" -X "github.com/tfadeyi/slotalk/internal/version.Commit={{.Commit}}" -X "github.com/tfadeyi/slotalk/internal/version.Date={{.Date}}"
-    binary: "{{ .ProjectName }}"
+      - -s -w -X "github.com/tfadeyi/slosive/internal/version.Platform={{ .Os }}/{{ .Arch }}" github.com/tfadeyi/slosive/internal/version.Version={{.Version}}" -X "github.com/tfadeyi/slosive/internal/version.Commit={{.Commit}}" -X "github.com/tfadeyi/slosive/internal/version.Date={{.Date}}"
+    binary: "xslosive"
     goos:
       - darwin
     goarch:

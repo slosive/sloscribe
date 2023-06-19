@@ -3,7 +3,7 @@
 # options
 
 ```go
-import "github.com/tfadeyi/slotalk/internal/parser/options"
+import "github.com/tfadeyi/slosive/internal/parser/options"
 ```
 
 Package options contains the different options available for the Parser struct

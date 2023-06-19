@@ -1,7 +1,6 @@
 package init
 
 import (
-	"github.com/tfadeyi/slotalk/cmd/options/common"
 	"os"
 
 	multierr "github.com/hashicorp/go-multierror"
@@ -9,8 +8,9 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 	goaloe "github.com/tfadeyi/go-aloe"
-	"github.com/tfadeyi/slotalk/internal/generate"
-	"github.com/tfadeyi/slotalk/internal/parser/lang"
+	"github.com/tfadeyi/slosive/cmd/options/common"
+	"github.com/tfadeyi/slosive/internal/generate"
+	"github.com/tfadeyi/slosive/internal/parser/lang"
 )
 
 type (

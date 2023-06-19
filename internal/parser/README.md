@@ -3,7 +3,7 @@
 # parser
 
 ```go
-import "github.com/tfadeyi/slotalk/internal/parser"
+import "github.com/tfadeyi/slosive/internal/parser"
 ```
 
 ## Index

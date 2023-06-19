@@ -1,8 +1,8 @@
 package sloth
 
 import (
-	"github.com/tfadeyi/slotalk/internal/parser/options"
-	"github.com/tfadeyi/slotalk/internal/parser/specification/sloth/language/golang"
+	"github.com/tfadeyi/slosive/internal/parser/options"
+	"github.com/tfadeyi/slosive/internal/parser/specification/sloth/language/golang"
 )
 
 // Parser returns the options.Option to run the parser targeting sloth as a specification

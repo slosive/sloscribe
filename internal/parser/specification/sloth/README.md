@@ -3,7 +3,7 @@
 # sloth
 
 ```go
-import "github.com/tfadeyi/slotalk/internal/parser/specification/sloth"
+import "github.com/tfadeyi/slosive/internal/parser/specification/sloth"
 ```
 
 ## Index

@@ -3,7 +3,7 @@
 # common
 
 ```go
-import "github.com/tfadeyi/slotalk/cmd/options/common"
+import "github.com/tfadeyi/slosive/cmd/options/common"
 ```
 
 Package common contains the different common options across the different commands.

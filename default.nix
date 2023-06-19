@@ -12,7 +12,7 @@
 }:
 
 pkgs.buildGoApplication {
-  pname = "slotalk";
+  pname = "slosive";
   version = "v0.1.0-alpha.3";
   pwd = ./.;
   src = ./.;

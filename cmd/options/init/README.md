@@ -3,7 +3,7 @@
 # init
 
 ```go
-import "github.com/tfadeyi/slotalk/cmd/options/init"
+import "github.com/tfadeyi/slosive/cmd/options/init"
 ```
 
 Package spec contains the different options present under the spec generation command.

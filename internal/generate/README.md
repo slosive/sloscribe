@@ -3,7 +3,7 @@
 # generate
 
 ```go
-import "github.com/tfadeyi/slotalk/internal/generate"
+import "github.com/tfadeyi/slosive/internal/generate"
 ```
 
 Package generate contains utilities to generate data from a given specification

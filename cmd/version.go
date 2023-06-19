@@ -2,8 +2,8 @@ package cmd
 
 import (
 	"github.com/spf13/cobra"
-	"github.com/tfadeyi/slotalk/internal/logging"
-	"github.com/tfadeyi/slotalk/internal/version"
+	"github.com/tfadeyi/slosive/internal/logging"
+	"github.com/tfadeyi/slosive/internal/version"
 )
 
 var versionCmd = &cobra.Command{
