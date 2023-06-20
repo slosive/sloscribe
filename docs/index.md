@@ -1,11 +1,11 @@
 ---
-title: slosive
+title: xslosive
 ---
 
-## slosive
+## xslosive
 
-**Application**: slosive
-**Version**: v0.1.0-alpha.3
+**Application**: xslosive
+**Version**: v0.1.0-alpha.4
 
 ### Description
 

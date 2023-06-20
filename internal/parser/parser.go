@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/juju/errors"
-	"github.com/tfadeyi/slosive/internal/parser/options"
+	"github.com/slosive/xslosive/internal/parser/options"
 )
 
 type (

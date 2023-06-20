@@ -7,9 +7,9 @@ GOOS:=$(shell go env GOOS)
 GOARCH:=$(shell go env GOARCH)
 
 define LDFLAGS
--X "github.com/tfadeyi/slosive/internal/version.Platform=$(GOOS)/$(GOARCH)" \
--X "github.com/tfadeyi/slosive/internal/version.Commit=$(COMMIT)" \
--X "github.com/tfadeyi/slosive/internal/version.BuildDate=$(DATE)"
+-X "github.com/slosive/xslosive/internal/version.Platform=$(GOOS)/$(GOARCH)" \
+-X "github.com/slosive/xslosive/internal/version.Commit=$(COMMIT)" \
+-X "github.com/slosive/xslosive/internal/version.BuildDate=$(DATE)"
 endef
 
 BIN_NAME:=xslosive

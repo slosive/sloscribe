@@ -1,4 +1,4 @@
-module github.com/tfadeyi/slosive
+module github.com/slosive/xslosive
 
 go 1.20
 

@@ -3,7 +3,7 @@
 # version
 
 ```go
-import "github.com/tfadeyi/slosive/internal/version"
+import "github.com/slosive/xslosive/internal/version"
 ```
 
 Package version, returns the build info of the binary
@@ -29,7 +29,7 @@ var (
 ```
 
 <a name="BuildInfo"></a>
-## func [BuildInfo](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/version/version.go#L16>)
+## func [BuildInfo](<https://github.com/slosive/xslosive/blob/main/internal/version/version.go#L16>)
 
 ```go
 func BuildInfo() string
@@ -38,7 +38,7 @@ func BuildInfo() string
 BuildInfo returns the binary build information
 
 <a name="Info"></a>
-## func [Info](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/version/version.go#L26>)
+## func [Info](<https://github.com/slosive/xslosive/blob/main/internal/version/version.go#L26>)
 
 ```go
 func Info() string

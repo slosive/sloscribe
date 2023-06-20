@@ -3,7 +3,7 @@
 # parser
 
 ```go
-import "github.com/tfadeyi/slosive/internal/parser"
+import "github.com/slosive/xslosive/internal/parser"
 ```
 
 ## Index
@@ -14,7 +14,7 @@ import "github.com/tfadeyi/slosive/internal/parser"
 
 
 <a name="Parser"></a>
-## type [Parser](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/parser.go#L12-L16>)
+## type [Parser](<https://github.com/slosive/xslosive/blob/main/internal/parser/parser.go#L12-L16>)
 
 Parser parses source files containing the sloth definitions
 
@@ -27,7 +27,7 @@ type Parser struct {
 ```
 
 <a name="New"></a>
-### func [New](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/parser.go#L20>)
+### func [New](<https://github.com/slosive/xslosive/blob/main/internal/parser/parser.go#L20>)
 
 ```go
 func New(opts ...options.Option) (*Parser, error)
@@ -36,7 +36,7 @@ func New(opts ...options.Option) (*Parser, error)
 New creates a new instance of the parser. See options.Option for more info on the available configuration.
 
 <a name="Parser.Parse"></a>
-### func \(\*Parser\) [Parse](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/parser/parser.go#L37>)
+### func \(\*Parser\) [Parse](<https://github.com/slosive/xslosive/blob/main/internal/parser/parser.go#L37>)
 
 ```go
 func (p *Parser) Parse(ctx context.Context) (map[string]any, error)

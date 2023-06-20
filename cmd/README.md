@@ -3,7 +3,7 @@
 # cmd
 
 ```go
-import "github.com/tfadeyi/slosive/cmd"
+import "github.com/slosive/xslosive/cmd"
 ```
 
 Copyright © 2023 Oluwole Fadeyi
@@ -14,7 +14,7 @@ Copyright © 2023 Oluwole Fadeyi
 
 
 <a name="Execute"></a>
-## func [Execute](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/cmd/root.go#L43>)
+## func [Execute](<https://github.com/slosive/xslosive/blob/main/cmd/root.go#L43>)
 
 ```go
 func Execute(ctx context.Context)

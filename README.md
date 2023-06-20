@@ -1,34 +1,40 @@
 <div align="center">
 
-# SLOsive
+# XSLOsive
+#### SLOsive's X(SLO)sive CLI 💥
 
-<p align="center">
-<a href="https://slotalk.fadey.io/docs/intro"><strong>Docs</strong></a> |
-<a href="#Try-it!"><strong>Try it!</strong></a> |
-<a href="#Install"><strong>Install</strong></a> |
-<a href="#Get-Started"><strong>Get Started</strong></a>
-</p>
 
-[![Nix Devshell](https://img.shields.io/badge/nix-devshell-blue?logo=NixOS&style=for-the-badge)](https://github.com/tfadeyi/sloth-simple-comments#Nix)
-[![Continuous Integration](https://img.shields.io/github/actions/workflow/status/tfadeyi/sloth-simple-comments/ci.yml?branch=main&style=for-the-badge)](https://github.com/tfadeyi/sloth-simple-comments/actions/workflows/ci.yml)
-[![License](https://img.shields.io/badge/License-MIT-yellowgreen.svg?style=for-the-badge)](https://github.com/tfadeyi/sloth-simple-comments/blob/main/LICENSE)
-[![Language](https://img.shields.io/github/go-mod/go-version/tfadeyi/sloth-simple-comments?style=for-the-badge)](https://github.com/tfadeyi/sloth-simple-comments)
-[![GitHub release](https://img.shields.io/github/v/release/tfadeyi/sloth-simple-comments?color=green&style=for-the-badge)](https://github.com/tfadeyi/sloth-simple-comments/releases)
-[![Code size](https://img.shields.io/github/languages/code-size/tfadeyi/sloth-simple-comments?color=orange&style=for-the-badge)](https://github.com/tfadeyi/sloth-simple-comments)
-[![Go Report Card](https://goreportcard.com/badge/github.com/tfadeyi/sloth-simple-comments?style=for-the-badge)](https://goreportcard.com/report/github.com/tfadeyi/sloth-simple-comments)
+[![Nix Devshell](https://img.shields.io/badge/nix-devshell-blue?logo=NixOS&style=for-the-badge)](https://github.com/slosive/xslosive)
+[![Continuous Integration](https://img.shields.io/github/actions/workflow/status/slosive/xslosive/ci.yml?branch=main&style=for-the-badge)](https://github.com/slosive/xslosive/actions/workflows/ci.yml)
+[![License](https://img.shields.io/badge/License-MIT-yellowgreen.svg?style=for-the-badge)](https://github.com/slosive/xslosive/blob/main/LICENSE)
+[![Language](https://img.shields.io/github/go-mod/go-version/slosive/xslosive?style=for-the-badge)](https://github.com/slosive/xslosive)
+[![GitHub release](https://img.shields.io/github/v/release/slosive/xslosive?color=green&style=for-the-badge)](https://github.com/slosive/xslosive/releases)
+[![Code size](https://img.shields.io/github/languages/code-size/slosive/xslosive?color=orange&style=for-the-badge)](https://github.com/slosive/xslosive)
+[![Go Report Card](https://goreportcard.com/badge/github.com/slosive/xslosive?style=for-the-badge)](https://goreportcard.com/report/github.com/slosive/xslosive)
 </div>
-
-> ⚠ The tool is still not ready for real production use yet.
-
-SLOsive is a CLI tool that allows developers to embed [Sloth](https://github.com/slok/sloth) SLO/SLI [specifications](https://github.com/slok/sloth/blob/main/pkg/prometheus/api/v1/README.md) as in-code annotations rather than a YAML file.
 
 <p align="center">
 <img src="./static/images/simple-usage-example.gif">
 </p>
 
-Similar to how [Swaggo](https://github.com/swaggo/swag) does for Swagger docs,  SLOsive moves the SLO/SLI specification closer to where its relevant Prometheus metric was defined.
+<p align="center">
+<strong>[<a href="https://slotalk.fadey.io/docs/intro">Docs</a>]</strong>
+<strong>[<a href="#Try-it!">Try it!</a>]</strong>
+<strong>[<a href="#Install">Install</a>]</strong>
+<strong>[<a href="#Get-Started">Get Started</a>]</strong>
+</p>
 
-SLOsive can be used in tandem with the [Sloth CLI](https://github.com/slok/sloth#getting-started) to generate Prometheus alerts groups from the in-code annotations, which can be used in any Prometheus/Grafana monitoring system to keep track of the service's SLOs. See examples below.
+> ⚠ The tool is still not ready for real production use yet.
+
+---
+
+## What is it?
+
+SLOsive's XSLOsive CLI, is a tool that allows developers to embed [Sloth](https://github.com/slok/sloth) SLO/SLI [specifications](https://github.com/slok/sloth/blob/main/pkg/prometheus/api/v1/README.md) as in-code annotations rather than a YAML file.
+
+Similar to how [Swaggo](https://github.com/swaggo/swag) does for Swagger docs, XSLOsive moves the SLO/SLI specification closer to where its relevant Prometheus metric was defined.
+
+XSLOsive can be used in tandem with the [Sloth CLI](https://github.com/slok/sloth#getting-started) to generate Prometheus alerts groups from the in-code annotations, which can be used in any Prometheus/Grafana monitoring system to keep track of the service's SLOs. See examples below.
 
 ## Prerequisites
 
@@ -49,13 +55,13 @@ This example shows how sloth's comments can be added next to the prometheus metr
         // @sloth.sli total_query sum(rate(tenant_login_operations_total{client="chat-gpt"}[{{.window}}]))
         // @sloth.slo description 95% of logins to the chat-gpt app should be successful.
         // @sloth.alerting name ChatGPTAvailability
-        metricGaugeCertInventoryProcessingMessages = prometheus.NewGauge(
+        metricTenantLogins = prometheus.NewCounter(
             prometheus.GaugeOpts{
                 Namespace: "chatgpt",
                 Subsystem: "auth0",
                 Name:      "tenant_login_operations_total",
             })
-        tenantFailedLogins = prometheus.NewCounter(
+        metricTenantFailedLogins = prometheus.NewCounter(
             prometheus.CounterOpts{
             Namespace: "chatgpt",
             Subsystem: "auth0",
@@ -67,7 +73,7 @@ This example shows how sloth's comments can be added next to the prometheus metr
 Now running the following command from the root of the project.
 
 ```shell
-./xslosive init
+xslosive init
 ```
 
 This will generate the following sloth definitions being outputted to standard out.
@@ -90,7 +96,7 @@ slos:
 This specification can then be passed to the Sloth CLI to generate Prometheus alerting groups.
 
 ```shell
-./xslosive init > sloth_defs.yaml && sloth generate -i sloth_defs.yaml
+xslosive init > sloth_defs.yaml && sloth generate -i sloth_defs.yaml
 ```
 
 <details>
@@ -301,10 +307,10 @@ groups:
 
 ## 🔽 Install
 
-SLOsive's xslosive CLI can be installed easily via the installation script.
+SLOsive's XSLOsive CLI can be installed easily via the installation script.
 
 ```shell
-curl -sfL https://raw.githubusercontent.com/tfadeyi/slosive/main/install.sh | sh -
+curl -sfL https://raw.githubusercontent.com/slosive/xslosive/main/install.sh | sh -
 ```
 
 This will install the required binary for your machine (Linux/Mac only).
@@ -316,19 +322,19 @@ For other ways of installing the tool please check the [installation guide](http
 1. Add comments to your source code. See [Declarative Comments](https://slotalk.fadey.io/docs/category/sloth-annotations).
 2. Run `xslosive` init in the project's root. This will parse your source code annotations and print the sloth definitions to standard out.
     ```shell
-    ./xslosive init
+    xslosive init
     ```
 
    You can also specify the specific file to parse by using the `-f` flag.
 
     ```shell
-    ./xslosive init -f metrics.go
+    xslosive init -f metrics.go
     ```
 
    Another way would be to pass the input file through pipe.
 
     ```shell
-    cat metrics.go | ./xslosive init -f -
+    cat metrics.go | xslosive init -f -
     ```
 
 ## 🖥️ CLI usage
@@ -356,8 +362,8 @@ Global Flags:
 ### Nix
 Generate Prometheus SLO alert rules from an example [metrics.go](https://gist.githubusercontent.com/tfadeyi/df60aebd858d1c76428c045d4df7b114/raw/dfb96773dfb64086280845b9a0776012cbd7d26b/metrics.go).
    ```shell
-   # creates a nix demo shell with slosive and sloth. just follow the shell instructions
-   nix develop github:tfadeyi/slosive#demo
+   # creates a nix demo shell with xslosive and sloth. just follow the shell instructions
+   nix develop github:slosive/xslosive#demo
    ```
 
 ## Motivation

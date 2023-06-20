@@ -32,13 +32,13 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/tfadeyi/slosive/cmd"
-	"github.com/tfadeyi/slosive/internal/logging"
+	"github.com/slosive/xslosive/cmd"
+	"github.com/slosive/xslosive/internal/logging"
 )
 
-// @aloe name slosive
-// @aloe url https://tfadeyi.github.io
-// @aloe version v0.1.0-alpha.3
+// @aloe name xslosive
+// @aloe url https://slosive.github.io
+// @aloe version v0.1.0-alpha.4
 // @aloe description Generate Sloth SLO/SLI definitions from code annotations.
 
 func main() {
