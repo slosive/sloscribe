@@ -1,9 +1,9 @@
 package cmd
 
 import (
+	"github.com/slosive/xslosive/internal/logging"
+	"github.com/slosive/xslosive/internal/version"
 	"github.com/spf13/cobra"
-	"github.com/tfadeyi/slosive/internal/logging"
-	"github.com/tfadeyi/slosive/internal/version"
 )
 
 var versionCmd = &cobra.Command{

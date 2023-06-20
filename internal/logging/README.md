@@ -3,7 +3,7 @@
 # logging
 
 ```go
-import "github.com/tfadeyi/slosive/internal/logging"
+import "github.com/slosive/xslosive/internal/logging"
 ```
 
 Package logging uses the logr.Logger interface to integrate with different logging implementation for structured logging
@@ -23,7 +23,7 @@ Package logging uses the logr.Logger interface to integrate with different loggi
 
 
 <a name="ContextWithLogger"></a>
-## func [ContextWithLogger](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/logging/logging.go#L25>)
+## func [ContextWithLogger](<https://github.com/slosive/xslosive/blob/main/internal/logging/logging.go#L25>)
 
 ```go
 func ContextWithLogger(ctx context.Context, l Logger) context.Context
@@ -32,7 +32,7 @@ func ContextWithLogger(ctx context.Context, l Logger) context.Context
 ContextWithLogger wraps the logr NewContext function
 
 <a name="IsValidLevel"></a>
-## func [IsValidLevel](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/logging/logging.go#L87>)
+## func [IsValidLevel](<https://github.com/slosive/xslosive/blob/main/internal/logging/logging.go#L87>)
 
 ```go
 func IsValidLevel(lvl string) bool
@@ -41,7 +41,7 @@ func IsValidLevel(lvl string) bool
 IsValidLevel returns true if the input level is one of the valid values \("info", "debug", "warn", "none"\)
 
 <a name="Logger"></a>
-## type [Logger](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/logging/logging.go#L14-L17>)
+## type [Logger](<https://github.com/slosive/xslosive/blob/main/internal/logging/logging.go#L14-L17>)
 
 
 
@@ -53,7 +53,7 @@ type Logger struct {
 ```
 
 <a name="LoggerFromContext"></a>
-### func [LoggerFromContext](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/logging/logging.go#L30>)
+### func [LoggerFromContext](<https://github.com/slosive/xslosive/blob/main/internal/logging/logging.go#L30>)
 
 ```go
 func LoggerFromContext(ctx context.Context) Logger
@@ -62,7 +62,7 @@ func LoggerFromContext(ctx context.Context) Logger
 LoggerFromContext wraps the LoggerFromContext or creates a Zap production logger
 
 <a name="NewStandardLogger"></a>
-### func [NewStandardLogger](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/logging/logging.go#L39>)
+### func [NewStandardLogger](<https://github.com/slosive/xslosive/blob/main/internal/logging/logging.go#L39>)
 
 ```go
 func NewStandardLogger() Logger
@@ -71,7 +71,7 @@ func NewStandardLogger() Logger
 NewStandardLogger wraps the creation of a Golang standard logger
 
 <a name="Logger.Debug"></a>
-### func \(\*Logger\) [Debug](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/logging/logging.go#L68>)
+### func \(\*Logger\) [Debug](<https://github.com/slosive/xslosive/blob/main/internal/logging/logging.go#L68>)
 
 ```go
 func (l *Logger) Debug(msg string, keysAndValues ...interface{})
@@ -80,7 +80,7 @@ func (l *Logger) Debug(msg string, keysAndValues ...interface{})
 Debug logs the message using the info debug level \(1\)
 
 <a name="Logger.Info"></a>
-### func \(\*Logger\) [Info](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/logging/logging.go#L58>)
+### func \(\*Logger\) [Info](<https://github.com/slosive/xslosive/blob/main/internal/logging/logging.go#L58>)
 
 ```go
 func (l *Logger) Info(msg string, keysAndValues ...interface{})
@@ -89,7 +89,7 @@ func (l *Logger) Info(msg string, keysAndValues ...interface{})
 Info logs the message using the info log level \(2\)
 
 <a name="Logger.SetLevel"></a>
-### func \(\*Logger\) [SetLevel](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/logging/logging.go#L50>)
+### func \(\*Logger\) [SetLevel](<https://github.com/slosive/xslosive/blob/main/internal/logging/logging.go#L50>)
 
 ```go
 func (l *Logger) SetLevel(lvl string) Logger
@@ -98,7 +98,7 @@ func (l *Logger) SetLevel(lvl string) Logger
 SetLevel sets the global level against which all info logs will be compared. If this is greater than or equal to the "V" of the logger, the message will be logged. A higher value here means more logs will be written
 
 <a name="Logger.Warn"></a>
-### func \(\*Logger\) [Warn](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/logging/logging.go#L63>)
+### func \(\*Logger\) [Warn](<https://github.com/slosive/xslosive/blob/main/internal/logging/logging.go#L63>)
 
 ```go
 func (l *Logger) Warn(err error, keysAndValues ...interface{})
@@ -107,7 +107,7 @@ func (l *Logger) Warn(err error, keysAndValues ...interface{})
 Warn logs the error using the warning log level \(3\)
 
 <a name="Logger.WithName"></a>
-### func \(\*Logger\) [WithName](<https://github.com/tfadeyi/sloth-simple-comments/blob/main/internal/logging/logging.go#L43>)
+### func \(\*Logger\) [WithName](<https://github.com/slosive/xslosive/blob/main/internal/logging/logging.go#L43>)
 
 ```go
 func (l *Logger) WithName(name string) Logger

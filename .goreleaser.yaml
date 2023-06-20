@@ -1,4 +1,4 @@
-project_name: slosive
+project_name: xslosive
 before:
   hooks:
     - go mod tidy
@@ -10,8 +10,8 @@ builds:
     flags:
       - -trimpath
     ldflags:
-      - -s -w -X "github.com/tfadeyi/slosive/internal/version.Platform={{ .Os }}/{{ .Arch }}" github.com/tfadeyi/slosive/internal/version.Version={{.Version}}" -X "github.com/tfadeyi/slosive/internal/version.Commit={{.Commit}}" -X "github.com/tfadeyi/slosive/internal/version.Date={{.Date}}"
-    binary: "xslosive"
+      - -s -w -X "github.com/slosive/xslosive/internal/version.Platform={{ .Os }}/{{ .Arch }}" github.com/slosive/xslosive/internal/version.Version={{.Version}}" -X "github.com/slosive/xslosive/internal/version.Commit={{.Commit}}" -X "github.com/slosive/xslosive/internal/version.Date={{.Date}}"
+    binary: "{{ .ProjectName }}"
     goos:
       - linux
     goarch:
@@ -25,8 +25,8 @@ builds:
     flags:
       - -trimpath
     ldflags:
-      - -s -w -X "github.com/tfadeyi/slosive/internal/version.Platform={{ .Os }}/{{ .Arch }}" github.com/tfadeyi/slosive/internal/version.Version={{.Version}}" -X "github.com/tfadeyi/slosive/internal/version.Commit={{.Commit}}" -X "github.com/tfadeyi/slosive/internal/version.Date={{.Date}}"
-    binary: "xslosive"
+      - -s -w -X "github.com/slosive/xslosive/internal/version.Platform={{ .Os }}/{{ .Arch }}" github.com/slosive/xslosive/internal/version.Version={{.Version}}" -X "github.com/slosive/xslosive/internal/version.Commit={{.Commit}}" -X "github.com/slosive/xslosive/internal/version.Date={{.Date}}"
+    binary: "{{ .ProjectName }}"
     goos:
       - darwin
     goarch:
@@ -53,7 +53,7 @@ kos:
     build: "linux"
     base_image: gcr.io/distroless/base:nonroot
     labels:
-      org.opencontainers.image.source: "https://github.com/tfadeyi/{{ .ProjectName }}"
+      org.opencontainers.image.source: "https://github.com/slosive/{{ .ProjectName }}"
       org.opencontainers.image.description: "Generate Sloth SLO/SLI definitions from source code."
       org.opencontainers.image.licenses: MIT
       org.opencontainers.image.title: "{{ .ProjectName }}"

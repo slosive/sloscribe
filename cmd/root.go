@@ -7,9 +7,9 @@ import (
 	"context"
 	"os"
 
+	commonoptions "github.com/slosive/xslosive/cmd/options/common"
+	"github.com/slosive/xslosive/internal/logging"
 	"github.com/spf13/cobra"
-	commonoptions "github.com/tfadeyi/slosive/cmd/options/common"
-	"github.com/tfadeyi/slosive/internal/logging"
 )
 
 // rootCmd represents the base command when called without any subcommands

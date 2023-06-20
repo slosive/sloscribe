@@ -12,8 +12,8 @@
 }:
 
 pkgs.buildGoApplication {
-  pname = "slosive";
-  version = "v0.1.0-alpha.3";
+  pname = "xslosive";
+  version = "v0.1.0-alpha.4";
   pwd = ./.;
   src = ./.;
   modules = ./gomod2nix.toml;
