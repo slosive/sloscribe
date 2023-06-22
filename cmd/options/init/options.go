@@ -5,9 +5,9 @@ import (
 
 	multierr "github.com/hashicorp/go-multierror"
 	"github.com/juju/errors"
-	"github.com/slosive/xslosive/cmd/options/common"
-	"github.com/slosive/xslosive/internal/generate"
-	"github.com/slosive/xslosive/internal/parser/lang"
+	"github.com/slosive/sloscribe/cmd/options/common"
+	"github.com/slosive/sloscribe/internal/generate"
+	"github.com/slosive/sloscribe/internal/parser/lang"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 	goaloe "github.com/tfadeyi/go-aloe"

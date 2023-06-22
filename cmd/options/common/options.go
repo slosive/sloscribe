@@ -3,7 +3,7 @@ package common
 import (
 	multierr "github.com/hashicorp/go-multierror"
 	"github.com/juju/errors"
-	"github.com/slosive/xslosive/internal/logging"
+	"github.com/slosive/sloscribe/internal/logging"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 	goaloe "github.com/tfadeyi/go-aloe"

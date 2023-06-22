@@ -7,12 +7,12 @@ GOOS:=$(shell go env GOOS)
 GOARCH:=$(shell go env GOARCH)
 
 define LDFLAGS
--X "github.com/slosive/xslosive/internal/version.Platform=$(GOOS)/$(GOARCH)" \
--X "github.com/slosive/xslosive/internal/version.Commit=$(COMMIT)" \
--X "github.com/slosive/xslosive/internal/version.BuildDate=$(DATE)"
+-X "github.com/slosive/sloscribe/internal/version.Platform=$(GOOS)/$(GOARCH)" \
+-X "github.com/slosive/sloscribe/internal/version.Commit=$(COMMIT)" \
+-X "github.com/slosive/sloscribe/internal/version.BuildDate=$(DATE)"
 endef
 
-BIN_NAME:=xslosive
+BIN_NAME:=sloscribe
 GOFLAGS:=-mod=readonly
 GO_BUILD:=go build $(GOFLAGS) -ldflags '$(LDFLAGS)'
 

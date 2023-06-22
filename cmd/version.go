@@ -1,8 +1,8 @@
 package cmd
 
 import (
-	"github.com/slosive/xslosive/internal/logging"
-	"github.com/slosive/xslosive/internal/version"
+	"github.com/slosive/sloscribe/internal/logging"
+	"github.com/slosive/sloscribe/internal/version"
 	"github.com/spf13/cobra"
 )
 

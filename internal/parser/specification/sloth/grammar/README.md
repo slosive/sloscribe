@@ -3,7 +3,7 @@
 # grammar
 
 ```go
-import "github.com/slosive/xslosive/internal/parser/specification/sloth/grammar"
+import "github.com/slosive/sloscribe/internal/parser/specification/sloth/grammar"
 ```
 
 Package grammar contains the grammar rules and lexer related to sloth
@@ -30,7 +30,7 @@ var (
 ```
 
 <a name="Eval"></a>
-## func [Eval](<https://github.com/slosive/xslosive/blob/main/internal/parser/specification/sloth/grammar/grammar.go#L196>)
+## func [Eval](<https://github.com/slosive/sloscribe/blob/main/internal/parser/specification/sloth/grammar/grammar.go#L196>)
 
 ```go
 func Eval(source string, options ...participle.ParseOption) (*sloth.Spec, error)
@@ -39,7 +39,7 @@ func Eval(source string, options ...participle.ParseOption) (*sloth.Spec, error)
 Eval evaluates the source input against the grammar and returns an instance of \*sloth.spec
 
 <a name="Grammar"></a>
-## type [Grammar](<https://github.com/slosive/xslosive/blob/main/internal/parser/specification/sloth/grammar/grammar.go#L15-L18>)
+## type [Grammar](<https://github.com/slosive/sloscribe/blob/main/internal/parser/specification/sloth/grammar/grammar.go#L15-L18>)
 
 Grammar is the participle grammar use to parse the Sloth comment groups in source files
 
@@ -51,7 +51,7 @@ type Grammar struct {
 ```
 
 <a name="Scope"></a>
-## type [Scope](<https://github.com/slosive/xslosive/blob/main/internal/parser/specification/sloth/grammar/grammar.go#L25-L29>)
+## type [Scope](<https://github.com/slosive/sloscribe/blob/main/internal/parser/specification/sloth/grammar/grammar.go#L25-L29>)
 
 Scope defines the statement scope, similar to a code function
 
@@ -64,7 +64,7 @@ type Scope struct {
 ```
 
 <a name="Scope.GetType"></a>
-### func \(Scope\) [GetType](<https://github.com/slosive/xslosive/blob/main/internal/parser/specification/sloth/grammar/grammar.go#L44>)
+### func \(Scope\) [GetType](<https://github.com/slosive/sloscribe/blob/main/internal/parser/specification/sloth/grammar/grammar.go#L44>)
 
 ```go
 func (k Scope) GetType() string
@@ -73,7 +73,7 @@ func (k Scope) GetType() string
 GetType returns the type of the statement scope
 
 <a name="Statement"></a>
-## type [Statement](<https://github.com/slosive/xslosive/blob/main/internal/parser/specification/sloth/grammar/grammar.go#L20-L23>)
+## type [Statement](<https://github.com/slosive/sloscribe/blob/main/internal/parser/specification/sloth/grammar/grammar.go#L20-L23>)
 
 Statement is any comment starting with @sloth keyword
 

@@ -3,7 +3,7 @@
 # golang
 
 ```go
-import "github.com/slosive/xslosive/internal/parser/specification/sloth/language/golang"
+import "github.com/slosive/sloscribe/internal/parser/specification/sloth/language/golang"
 ```
 
 ## Index
@@ -13,7 +13,7 @@ import "github.com/slosive/xslosive/internal/parser/specification/sloth/language
 
 
 <a name="Options"></a>
-## type [Options](<https://github.com/slosive/xslosive/blob/main/internal/parser/specification/sloth/language/golang/parser.go#L32-L38>)
+## type [Options](<https://github.com/slosive/sloscribe/blob/main/internal/parser/specification/sloth/language/golang/parser.go#L32-L38>)
 
 Options contains the configuration options available to the Parser
 
@@ -28,7 +28,7 @@ type Options struct {
 ```
 
 <a name="NewOptions"></a>
-### func [NewOptions](<https://github.com/slosive/xslosive/blob/main/internal/parser/specification/sloth/language/golang/parser.go#L40>)
+### func [NewOptions](<https://github.com/slosive/sloscribe/blob/main/internal/parser/specification/sloth/language/golang/parser.go#L40>)
 
 ```go
 func NewOptions() *Options

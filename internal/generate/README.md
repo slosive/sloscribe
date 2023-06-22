@@ -3,7 +3,7 @@
 # generate
 
 ```go
-import "github.com/slosive/xslosive/internal/generate"
+import "github.com/slosive/sloscribe/internal/generate"
 ```
 
 Package generate contains utilities to generate data from a given specification
@@ -33,7 +33,7 @@ var ErrUnsupportedFormat = errors.New("the specification is in an invalid format
 ```
 
 <a name="IsValidOutputFormat"></a>
-## func [IsValidOutputFormat](<https://github.com/slosive/xslosive/blob/main/internal/generate/generate.go#L24>)
+## func [IsValidOutputFormat](<https://github.com/slosive/sloscribe/blob/main/internal/generate/generate.go#L24>)
 
 ```go
 func IsValidOutputFormat(format string) bool
@@ -42,7 +42,7 @@ func IsValidOutputFormat(format string) bool
 
 
 <a name="WriteSpecifications"></a>
-## func [WriteSpecifications](<https://github.com/slosive/xslosive/blob/main/internal/generate/generate.go#L34>)
+## func [WriteSpecifications](<https://github.com/slosive/sloscribe/blob/main/internal/generate/generate.go#L34>)
 
 ```go
 func WriteSpecifications(writer io.Writer, header []byte, specs map[string]any, toFile bool, outputDirectory string, kubernetes bool, formats ...string) error

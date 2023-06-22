@@ -3,7 +3,7 @@
 # common
 
 ```go
-import "github.com/slosive/xslosive/cmd/options/common"
+import "github.com/slosive/sloscribe/cmd/options/common"
 ```
 
 Package common contains the different common options across the different commands.
@@ -17,7 +17,7 @@ Package common contains the different common options across the different comman
 
 
 <a name="Options"></a>
-## type [Options](<https://github.com/slosive/xslosive/blob/main/cmd/options/common/options.go#L15-L18>)
+## type [Options](<https://github.com/slosive/sloscribe/blob/main/cmd/options/common/options.go#L15-L18>)
 
 Options is the list of options/flag available to the application, plus the clients needed by the application to function.
 
@@ -29,7 +29,7 @@ type Options struct {
 ```
 
 <a name="New"></a>
-### func [New](<https://github.com/slosive/xslosive/blob/main/cmd/options/common/options.go#L22>)
+### func [New](<https://github.com/slosive/sloscribe/blob/main/cmd/options/common/options.go#L22>)
 
 ```go
 func New() *Options
@@ -38,7 +38,7 @@ func New() *Options
 New creates a new instance of the application's options
 
 <a name="Options.Complete"></a>
-### func \(\*Options\) [Complete](<https://github.com/slosive/xslosive/blob/main/cmd/options/common/options.go#L33>)
+### func \(\*Options\) [Complete](<https://github.com/slosive/sloscribe/blob/main/cmd/options/common/options.go#L33>)
 
 ```go
 func (o *Options) Complete() error
@@ -47,7 +47,7 @@ func (o *Options) Complete() error
 Complete initialises the components needed for the application to function given the options
 
 <a name="Options.Prepare"></a>
-### func \(\*Options\) [Prepare](<https://github.com/slosive/xslosive/blob/main/cmd/options/common/options.go#L27>)
+### func \(\*Options\) [Prepare](<https://github.com/slosive/sloscribe/blob/main/cmd/options/common/options.go#L27>)
 
 ```go
 func (o *Options) Prepare(cmd *cobra.Command) *Options

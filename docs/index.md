@@ -1,10 +1,10 @@
 ---
-title: xslosive
+title: sloscribe
 ---
 
-## xslosive
+## sloscribe
 
-**Application**: xslosive
+**Application**: sloscribe
 **Version**: v0.1.0-alpha.4
 
 ### Description

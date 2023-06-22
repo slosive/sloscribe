@@ -3,7 +3,7 @@
 # init
 
 ```go
-import "github.com/slosive/xslosive/cmd/options/init"
+import "github.com/slosive/sloscribe/cmd/options/init"
 ```
 
 Package spec contains the different options present under the spec generation command.
@@ -17,7 +17,7 @@ Package spec contains the different options present under the spec generation co
 
 
 <a name="Options"></a>
-## type [Options](<https://github.com/slosive/xslosive/blob/main/cmd/options/init/options.go#L19-L29>)
+## type [Options](<https://github.com/slosive/sloscribe/blob/main/cmd/options/init/options.go#L19-L29>)
 
 Options is the list of options/flag available to the application, plus the clients needed by the application to function.
 
@@ -36,7 +36,7 @@ type Options struct {
 ```
 
 <a name="New"></a>
-### func [New](<https://github.com/slosive/xslosive/blob/main/cmd/options/init/options.go#L33>)
+### func [New](<https://github.com/slosive/sloscribe/blob/main/cmd/options/init/options.go#L33>)
 
 ```go
 func New(c *common.Options) *Options
@@ -45,7 +45,7 @@ func New(c *common.Options) *Options
 New creates a new instance of the application's options
 
 <a name="Options.Complete"></a>
-### func \(\*Options\) [Complete](<https://github.com/slosive/xslosive/blob/main/cmd/options/init/options.go#L46>)
+### func \(\*Options\) [Complete](<https://github.com/slosive/sloscribe/blob/main/cmd/options/init/options.go#L46>)
 
 ```go
 func (o *Options) Complete() error
@@ -54,7 +54,7 @@ func (o *Options) Complete() error
 Complete initialises the components needed for the application to function given the options
 
 <a name="Options.Prepare"></a>
-### func \(\*Options\) [Prepare](<https://github.com/slosive/xslosive/blob/main/cmd/options/init/options.go#L40>)
+### func \(\*Options\) [Prepare](<https://github.com/slosive/sloscribe/blob/main/cmd/options/init/options.go#L40>)
 
 ```go
 func (o *Options) Prepare(cmd *cobra.Command) *Options

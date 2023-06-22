@@ -32,11 +32,11 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/slosive/xslosive/cmd"
-	"github.com/slosive/xslosive/internal/logging"
+	"github.com/slosive/sloscribe/cmd"
+	"github.com/slosive/sloscribe/internal/logging"
 )
 
-// @aloe name xslosive
+// @aloe name sloscribe
 // @aloe url https://slosive.github.io
 // @aloe version v0.1.0-alpha.4
 // @aloe description Generate Sloth SLO/SLI definitions from code annotations.

@@ -3,7 +3,7 @@
 # options
 
 ```go
-import "github.com/slosive/xslosive/internal/parser/options"
+import "github.com/slosive/sloscribe/internal/parser/options"
 ```
 
 Package options contains the different options available for the Parser struct
@@ -21,7 +21,7 @@ Package options contains the different options available for the Parser struct
 
 
 <a name="Option"></a>
-## type [Option](<https://github.com/slosive/xslosive/blob/main/internal/parser/options/options.go#L41>)
+## type [Option](<https://github.com/slosive/sloscribe/blob/main/internal/parser/options/options.go#L41>)
 
 Option is a more atomic to configure the different Options rather than passing the entire Options struct.
 
@@ -30,7 +30,7 @@ type Option func(p *Options)
 ```
 
 <a name="Include"></a>
-### func [Include](<https://github.com/slosive/xslosive/blob/main/internal/parser/options/options.go#L46>)
+### func [Include](<https://github.com/slosive/sloscribe/blob/main/internal/parser/options/options.go#L46>)
 
 ```go
 func Include(dirs ...string) Option
@@ -39,7 +39,7 @@ func Include(dirs ...string) Option
 Include configure the parser to parse the given included directories SourceFile and SourceContent will override this, if present.
 
 <a name="Language"></a>
-### func [Language](<https://github.com/slosive/xslosive/blob/main/internal/parser/options/options.go#L77>)
+### func [Language](<https://github.com/slosive/sloscribe/blob/main/internal/parser/options/options.go#L77>)
 
 ```go
 func Language(lang lang.Target) Option
@@ -48,7 +48,7 @@ func Language(lang lang.Target) Option
 Language configure the parser to parse using a specific target language
 
 <a name="Logger"></a>
-### func [Logger](<https://github.com/slosive/xslosive/blob/main/internal/parser/options/options.go#L53>)
+### func [Logger](<https://github.com/slosive/sloscribe/blob/main/internal/parser/options/options.go#L53>)
 
 ```go
 func Logger(logger *logging.Logger) Option
@@ -57,7 +57,7 @@ func Logger(logger *logging.Logger) Option
 Logger configure the parser's logger
 
 <a name="SourceContent"></a>
-### func [SourceContent](<https://github.com/slosive/xslosive/blob/main/internal/parser/options/options.go#L70>)
+### func [SourceContent](<https://github.com/slosive/sloscribe/blob/main/internal/parser/options/options.go#L70>)
 
 ```go
 func SourceContent(content io.ReadCloser) Option
@@ -66,7 +66,7 @@ func SourceContent(content io.ReadCloser) Option
 SourceContent configure the parser to parse a specific io.Reader Shouldn't be used together with SourceFile
 
 <a name="SourceFile"></a>
-### func [SourceFile](<https://github.com/slosive/xslosive/blob/main/internal/parser/options/options.go#L62>)
+### func [SourceFile](<https://github.com/slosive/sloscribe/blob/main/internal/parser/options/options.go#L62>)
 
 ```go
 func SourceFile(file string) Option
@@ -75,7 +75,7 @@ func SourceFile(file string) Option
 SourceFile configure the parser to parse a specific file Shouldn't be used together with SourceContent
 
 <a name="Specification"></a>
-### func [Specification](<https://github.com/slosive/xslosive/blob/main/internal/parser/options/options.go#L84>)
+### func [Specification](<https://github.com/slosive/sloscribe/blob/main/internal/parser/options/options.go#L84>)
 
 ```go
 func Specification(target specification.Target) Option
@@ -84,7 +84,7 @@ func Specification(target specification.Target) Option
 Specification configure the parser to parse for a specific target specification
 
 <a name="Options"></a>
-## type [Options](<https://github.com/slosive/xslosive/blob/main/internal/parser/options/options.go#L13-L39>)
+## type [Options](<https://github.com/slosive/sloscribe/blob/main/internal/parser/options/options.go#L13-L39>)
 
 Options is a struct contains all the configurations available for the parser
 

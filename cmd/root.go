@@ -7,8 +7,8 @@ import (
 	"context"
 	"os"
 
-	commonoptions "github.com/slosive/xslosive/cmd/options/common"
-	"github.com/slosive/xslosive/internal/logging"
+	commonoptions "github.com/slosive/sloscribe/cmd/options/common"
+	"github.com/slosive/sloscribe/internal/logging"
 	"github.com/spf13/cobra"
 )
 
@@ -17,7 +17,7 @@ var rootCmd *cobra.Command
 
 func cmd(opts *commonoptions.Options) *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "xslosive",
+		Use:   "sloscribe",
 		Short: "Generate Sloth SLO/SLI definitions from code annotations.",
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 			logger := logging.LoggerFromContext(cmd.Context())
