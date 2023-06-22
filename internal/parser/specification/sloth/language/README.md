@@ -3,7 +3,7 @@
 # language
 
 ```go
-import "github.com/slosive/xslosive/internal/parser/specification/sloth/language"
+import "github.com/slosive/sloscribe/internal/parser/specification/sloth/language"
 ```
 
 ## Index
@@ -12,7 +12,7 @@ import "github.com/slosive/xslosive/internal/parser/specification/sloth/language
 
 
 <a name="Language"></a>
-## type [Language](<https://github.com/slosive/xslosive/blob/main/internal/parser/specification/sloth/language/language.go#L9-L11>)
+## type [Language](<https://github.com/slosive/sloscribe/blob/main/internal/parser/specification/sloth/language/language.go#L9-L11>)
 
 Language is the parsing strategy used by the Parser to parse comments in the different source files
 

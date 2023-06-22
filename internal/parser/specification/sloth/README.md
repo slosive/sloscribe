@@ -3,7 +3,7 @@
 # sloth
 
 ```go
-import "github.com/slosive/xslosive/internal/parser/specification/sloth"
+import "github.com/slosive/sloscribe/internal/parser/specification/sloth"
 ```
 
 ## Index
@@ -13,7 +13,7 @@ import "github.com/slosive/xslosive/internal/parser/specification/sloth"
 
 
 <a name="Parser"></a>
-## func [Parser](<https://github.com/slosive/xslosive/blob/main/internal/parser/specification/sloth/options.go#L9>)
+## func [Parser](<https://github.com/slosive/sloscribe/blob/main/internal/parser/specification/sloth/options.go#L9>)
 
 ```go
 func Parser(kubernetes bool) options.Option
@@ -22,7 +22,7 @@ func Parser(kubernetes bool) options.Option
 Parser returns the options.Option to run the parser targeting sloth as a specification
 
 <a name="Options"></a>
-## type [Options](<https://github.com/slosive/xslosive/blob/main/internal/parser/specification/sloth/parser.go#L17-L20>)
+## type [Options](<https://github.com/slosive/sloscribe/blob/main/internal/parser/specification/sloth/parser.go#L17-L20>)
 
 Options is a struct contains all the configurations available for the sloth parser
 

@@ -14,8 +14,8 @@ import (
 	"github.com/juju/errors"
 	k8sloth "github.com/slok/sloth/pkg/kubernetes/api/sloth/v1"
 	sloth "github.com/slok/sloth/pkg/prometheus/api/v1"
-	"github.com/slosive/xslosive/internal/logging"
-	"github.com/slosive/xslosive/internal/parser/specification/sloth/grammar"
+	"github.com/slosive/sloscribe/internal/logging"
+	"github.com/slosive/sloscribe/internal/parser/specification/sloth/grammar"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 

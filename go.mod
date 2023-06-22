@@ -1,4 +1,4 @@
-module github.com/slosive/xslosive
+module github.com/slosive/sloscribe
 
 go 1.20
 

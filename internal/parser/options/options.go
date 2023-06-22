@@ -3,9 +3,9 @@ package options
 import (
 	"io"
 
-	"github.com/slosive/xslosive/internal/logging"
-	"github.com/slosive/xslosive/internal/parser/lang"
-	"github.com/slosive/xslosive/internal/parser/specification"
+	"github.com/slosive/sloscribe/internal/logging"
+	"github.com/slosive/sloscribe/internal/parser/lang"
+	"github.com/slosive/sloscribe/internal/parser/specification"
 )
 
 type (

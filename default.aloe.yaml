@@ -34,5 +34,5 @@ errors_definitions:
         details: The tool has failed to print outputDirectory the Sloth definitions for service.
         summary: The tool has failed to print outputDirectory the Sloth definitions for service.
         title: Error Creating Artefacts
-name: xslosive
+name: sloscribe
 version: v0.1.0-alpha.4

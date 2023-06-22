@@ -34,4 +34,4 @@ gomod2nix
 '
 """
 startup.build.text = "alias build='make build'"
-startup.xslosive.text = "alias xslosive='build && ./builds/xslosive'"
+startup.sloscribe.text = "alias sloscribe='build && ./builds/sloscribe'"

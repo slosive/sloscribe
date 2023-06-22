@@ -1,8 +1,8 @@
 package sloth
 
 import (
-	"github.com/slosive/xslosive/internal/parser/options"
-	"github.com/slosive/xslosive/internal/parser/specification/sloth/language/golang"
+	"github.com/slosive/sloscribe/internal/parser/options"
+	"github.com/slosive/sloscribe/internal/parser/specification/sloth/language/golang"
 )
 
 // Parser returns the options.Option to run the parser targeting sloth as a specification

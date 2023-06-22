@@ -12,7 +12,7 @@
 }:
 
 pkgs.buildGoApplication {
-  pname = "xslosive";
+  pname = "sloscribe";
   version = "v0.1.0-alpha.4";
   pwd = ./.;
   src = ./.;

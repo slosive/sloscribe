@@ -1,7 +1,7 @@
-# XSLOsive CLI Release Process
+# SLOscribe CLI Release Process
 
 The repo uses [goreleaser](https://goreleaser.com/) and [ko](https://ko.build/) to release the different artifacts.
-To make a new release just create a new git tag, this will trigger a new Github action release [workflow](https://github.com/slosive/xslosive/blob/main/.github/workflows/release.yml).
+To make a new release just create a new git tag, this will trigger a new Github action release [workflow](https://github.com/slosive/sloscribe/blob/main/.github/workflows/release.yml).
 
 ```shell
 git tag -a v0.1.0 -m "First release"

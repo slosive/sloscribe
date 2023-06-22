@@ -3,7 +3,7 @@
 # lang
 
 ```go
-import "github.com/slosive/xslosive/internal/parser/lang"
+import "github.com/slosive/sloscribe/internal/parser/lang"
 ```
 
 ## Index
@@ -25,7 +25,7 @@ const (
 ```
 
 <a name="IsSupportedLanguage"></a>
-## func [IsSupportedLanguage](<https://github.com/slosive/xslosive/blob/main/internal/parser/lang/lang.go#L14>)
+## func [IsSupportedLanguage](<https://github.com/slosive/sloscribe/blob/main/internal/parser/lang/lang.go#L14>)
 
 ```go
 func IsSupportedLanguage(l Target) bool
@@ -34,7 +34,7 @@ func IsSupportedLanguage(l Target) bool
 IsSupportedLanguage returns true is the input language is a supported language
 
 <a name="Target"></a>
-## type [Target](<https://github.com/slosive/xslosive/blob/main/internal/parser/lang/lang.go#L5>)
+## type [Target](<https://github.com/slosive/sloscribe/blob/main/internal/parser/lang/lang.go#L5>)
 
 Target represents the language for the source file parsed by the generator
 

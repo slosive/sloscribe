@@ -3,7 +3,7 @@
 # specification
 
 ```go
-import "github.com/slosive/xslosive/internal/parser/specification"
+import "github.com/slosive/sloscribe/internal/parser/specification"
 ```
 
 ## Index
@@ -12,7 +12,7 @@ import "github.com/slosive/xslosive/internal/parser/specification"
 
 
 <a name="Target"></a>
-## type [Target](<https://github.com/slosive/xslosive/blob/main/internal/parser/specification/target.go#L10-L13>)
+## type [Target](<https://github.com/slosive/sloscribe/blob/main/internal/parser/specification/target.go#L10-L13>)
 
 Target is the specification target interface, it defines the specification target contract that all new targets should adhere to.
 
