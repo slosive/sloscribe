@@ -9,7 +9,7 @@ GOARCH:=$(shell go env GOARCH)
 define LDFLAGS
 -X "github.com/slosive/sloscribe/internal/version.Platform=$(GOOS)/$(GOARCH)" \
 -X "github.com/slosive/sloscribe/internal/version.Commit=$(COMMIT)" \
--X "github.com/slosive/sloscribe/internal/version.BuildDate=$(DATE)"
+-X "github.com/slosive/sloscribe/internal/version.Date=$(DATE)"
 endef
 
 BIN_NAME:=sloscribe

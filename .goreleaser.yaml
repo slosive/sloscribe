@@ -10,7 +10,7 @@ builds:
     flags:
       - -trimpath
     ldflags:
-      - -s -w -X "github.com/slosive/sloscribe/internal/version.Platform={{ .Os }}/{{ .Arch }}" github.com/slosive/sloscribe/internal/version.Version={{.Version}}" -X "github.com/slosive/sloscribe/internal/version.Commit={{.Commit}}" -X "github.com/slosive/sloscribe/internal/version.Date={{.Date}}"
+      - '-s -w -X "internal/version.Platform={{ .Os }}/{{ .Arch }}" -X "github.com/slosive/sloscribe/internal/version.Version={{ .Version }}" -X "github.com/slosive/sloscribe/internal/version.Commit={{ .Commit }}" -X "github.com/slosive/sloscribe/internal/version.Date={{ .Date }}"'
     binary: "{{ .ProjectName }}"
     goos:
       - linux
@@ -25,7 +25,7 @@ builds:
     flags:
       - -trimpath
     ldflags:
-      - -s -w -X "github.com/slosive/sloscribe/internal/version.Platform={{ .Os }}/{{ .Arch }}" github.com/slosive/sloscribe/internal/version.Version={{.Version}}" -X "github.com/slosive/sloscribe/internal/version.Commit={{.Commit}}" -X "github.com/slosive/sloscribe/internal/version.Date={{.Date}}"
+      - '-s -w -X "github.com/slosive/sloscribe/internal/version.Platform={{ .Os }}/{{ .Arch }}" -X "github.com/slosive/sloscribe/internal/version.Version={{ .Version }}" -X "github.com/slosive/sloscribe/internal/version.Commit={{.Commit}}" -X "github.com/slosive/sloscribe/internal/version.Date={{ .Date }}"'
     binary: "{{ .ProjectName }}"
     goos:
       - darwin
