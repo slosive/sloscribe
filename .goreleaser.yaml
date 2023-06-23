@@ -6,13 +6,11 @@ builds:
   - id: "linux"
     env:
       - CGO_ENABLED=0
-      - OS={{ .Os }}
-      - ARCH={{ .Arch }}
     mod_timestamp: "{{ .CommitTimestamp }}"
     flags:
       - -trimpath
     ldflags:
-      - '-s -w -X "internal/version.Platform={{ .Env.OS }}/{{ .Env.ARCH }}" -X "github.com/slosive/sloscribe/internal/version.Version={{ .Version }}" -X "github.com/slosive/sloscribe/internal/version.Commit={{ .Commit }}" -X "github.com/slosive/sloscribe/internal/version.Date={{ .Date }}"'
+      - '-s -w -X "internal/version.Platform=linux/unknown" -X "github.com/slosive/sloscribe/internal/version.Version={{ .Version }}" -X "github.com/slosive/sloscribe/internal/version.Commit={{ .Commit }}" -X "github.com/slosive/sloscribe/internal/version.Date={{ .Date }}"'
     binary: "{{ .ProjectName }}"
     goos:
       - linux
@@ -23,13 +21,11 @@ builds:
   - id: "darwin"
     env:
       - CGO_ENABLED=0
-      - OS={{ .Os }}
-      - ARCH={{ .Arch }}
     mod_timestamp: "{{ .CommitTimestamp }}"
     flags:
       - -trimpath
     ldflags:
-      - '-s -w -X "github.com/slosive/sloscribe/internal/version.Platform={{ .Env.OS }}/{{ .Env.ARCH }}" -X "github.com/slosive/sloscribe/internal/version.Version={{ .Version }}" -X "github.com/slosive/sloscribe/internal/version.Commit={{.Commit}}" -X "github.com/slosive/sloscribe/internal/version.Date={{ .Date }}"'
+      - '-s -w -X "github.com/slosive/sloscribe/internal/version.Platform=darwin/unknown" -X "github.com/slosive/sloscribe/internal/version.Version={{ .Version }}" -X "github.com/slosive/sloscribe/internal/version.Commit={{.Commit}}" -X "github.com/slosive/sloscribe/internal/version.Date={{ .Date }}"'
     binary: "{{ .ProjectName }}"
     goos:
       - darwin
@@ -54,9 +50,6 @@ archives:
 kos:
   - working_dir: .
     id: "linux"
-    env:
-      - OS=linux
-      - ARCH=unknown
     build: "linux"
     base_image: gcr.io/distroless/base:nonroot
     labels:
