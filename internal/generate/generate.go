@@ -30,8 +30,51 @@ func IsValidOutputFormat(format string) bool {
 	return false
 }
 
+// WriteK8Specifications write the k8s service spec bytes to a specific writer, stdout or file
+func WriteK8Specifications(writer io.Writer, header []byte, specs map[string]any, toFile bool, outputDirectory string, formats ...string) error {
+	for specName, spec := range specs {
+		for _, format := range formats {
+			var files = make(map[string][]byte, len(formats))
+
+			format = strings.ToLower(strings.TrimSpace(format))
+			switch format {
+			case "yaml":
+				body, err := k8syaml.Marshal(spec)
+				if err != nil {
+					return err
+				}
+
+				file := filepath.Join([]string{outputDirectory, DefaultServiceDefinitionDir, fmt.Sprintf("%s.%s", specName, format)}...)
+				files[file] = bytes.Join([][]byte{[]byte("---"), header, body}, []byte("\n"))
+				if err := clean(file); err != nil {
+					return goaloe.DefaultOrDie().Error(err, "clean_artefacts_error")
+				}
+			default:
+				return ErrUnsupportedFormat
+			}
+
+			if toFile {
+				if err := writeToFile(files); err != nil {
+					// @aloe code write_artefacts_error
+					// @aloe title Error Creating Artefacts
+					// @aloe summary The tool has failed to print outputDirectory the Sloth definitions for service.
+					// @aloe details The tool has failed to print outputDirectory the Sloth definitions for service.
+					return goaloe.DefaultOrDie().Error(err, "write_artefacts_error")
+				}
+				continue
+			}
+
+			if err := write(writer, files); err != nil {
+				return goaloe.DefaultOrDie().Error(err, "write_artefacts_error")
+			}
+		}
+	}
+
+	return nil
+}
+
 // WriteSpecifications write the service spec bytes to a specific writer, stdout or file
-func WriteSpecifications(writer io.Writer, header []byte, specs map[string]any, toFile bool, outputDirectory string, kubernetes bool, formats ...string) error {
+func WriteSpecifications(writer io.Writer, header []byte, specs map[string]any, toFile bool, outputDirectory string, formats ...string) error {
 	for specName, spec := range specs {
 		for _, format := range formats {
 			var files = make(map[string][]byte, len(formats))
@@ -54,13 +97,7 @@ func WriteSpecifications(writer io.Writer, header []byte, specs map[string]any, 
 					return goaloe.DefaultOrDie().Error(err, "clean_artefacts_error")
 				}
 			case "yaml":
-				var body []byte
-				var err error
-				if kubernetes {
-					body, err = k8syaml.Marshal(spec)
-				} else {
-					body, err = yaml.Marshal(spec)
-				}
+				body, err := yaml.Marshal(spec)
 				if err != nil {
 					return err
 				}

@@ -13,7 +13,7 @@ import "github.com/slosive/sloscribe/internal/parser/specification/sloth/languag
 
 
 <a name="Options"></a>
-## type [Options](<https://github.com/slosive/sloscribe/blob/main/internal/parser/specification/sloth/language/golang/parser.go#L32-L38>)
+## type [Options](<https://github.com/slosive/sloscribe/blob/main/internal/parser/specification/sloth/language/golang/parser.go#L33-L39>)
 
 Options contains the configuration options available to the Parser
 
@@ -28,7 +28,7 @@ type Options struct {
 ```
 
 <a name="NewOptions"></a>
-### func [NewOptions](<https://github.com/slosive/sloscribe/blob/main/internal/parser/specification/sloth/language/golang/parser.go#L40>)
+### func [NewOptions](<https://github.com/slosive/sloscribe/blob/main/internal/parser/specification/sloth/language/golang/parser.go#L41>)
 
 ```go
 func NewOptions() *Options
