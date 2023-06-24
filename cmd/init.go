@@ -65,7 +65,7 @@ func specInitCmd(common *commonoptions.Options) *cobra.Command {
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			logger := logging.LoggerFromContext(cmd.Context())
-			logger.Info("Parsing source code for slo definitions",
+			logger.Info("Parsing source code for SLO definitions ⚙️",
 				"directories", opts.IncludedDirs,
 				"source", opts.Source,
 			)
@@ -88,7 +88,7 @@ func specInitCmd(common *commonoptions.Options) *cobra.Command {
 				return err
 			}
 
-			logger.Info("Source code was parsed")
+			logger.Info("Source code was parsed ✅")
 
 			// check if the user has selected a target service to output
 			selectedServices := services
@@ -109,19 +109,35 @@ func specInitCmd(common *commonoptions.Options) *cobra.Command {
 
 			// Only print to file if the user has selected the to-file option
 			if opts.ToFile {
-				logger.Info("Generating specifications files in output directory.", "directory", generate.DefaultServiceDefinitionDir)
-				if err := generate.WriteSpecifications(nil, []byte(header), selectedServices, true, ".", outputKubernetes, opts.Formats...); err != nil {
-					logger.Error(err, "Generating specification file error")
-					return err
+				logger.Info("Generating specifications files in output directory ✍🏿", "directory", generate.DefaultServiceDefinitionDir)
+				if outputKubernetes {
+					if err := generate.WriteK8Specifications(nil, []byte(header), selectedServices, true, ".", opts.Formats...); err != nil {
+						logger.Error(err, "Generating specification file error")
+						return err
+					}
+				} else {
+					if err := generate.WriteSpecifications(nil, []byte(header), selectedServices, true, ".", opts.Formats...); err != nil {
+						logger.Error(err, "Generating specification file error")
+						return err
+					}
 				}
 				return nil
 			}
 
-			logger.Info("Printing result specification to stdout.")
+			logger.Info("Printing result specification to stdout ✍🏿")
 			writer := cmd.OutOrStdout()
-			if err := generate.WriteSpecifications(writer, []byte(header), selectedServices, false, "", outputKubernetes, opts.Formats...); err != nil {
-				logger.Error(err, "Writing specification to stdout error")
-				return err
+
+			// Print the specification(s) to stout or file
+			if outputKubernetes {
+				if err := generate.WriteK8Specifications(writer, []byte(header), selectedServices, false, "", opts.Formats...); err != nil {
+					logger.Error(err, "Writing specification to stdout error")
+					return err
+				}
+			} else {
+				if err := generate.WriteSpecifications(writer, []byte(header), selectedServices, false, "", opts.Formats...); err != nil {
+					logger.Error(err, "Writing specification to stdout error")
+					return err
+				}
 			}
 			return nil
 		},

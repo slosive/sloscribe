@@ -13,7 +13,8 @@ Package generate contains utilities to generate data from a given specification
 - [Constants](<#constants>)
 - [Variables](<#variables>)
 - [func IsValidOutputFormat\(format string\) bool](<#IsValidOutputFormat>)
-- [func WriteSpecifications\(writer io.Writer, header \[\]byte, specs map\[string\]any, toFile bool, outputDirectory string, kubernetes bool, formats ...string\) error](<#WriteSpecifications>)
+- [func WriteK8Specifications\(writer io.Writer, header \[\]byte, specs map\[string\]any, toFile bool, outputDirectory string, formats ...string\) error](<#WriteK8Specifications>)
+- [func WriteSpecifications\(writer io.Writer, header \[\]byte, specs map\[string\]any, toFile bool, outputDirectory string, formats ...string\) error](<#WriteSpecifications>)
 
 
 ## Constants
@@ -41,11 +42,20 @@ func IsValidOutputFormat(format string) bool
 
 
 
-<a name="WriteSpecifications"></a>
-## func [WriteSpecifications](<https://github.com/slosive/sloscribe/blob/main/internal/generate/generate.go#L34>)
+<a name="WriteK8Specifications"></a>
+## func [WriteK8Specifications](<https://github.com/slosive/sloscribe/blob/main/internal/generate/generate.go#L34>)
 
 ```go
-func WriteSpecifications(writer io.Writer, header []byte, specs map[string]any, toFile bool, outputDirectory string, kubernetes bool, formats ...string) error
+func WriteK8Specifications(writer io.Writer, header []byte, specs map[string]any, toFile bool, outputDirectory string, formats ...string) error
+```
+
+WriteK8Specifications write the k8s service spec bytes to a specific writer, stdout or file
+
+<a name="WriteSpecifications"></a>
+## func [WriteSpecifications](<https://github.com/slosive/sloscribe/blob/main/internal/generate/generate.go#L77>)
+
+```go
+func WriteSpecifications(writer io.Writer, header []byte, specs map[string]any, toFile bool, outputDirectory string, formats ...string) error
 ```
 
 WriteSpecifications write the service spec bytes to a specific writer, stdout or file

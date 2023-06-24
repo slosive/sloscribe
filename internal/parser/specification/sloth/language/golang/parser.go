@@ -21,6 +21,7 @@ import (
 
 type parser struct {
 	specs         map[string]any
+	current       any
 	sourceFile    string
 	sourceContent io.ReadCloser
 	includedDirs  []string
@@ -62,6 +63,7 @@ func NewParser(opts *Options) *parser {
 
 	return &parser{
 		specs:         map[string]any{},
+		current:       nil,
 		sourceFile:    sourceFile,
 		sourceContent: sourceContent,
 		includedDirs:  dirs,
@@ -114,10 +116,27 @@ func getFile(name string, file io.ReadCloser) (*ast.File, error) {
 	return goparser.ParseFile(fset, name, file, goparser.ParseComments)
 }
 
-func (p parser) parseK8SlothAnnotations(comments ...*ast.CommentGroup) error {
-	var currentServiceSpec *k8sloth.PrometheusServiceLevel
+func (p *parser) parseK8SlothAnnotations(comments ...*ast.CommentGroup) error {
+	if p.current == nil {
+		p.current = &k8sloth.PrometheusServiceLevel{
+			TypeMeta: v1.TypeMeta{
+				Kind:       "PrometheusServiceLevel",
+				APIVersion: "sloth.slok.dev/v1",
+			},
+			ObjectMeta: v1.ObjectMeta{
+				Labels: map[string]string{},
+			},
+			Spec: k8sloth.PrometheusServiceLevelSpec{
+				Service: "",
+				Labels:  map[string]string{},
+				SLOs:    nil,
+			},
+		}
+	}
 
+	p.logger.Debug("current service being parsed", "service", p.current.(*k8sloth.PrometheusServiceLevel).Spec.Service)
 	for _, comment := range comments {
+		p.logger.Debug("parser parsing", "comment", strings.TrimSpace(comment.Text()))
 		// partialServiceSpec contains the partially parsed sloth Specification for a given comment group
 		// this means the parsed spec will only contain data for the fields that are present in the comments, making the spec only partially accurate
 		partialServiceSpec, err := grammar.Eval(strings.TrimSpace(comment.Text()))
@@ -130,8 +149,8 @@ func (p parser) parseK8SlothAnnotations(comments ...*ast.CommentGroup) error {
 		// check if service was parsed before else add it the collection of specs.
 		// Set the found service spec as the current service spec.
 		if partialServiceSpec.Service != "" {
-			if currentServiceSpec != nil && (currentServiceSpec.Name == partialServiceSpec.Service || currentServiceSpec.Name == "") {
-				p.specs[partialServiceSpec.Service] = currentServiceSpec
+			if p.current != nil && (p.current.(*k8sloth.PrometheusServiceLevel).Name == partialServiceSpec.Service || p.current.(*k8sloth.PrometheusServiceLevel).Name == "") {
+				p.specs[partialServiceSpec.Service] = p.current
 			}
 			spec, ok := p.specs[partialServiceSpec.Service]
 			if !ok {
@@ -151,44 +170,40 @@ func (p parser) parseK8SlothAnnotations(comments ...*ast.CommentGroup) error {
 					},
 				}
 				p.specs[partialServiceSpec.Service] = tmpSpec
-				currentServiceSpec = tmpSpec
+				p.current = tmpSpec
 			} else {
-				currentServiceSpec = spec.(*k8sloth.PrometheusServiceLevel)
+				p.current = spec.(*k8sloth.PrometheusServiceLevel)
 			}
 		}
 
-		if currentServiceSpec == nil {
-			currentServiceSpec = &k8sloth.PrometheusServiceLevel{
-				TypeMeta: v1.TypeMeta{
-					Kind:       "PrometheusServiceLevel",
-					APIVersion: "sloth.slok.dev/v1",
-				},
-				Spec: k8sloth.PrometheusServiceLevelSpec{
-					Service: "",
-					Labels:  nil,
-					SLOs:    nil,
-				},
-			}
+		if p.current.(*k8sloth.PrometheusServiceLevel).Name == "" {
+			p.current.(*k8sloth.PrometheusServiceLevel).Name = partialServiceSpec.Service
 		}
 
-		if currentServiceSpec.Name == "" {
-			currentServiceSpec.Name = partialServiceSpec.Service
+		for key, label := range partialServiceSpec.Labels {
+			p.current.(*k8sloth.PrometheusServiceLevel).Labels[key] = label
 		}
-		if currentServiceSpec.Labels == nil {
-			for key, label := range partialServiceSpec.Labels {
-				currentServiceSpec.Labels[key] = label
+
+		if p.current.(*k8sloth.PrometheusServiceLevel).Spec.Service == "" {
+			p.current.(*k8sloth.PrometheusServiceLevel).Spec.Service = partialServiceSpec.Service
+		}
+
+		for key, label := range partialServiceSpec.Labels {
+			p.current.(*k8sloth.PrometheusServiceLevel).Spec.Labels[key] = label
+		}
+
+		for _, slo := range toKubernetes(partialServiceSpec.SLOs...) {
+			exist := false
+			for _, currSLO := range p.current.(*k8sloth.PrometheusServiceLevel).Spec.SLOs {
+				if currSLO.Name == slo.Name {
+					exist = true
+					break
+				}
 			}
-		}
-		if currentServiceSpec.Spec.Service == "" {
-			currentServiceSpec.Spec.Service = partialServiceSpec.Service
-		}
-		if currentServiceSpec.Spec.Labels == nil {
-			for key, label := range partialServiceSpec.Labels {
-				currentServiceSpec.Spec.Labels[key] = label
+
+			if !exist {
+				p.current.(*k8sloth.PrometheusServiceLevel).Spec.SLOs = append(p.current.(*k8sloth.PrometheusServiceLevel).Spec.SLOs, slo)
 			}
-		}
-		if currentServiceSpec.Spec.SLOs == nil {
-			currentServiceSpec.Spec.SLOs = append(currentServiceSpec.Spec.SLOs, toKubernetes(partialServiceSpec.SLOs...)...)
 		}
 	}
 	return nil
@@ -231,10 +246,20 @@ func toKubernetes(slos ...sloth.SLO) []k8sloth.SLO {
 
 // parseSlothAnnotations parses the source code comments for sloth annotations using the sloth grammar.
 // It expects only SLO definition per comment group
-func (p parser) parseSlothAnnotations(comments ...*ast.CommentGroup) error {
-	var currentServiceSpec *sloth.Spec
+func (p *parser) parseSlothAnnotations(comments ...*ast.CommentGroup) error {
+	if p.current == nil {
+		p.current = &sloth.Spec{
+			Version: "",
+			Service: "",
+			Labels:  make(map[string]string),
+			SLOs:    make([]sloth.SLO, 0),
+		}
+	}
+
+	p.logger.Debug("current service being parsed", "service", p.current.(*sloth.Spec).Service)
 
 	for _, comment := range comments {
+		p.logger.Debug("parser parsing", "comment", strings.TrimSpace(comment.Text()))
 		// partialServiceSpec contains the partially parsed sloth Specification for a given comment group
 		// this means the parsed spec will only contain data for the fields that are present in the comments, making the spec only partially accurate
 		partialServiceSpec, err := grammar.Eval(strings.TrimSpace(comment.Text()))
@@ -247,40 +272,41 @@ func (p parser) parseSlothAnnotations(comments ...*ast.CommentGroup) error {
 		// check if service was parsed before else add it the collection of specs.
 		// Set the found service spec as the current service spec.
 		if partialServiceSpec.Service != "" {
-			if currentServiceSpec != nil && (currentServiceSpec.Service == partialServiceSpec.Service || currentServiceSpec.Service == "") {
-				p.specs[partialServiceSpec.Service] = currentServiceSpec
+			if p.current != nil && (p.current.(*sloth.Spec).Service == partialServiceSpec.Service || p.current.(*sloth.Spec).Service == "") {
+				p.specs[partialServiceSpec.Service] = p.current
 			}
 			spec, ok := p.specs[partialServiceSpec.Service]
 			if !ok {
 				p.specs[partialServiceSpec.Service] = partialServiceSpec
-				currentServiceSpec = partialServiceSpec
+				p.current = partialServiceSpec
 			} else {
-				currentServiceSpec = spec.(*sloth.Spec)
+				p.current = spec.(*sloth.Spec)
 			}
 		}
 
-		if currentServiceSpec == nil {
-			currentServiceSpec = &sloth.Spec{
-				Version: "",
-				Service: "",
-				Labels:  nil,
-				SLOs:    nil,
-			}
+		if p.current.(*sloth.Spec).Service == "" {
+			p.current.(*sloth.Spec).Service = partialServiceSpec.Service
+		}
+		if p.current.(*sloth.Spec).Version == "" {
+			p.current.(*sloth.Spec).Version = partialServiceSpec.Version
 		}
 
-		if currentServiceSpec.Service == "" {
-			currentServiceSpec.Service = partialServiceSpec.Service
+		for key, label := range partialServiceSpec.Labels {
+			p.current.(*sloth.Spec).Labels[key] = label
 		}
-		if currentServiceSpec.Version == "" {
-			currentServiceSpec.Version = partialServiceSpec.Version
-		}
-		if currentServiceSpec.Labels == nil {
-			for key, label := range partialServiceSpec.Labels {
-				currentServiceSpec.Labels[key] = label
+
+		for _, slo := range partialServiceSpec.SLOs {
+			exist := false
+			for _, currSLO := range p.current.(*sloth.Spec).SLOs {
+				if currSLO.Name == slo.Name {
+					exist = true
+					break
+				}
 			}
-		}
-		if currentServiceSpec.SLOs == nil {
-			currentServiceSpec.SLOs = append(currentServiceSpec.SLOs, partialServiceSpec.SLOs...)
+
+			if !exist {
+				p.current.(*sloth.Spec).SLOs = append(p.current.(*sloth.Spec).SLOs, slo)
+			}
 		}
 	}
 	return nil
@@ -288,7 +314,7 @@ func (p parser) parseSlothAnnotations(comments ...*ast.CommentGroup) error {
 
 // Parse will parse the source code for sloth annotations.
 // In case of error during parsing, Parse returns an empty sloth.Spec
-func (p parser) Parse(ctx context.Context) (map[string]any, error) {
+func (p *parser) Parse(ctx context.Context) (map[string]any, error) {
 	// collect all sloth annotations from the file and add them to the spec struct
 	if p.sourceFile != "" || p.sourceContent != nil {
 		file, err := getFile(p.sourceFile, p.sourceContent)
@@ -336,15 +362,41 @@ func (p parser) Parse(ctx context.Context) (map[string]any, error) {
 	}
 
 	// collect all sloth annotations from packages and add them to the spec struct
-	if len(applicationPackages) > 0 {
-		for _, pkg := range applicationPackages {
-			for _, file := range pkg.Files {
-				// handle signals with context
-				select {
-				case <-ctx.Done():
-					return nil, errors.New("termination signal was received, terminating process...")
-				default:
+	for _, pkg := range applicationPackages {
+		// Prioritise parsing the main.go if present in the package
+		for filename, file := range pkg.Files {
+			if !strings.Contains(filename, "main.go") {
+				continue
+			}
+
+			if p.kubernetes {
+				if err := p.parseK8SlothAnnotations(file.Comments...); err != nil {
+					return nil, err
 				}
+			} else {
+				if err := p.parseSlothAnnotations(file.Comments...); err != nil {
+					p.warn(err)
+					continue
+				}
+			}
+		}
+		// parse the rest of the files, skipping main.go
+		for filename, file := range pkg.Files {
+			if strings.Contains(filename, "main.go") {
+				continue
+			}
+			// handle signals with context
+			select {
+			case <-ctx.Done():
+				return nil, errors.New("termination signal was received, terminating process...")
+			default:
+			}
+
+			if p.kubernetes {
+				if err := p.parseK8SlothAnnotations(file.Comments...); err != nil {
+					return nil, err
+				}
+			} else {
 				if err := p.parseSlothAnnotations(file.Comments...); err != nil {
 					p.warn(err)
 					continue
@@ -356,7 +408,7 @@ func (p parser) Parse(ctx context.Context) (map[string]any, error) {
 	return p.specs, nil
 }
 
-func (p parser) warn(err error, keyValues ...interface{}) {
+func (p *parser) warn(err error, keyValues ...interface{}) {
 	if p.logger != nil {
 		p.logger.Warn(err, keyValues...)
 	}
