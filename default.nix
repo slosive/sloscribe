@@ -13,7 +13,7 @@
 
 pkgs.buildGoApplication {
   pname = "sloscribe";
-  version = "v0.1.0-alpha.4";
+  version = "v0.1.0-alpha.5";
   pwd = ./.;
   src = ./.;
   modules = ./gomod2nix.toml;

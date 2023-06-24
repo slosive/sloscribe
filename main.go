@@ -38,7 +38,7 @@ import (
 
 // @aloe name sloscribe
 // @aloe url https://slosive.github.io
-// @aloe version v0.1.0-alpha.4
+// @aloe version v0.1.0-alpha.5
 // @aloe description Generate Sloth SLO/SLI definitions from code annotations.
 
 func main() {

@@ -5,7 +5,7 @@ title: sloscribe
 ## sloscribe
 
 **Application**: sloscribe
-**Version**: v0.1.0-alpha.4
+**Version**: v0.1.0-alpha.5
 
 ### Description
 
