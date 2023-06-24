@@ -35,4 +35,4 @@ errors_definitions:
         summary: The tool has failed to print outputDirectory the Sloth definitions for service.
         title: Error Creating Artefacts
 name: sloscribe
-version: v0.1.0-alpha.4
+version: v0.1.0-alpha.5
