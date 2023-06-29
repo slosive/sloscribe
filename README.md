@@ -19,9 +19,9 @@
 
 <p align="center">
 <strong>[<a href="https://slotalk.fadey.io/docs/intro">Docs</a>]</strong>
-<strong>[<a href="#Try-it!">Try it!</a>]</strong>
-<strong>[<a href="#Install">Install</a>]</strong>
-<strong>[<a href="#Get-Started">Get Started</a>]</strong>
+<strong>[<a href="#try-it">Try it!</a>]</strong>
+<strong>[<a href="#-install">Install</a>]</strong>
+<strong>[<a href="#-get-started">Get Started</a>]</strong>
 </p>
 
 > ⚠ The tool is still not ready for real production use yet.
@@ -40,6 +40,18 @@ SLOscribe can be used in tandem with the [Sloth CLI](https://github.com/slok/slo
 * [Go](https://go.dev/doc/install)
 * [Nix](https://zero-to-nix.com/start/install) (optional)
 
+## 🔽 Install
+
+The SLOscribe CLI can be installed easily via the installation script.
+
+```shell
+curl -sfL https://raw.githubusercontent.com/slosive/sloscribe/main/install.sh | sh -
+```
+
+This will install the required binary for your machine (Linux/Mac only).
+
+For other ways of installing the tool please check the [installation guide](https://slotalk.fadey.io/docs/category/installation).
+
 ## 📚 Basic example - Generate Prometheus alert groups from code annotations
 
 This example shows how sloth's comments can be added next to the prometheus metrics defined in a `metrics.go` file.
@@ -54,7 +66,7 @@ This example shows how sloth's comments can be added next to the prometheus metr
         // @sloth.slo description 95% of logins to the chat-gpt app should be successful.
         // @sloth.alerting name ChatGPTAvailability
         metricTenantLogins = prometheus.NewCounter(
-            prometheus.GaugeOpts{
+            prometheus.CounterOpts{
                 Namespace: "chatgpt",
                 Subsystem: "auth0",
                 Name:      "tenant_login_operations_total",
@@ -303,18 +315,6 @@ groups:
 
 </details>
 
-## 🔽 Install
-
-The SLOscribe CLI can be installed easily via the installation script.
-
-```shell
-curl -sfL https://raw.githubusercontent.com/slosive/sloscribe/main/install.sh | sh -
-```
-
-This will install the required binary for your machine (Linux/Mac only).
-
-For other ways of installing the tool please check the [installation guide](https://slotalk.fadey.io/docs/category/installation).
-
 ## 🚀 Get Started
 
 1. Add comments to your source code. See [Declarative Comments](https://slotalk.fadey.io/docs/category/sloth-annotations).
@@ -342,14 +342,14 @@ Usage:
   sloscribe init [flags]
 
 Flags:
-      --dirs strings     Comma separated list of directories to be parses by the tool (default [...])
-  -f, --file string            Target file to parse. example: ./metrics.go
-      --format strings         Output format (yaml,json). (default [yaml])
-  -h, --help                   help for init
-      --lang string            Language of the source files. (go) (default "go")
-      --services strings       Comma separated list of service names. These will select the output service specifications returned by the tool.
-      --specification string   The name of the specification the tool should parse the source file for, example: sloth or sloth-k8s. (default "sloth")
-      --to-file                Print the generated specifications to file, under ./slo_definitions.
+      --dirs strings               Comma separated list of directories to be recursively parsed by the tool (default [/home/jetstack-oluwole/go/src/github.com/slosive/sloscribe])
+  -f, --file string                Source code file to parse for annotations. Example: ./metrics.go
+      --format strings             Format of the output returned by the tool. Available: yaml, json. (default [yaml])
+  -h, --help                       help for init
+      --lang string                Target source code language. Available: go. (default "go")
+      --service-selector strings   Comma separated list of service specification names. These will select the output service specifications returned by the tool. Example: --service-selector app1,app3 
+      --specification string       The SLO specification the tool should parse the source file for. Available: sloth, sloth-k8s. (default "sloth")
+      --to-file                    Tells the tool to save the generated specifications to file, under ./slo_definitions.
 
 Global Flags:
       --log-level string   Only log messages with the given severity or above. One of: [none, debug, info, warn], errors will always be printed (default "info")

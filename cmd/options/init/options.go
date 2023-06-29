@@ -10,7 +10,6 @@ import (
 	"github.com/slosive/sloscribe/internal/parser/lang"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
-	goaloe "github.com/tfadeyi/go-aloe"
 )
 
 type (
@@ -52,9 +51,7 @@ func (o *Options) Complete() error {
 	// The following are the supported languages: yaml(default), json.
 	for _, format := range o.Formats {
 		if ok := generate.IsValidOutputFormat(format); !ok {
-			err = goaloe.DefaultOrDie().Error(
-				multierr.Append(err, errors.Errorf("invalid format %q was passed to --format flag", format)),
-				"unsupported_output_format")
+			err = multierr.Append(err, errors.Errorf("invalid format %q was passed to --format flag", format))
 		}
 	}
 
@@ -64,9 +61,7 @@ func (o *Options) Complete() error {
 	// @aloe details The source language passed to the --lang flag is not currently supported by the tool.
 	// The following are the supported languages: go, wasm(experimental).
 	if ok := lang.IsSupportedLanguage(o.SourceLanguage); !ok {
-		err = goaloe.DefaultOrDie().Error(
-			multierr.Append(err, errors.Errorf("unsupported language %q was passed to --lang flag", o.SourceLanguage)),
-			"unsupported_language")
+		err = multierr.Append(err, errors.Errorf("unsupported language %q was passed to --lang flag", o.SourceLanguage))
 	}
 	return err
 }
@@ -84,43 +79,43 @@ func (o *Options) addAppFlags(fs *pflag.FlagSet) {
 		&o.IncludedDirs,
 		"dirs",
 		[]string{getWorkingDirOrDie()},
-		"Comma separated list of directories to be parses by the tool",
+		"Comma separated list of directories to be recursively parsed by the tool",
 	)
 	fs.StringSliceVar(
 		&o.Formats,
 		"format",
 		[]string{"yaml"},
-		"Output format (yaml,json).",
+		"Format of the output returned by the tool. Available: yaml, json.",
 	)
 	fs.StringVar(
 		(*string)(&o.SourceLanguage),
 		"lang",
 		"go",
-		"Language of the source files. (go)",
+		"Target source code language. Available: go.",
 	)
 	fs.StringVarP(
 		&o.Source,
 		"file",
 		"f",
 		"",
-		"Target file to parse. example: ./metrics.go",
+		"Source code file to parse for annotations. Example: ./metrics.go",
 	)
 	fs.BoolVar(
 		&o.ToFile,
 		"to-file",
 		false,
-		"Print the generated specifications to file, under ./slo_definitions.",
+		"Tells the tool to save the generated specifications to file, under ./slo_definitions.",
 	)
 	fs.StringSliceVar(
 		&o.Services,
-		"services",
+		"service-selector",
 		[]string{},
-		"Comma separated list of service names. These will select the output service specifications returned by the tool.",
+		"Comma separated list of service specification names. These will select the output service specifications returned by the tool. Example: --service-selector app1,app3 ",
 	)
 	fs.StringVar(
 		&o.Target,
 		"specification",
 		"sloth",
-		"The name of the specification the tool should parse the source file for, example: sloth or sloth-k8s.",
+		"The SLO specification the tool should parse the source file for. Available: sloth, sloth-k8s.",
 	)
 }
