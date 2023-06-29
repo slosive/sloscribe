@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/juju/errors"
-	"github.com/tfadeyi/go-aloe"
 	"gopkg.in/yaml.v3"
 	"io"
 	"os"
@@ -47,7 +46,7 @@ func WriteK8Specifications(writer io.Writer, header []byte, specs map[string]any
 				file := filepath.Join([]string{outputDirectory, DefaultServiceDefinitionDir, fmt.Sprintf("%s.%s", specName, format)}...)
 				files[file] = bytes.Join([][]byte{[]byte("---"), header, body}, []byte("\n"))
 				if err := clean(file); err != nil {
-					return goaloe.DefaultOrDie().Error(err, "clean_artefacts_error")
+					return err
 				}
 			default:
 				return ErrUnsupportedFormat
@@ -59,13 +58,13 @@ func WriteK8Specifications(writer io.Writer, header []byte, specs map[string]any
 					// @aloe title Error Creating Artefacts
 					// @aloe summary The tool has failed to print outputDirectory the Sloth definitions for service.
 					// @aloe details The tool has failed to print outputDirectory the Sloth definitions for service.
-					return goaloe.DefaultOrDie().Error(err, "write_artefacts_error")
+					return err
 				}
 				continue
 			}
 
 			if err := write(writer, files); err != nil {
-				return goaloe.DefaultOrDie().Error(err, "write_artefacts_error")
+				return err
 			}
 		}
 	}
@@ -94,7 +93,7 @@ func WriteSpecifications(writer io.Writer, header []byte, specs map[string]any, 
 					// @aloe summary The tool has failed to delete the artefacts from the previous execution.
 					// @aloe details The tool has failed to delete the artefacts from the previous execution.
 					// Try manually deleting them before running the tool again.
-					return goaloe.DefaultOrDie().Error(err, "clean_artefacts_error")
+					return err
 				}
 			case "yaml":
 				body, err := yaml.Marshal(spec)
@@ -105,7 +104,7 @@ func WriteSpecifications(writer io.Writer, header []byte, specs map[string]any, 
 				file := filepath.Join([]string{outputDirectory, DefaultServiceDefinitionDir, fmt.Sprintf("%s.%s", specName, format)}...)
 				files[file] = bytes.Join([][]byte{[]byte("---"), header, body}, []byte("\n"))
 				if err := clean(file); err != nil {
-					return goaloe.DefaultOrDie().Error(err, "clean_artefacts_error")
+					return err
 				}
 			default:
 				return ErrUnsupportedFormat
@@ -117,13 +116,13 @@ func WriteSpecifications(writer io.Writer, header []byte, specs map[string]any, 
 					// @aloe title Error Creating Artefacts
 					// @aloe summary The tool has failed to print outputDirectory the Sloth definitions for service.
 					// @aloe details The tool has failed to print outputDirectory the Sloth definitions for service.
-					return goaloe.DefaultOrDie().Error(err, "write_artefacts_error")
+					return err
 				}
 				continue
 			}
 
 			if err := write(writer, files); err != nil {
-				return goaloe.DefaultOrDie().Error(err, "write_artefacts_error")
+				return err
 			}
 		}
 	}

@@ -34,7 +34,7 @@ var ErrUnsupportedFormat = errors.New("the specification is in an invalid format
 ```
 
 <a name="IsValidOutputFormat"></a>
-## func [IsValidOutputFormat](<https://github.com/slosive/sloscribe/blob/main/internal/generate/generate.go#L24>)
+## func [IsValidOutputFormat](<https://github.com/slosive/sloscribe/blob/main/internal/generate/generate.go#L23>)
 
 ```go
 func IsValidOutputFormat(format string) bool
@@ -43,7 +43,7 @@ func IsValidOutputFormat(format string) bool
 
 
 <a name="WriteK8Specifications"></a>
-## func [WriteK8Specifications](<https://github.com/slosive/sloscribe/blob/main/internal/generate/generate.go#L34>)
+## func [WriteK8Specifications](<https://github.com/slosive/sloscribe/blob/main/internal/generate/generate.go#L33>)
 
 ```go
 func WriteK8Specifications(writer io.Writer, header []byte, specs map[string]any, toFile bool, outputDirectory string, formats ...string) error
@@ -52,7 +52,7 @@ func WriteK8Specifications(writer io.Writer, header []byte, specs map[string]any
 WriteK8Specifications write the k8s service spec bytes to a specific writer, stdout or file
 
 <a name="WriteSpecifications"></a>
-## func [WriteSpecifications](<https://github.com/slosive/sloscribe/blob/main/internal/generate/generate.go#L77>)
+## func [WriteSpecifications](<https://github.com/slosive/sloscribe/blob/main/internal/generate/generate.go#L76>)
 
 ```go
 func WriteSpecifications(writer io.Writer, header []byte, specs map[string]any, toFile bool, outputDirectory string, formats ...string) error

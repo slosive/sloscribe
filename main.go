@@ -21,7 +21,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-//go:generate aloe-cli spec generate main.go --format yaml,markdown
 //go:generate gomarkdoc --output "{{.Dir}}/README.md" ./internal/... ./cmd/...
 
 package main

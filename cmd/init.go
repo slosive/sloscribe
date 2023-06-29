@@ -78,13 +78,13 @@ func specInitCmd(common *commonoptions.Options) *cobra.Command {
 				options.SourceContent(inputReader),
 				options.Include(opts.IncludedDirs...))
 			if err != nil {
-				logger.Error(err, "Parser initialization")
+				logger.Error(err, "Parser initialization error, please try again")
 				return err
 			}
 
 			services, err := parser.Parse(cmd.Context())
 			if err != nil {
-				logger.Error(err, "Parser parsing error")
+				logger.Error(err, "Parsing error, please try again")
 				return err
 			}
 
@@ -100,8 +100,7 @@ func specInitCmd(common *commonoptions.Options) *cobra.Command {
 
 				service, ok := services[serviceName]
 				if !ok {
-					err := errors.Errorf("selected service %q was not found in the parser output", serviceName)
-					logger.Warn(err, "")
+					logger.Warn(errors.Errorf("selected service specification %q was not found in the parser output", serviceName), "")
 				} else {
 					selectedServices[serviceName] = service
 				}
@@ -109,36 +108,33 @@ func specInitCmd(common *commonoptions.Options) *cobra.Command {
 
 			// Only print to file if the user has selected the to-file option
 			if opts.ToFile {
-				logger.Info("Generating specifications files in output directory ✍🏿", "directory", generate.DefaultServiceDefinitionDir)
+				logger.Info("Generating service specification(s) files in output directory", "directory", generate.DefaultServiceDefinitionDir)
 				if outputKubernetes {
-					if err := generate.WriteK8Specifications(nil, []byte(header), selectedServices, true, ".", opts.Formats...); err != nil {
-						logger.Error(err, "Generating specification file error")
-						return err
-					}
+					err = generate.WriteK8Specifications(nil, []byte(header), selectedServices, true, ".", opts.Formats...)
 				} else {
-					if err := generate.WriteSpecifications(nil, []byte(header), selectedServices, true, ".", opts.Formats...); err != nil {
-						logger.Error(err, "Generating specification file error")
-						return err
-					}
+					err = generate.WriteSpecifications(nil, []byte(header), selectedServices, true, ".", opts.Formats...)
+				}
+				if err != nil {
+					logger.Error(err, "Error generating specification file for the parsed service, please try again")
+					return err
 				}
 				return nil
 			}
 
-			logger.Info("Printing result specification to stdout ✍🏿")
+			logger.Info("Printing parsed service specification(s) ✍🏿")
 			writer := cmd.OutOrStdout()
 
 			// Print the specification(s) to stout or file
 			if outputKubernetes {
-				if err := generate.WriteK8Specifications(writer, []byte(header), selectedServices, false, "", opts.Formats...); err != nil {
-					logger.Error(err, "Writing specification to stdout error")
-					return err
-				}
+				err = generate.WriteK8Specifications(writer, []byte(header), selectedServices, false, "", opts.Formats...)
 			} else {
-				if err := generate.WriteSpecifications(writer, []byte(header), selectedServices, false, "", opts.Formats...); err != nil {
-					logger.Error(err, "Writing specification to stdout error")
-					return err
-				}
+				err = generate.WriteSpecifications(writer, []byte(header), selectedServices, false, "", opts.Formats...)
 			}
+			if err != nil {
+				logger.Error(err, "Error printing service specification(s) to standard output")
+				return err
+			}
+
 			return nil
 		},
 	}

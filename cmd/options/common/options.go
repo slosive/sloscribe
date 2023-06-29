@@ -6,7 +6,6 @@ import (
 	"github.com/slosive/sloscribe/internal/logging"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
-	goaloe "github.com/tfadeyi/go-aloe"
 )
 
 type (
@@ -38,9 +37,7 @@ func (o *Options) Complete() error {
 		// @aloe summary The log level passed to the --log-level flag is not supported.
 		// @aloe details The log level passed to the --log-level flag is not currently supported by the tool.
 		// The following are supported: none, debug, info(default), warn.
-		err = goaloe.DefaultOrDie().Error(
-			multierr.Append(err, errors.Errorf("invalid log-level %q was passed to --log-level flag", o.LogLevel)),
-			"invalid_log_level")
+		err = multierr.Append(err, errors.Errorf("invalid log-level %q was passed to --log-level flag", o.LogLevel))
 	}
 	return err
 }
