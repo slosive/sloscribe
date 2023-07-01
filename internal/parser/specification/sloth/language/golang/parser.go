@@ -440,16 +440,13 @@ func (p *parser) warn(err error, keyValues ...interface{}) {
 }
 
 func (p *parser) stats() {
-	p.logger.Info("Found", "services", len(p.specs))
-	allSLOs := 0
 	for _, spec := range p.specs {
 		if p.kubernetes {
 			s := spec.(*k8sloth.PrometheusServiceLevel)
-			allSLOs += len(s.Spec.SLOs)
+			p.logger.Info("Found", "service", s.Spec.Service, "SLOs", len(s.Spec.SLOs))
 		} else {
 			s := spec.(*sloth.Spec)
-			allSLOs += len(s.SLOs)
+			p.logger.Info("Found", "service", s.Service, "SLOs", len(s.SLOs))
 		}
 	}
-	p.logger.Info("Found", "SLOs", allSLOs)
 }
