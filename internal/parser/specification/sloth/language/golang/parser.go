@@ -20,22 +20,30 @@ import (
 )
 
 type parser struct {
-	specs         map[string]any
-	current       any
-	sourceFile    string
+	// specs contains references to all the service specifications that have been parsed
+	specs map[string]any
+	// current references the current service specification being parsed
+	current any
+	// sourceFile is the path to the target file to be parsed, i.e: -f file.go
+	sourceFile string
+	// sourceContent is the reader to the content to be parsed
 	sourceContent io.ReadCloser
 	includedDirs  []string
 	logger        *logging.Logger
-	kubernetes    bool
+	// kubernetes tells the parser to parser the sloth annotations and output a kubernetes specification of the service
+	kubernetes bool
 }
 
 // Options contains the configuration options available to the Parser
 type Options struct {
-	Logger           *logging.Logger
-	SourceFile       string
+	Logger *logging.Logger
+	// SourceFile is the path to the target file to be parsed, i.e: -f file.go
+	SourceFile string
+	// SourceContent is the reader to the content to be parsed
 	SourceContent    io.ReadCloser
 	InputDirectories []string
-	Kubernetes       bool
+	// Kubernetes tells the parser to parser the sloth annotations and output a kubernetes specification of the service
+	Kubernetes bool
 }
 
 func NewOptions() *Options {
@@ -134,9 +142,12 @@ func (p *parser) parseK8SlothAnnotations(comments ...*ast.CommentGroup) error {
 		}
 	}
 
-	p.logger.Debug("current service being parsed", "service", p.current.(*k8sloth.PrometheusServiceLevel).Spec.Service)
+	p.logger.Debug("Current service being parsed", "service", p.current.(*k8sloth.PrometheusServiceLevel).Spec.Service)
 	for _, comment := range comments {
-		p.logger.Debug("parser parsing", "comment", strings.TrimSpace(comment.Text()))
+		if !strings.HasPrefix(strings.TrimSpace(comment.Text()), "@sloth") {
+			continue
+		}
+		p.logger.Debug("Parsing", "comment", strings.TrimSpace(comment.Text()))
 		// partialServiceSpec contains the partially parsed sloth Specification for a given comment group
 		// this means the parsed spec will only contain data for the fields that are present in the comments, making the spec only partially accurate
 		partialServiceSpec, err := grammar.Eval(strings.TrimSpace(comment.Text()))
@@ -256,10 +267,13 @@ func (p *parser) parseSlothAnnotations(comments ...*ast.CommentGroup) error {
 		}
 	}
 
-	p.logger.Debug("current service being parsed", "service", p.current.(*sloth.Spec).Service)
+	p.logger.Debug("Current service being parsed", "service", p.current.(*sloth.Spec).Service)
 
 	for _, comment := range comments {
-		p.logger.Debug("parser parsing", "comment", strings.TrimSpace(comment.Text()))
+		if !strings.HasPrefix(strings.TrimSpace(comment.Text()), "@sloth") {
+			continue
+		}
+		p.logger.Debug("Parsing", "comment", strings.TrimSpace(comment.Text()))
 		// partialServiceSpec contains the partially parsed sloth Specification for a given comment group
 		// this means the parsed spec will only contain data for the fields that are present in the comments, making the spec only partially accurate
 		partialServiceSpec, err := grammar.Eval(strings.TrimSpace(comment.Text()))
@@ -322,6 +336,7 @@ func (p *parser) Parse(ctx context.Context) (map[string]any, error) {
 			// error hard as we can't extract more data for the spec
 			return nil, err
 		}
+		p.logger.Debug("Parsing source code", "file", file.Name)
 		if p.kubernetes {
 			if err := p.parseK8SlothAnnotations(file.Comments...); err != nil {
 				return nil, err
@@ -331,6 +346,7 @@ func (p *parser) Parse(ctx context.Context) (map[string]any, error) {
 				return nil, err
 			}
 		}
+		p.logger.Debug("Parsed source code", "file", file.Name)
 		return p.specs, nil
 	}
 
@@ -365,26 +381,30 @@ func (p *parser) Parse(ctx context.Context) (map[string]any, error) {
 	for _, pkg := range applicationPackages {
 		// Prioritise parsing the main.go if present in the package
 		for filename, file := range pkg.Files {
-			if !strings.Contains(filename, "main.go") {
-				continue
-			}
-
-			if p.kubernetes {
-				if err := p.parseK8SlothAnnotations(file.Comments...); err != nil {
-					return nil, err
+			if strings.Contains(filename, "main.go") {
+				p.logger.Debug("Parsing source code", "package", pkg.Name, "file", filename)
+				if p.kubernetes {
+					if err := p.parseK8SlothAnnotations(file.Comments...); err != nil {
+						p.warn(err)
+						break
+					}
+				} else {
+					if err := p.parseSlothAnnotations(file.Comments...); err != nil {
+						p.warn(err)
+						break
+					}
 				}
-			} else {
-				if err := p.parseSlothAnnotations(file.Comments...); err != nil {
-					p.warn(err)
-					continue
-				}
+				p.logger.Debug("Parsed source code", "package", pkg.Name, "file", filename)
+				break
 			}
 		}
+
 		// parse the rest of the files, skipping main.go
 		for filename, file := range pkg.Files {
 			if strings.Contains(filename, "main.go") {
 				continue
 			}
+			p.logger.Debug("Parsing source code", "package", pkg.Name, "file", filename)
 			// handle signals with context
 			select {
 			case <-ctx.Done():
@@ -394,7 +414,8 @@ func (p *parser) Parse(ctx context.Context) (map[string]any, error) {
 
 			if p.kubernetes {
 				if err := p.parseK8SlothAnnotations(file.Comments...); err != nil {
-					return nil, err
+					p.warn(err)
+					continue
 				}
 			} else {
 				if err := p.parseSlothAnnotations(file.Comments...); err != nil {
@@ -402,8 +423,12 @@ func (p *parser) Parse(ctx context.Context) (map[string]any, error) {
 					continue
 				}
 			}
+			p.logger.Debug("Parsed source code", "package", pkg.Name, "file", filename)
 		}
 	}
+
+	// print statistics
+	p.stats()
 
 	return p.specs, nil
 }
@@ -412,4 +437,19 @@ func (p *parser) warn(err error, keyValues ...interface{}) {
 	if p.logger != nil {
 		p.logger.Warn(err, keyValues...)
 	}
+}
+
+func (p *parser) stats() {
+	p.logger.Info("Found", "services", len(p.specs))
+	allSLOs := 0
+	for _, spec := range p.specs {
+		if p.kubernetes {
+			s := spec.(*k8sloth.PrometheusServiceLevel)
+			allSLOs += len(s.Spec.SLOs)
+		} else {
+			s := spec.(*sloth.Spec)
+			allSLOs += len(s.SLOs)
+		}
+	}
+	p.logger.Info("Found", "SLOs", allSLOs)
 }

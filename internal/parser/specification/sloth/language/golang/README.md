@@ -13,22 +13,25 @@ import "github.com/slosive/sloscribe/internal/parser/specification/sloth/languag
 
 
 <a name="Options"></a>
-## type [Options](<https://github.com/slosive/sloscribe/blob/main/internal/parser/specification/sloth/language/golang/parser.go#L33-L39>)
+## type [Options](<https://github.com/slosive/sloscribe/blob/main/internal/parser/specification/sloth/language/golang/parser.go#L38-L47>)
 
 Options contains the configuration options available to the Parser
 
 ```go
 type Options struct {
-    Logger           *logging.Logger
-    SourceFile       string
+    Logger *logging.Logger
+    // SourceFile is the path to the target file to be parsed, i.e: -f file.go
+    SourceFile string
+    // SourceContent is the reader to the content to be parsed
     SourceContent    io.ReadCloser
     InputDirectories []string
-    Kubernetes       bool
+    // Kubernetes tells the parser to parser the sloth annotations and output a kubernetes specification of the service
+    Kubernetes bool
 }
 ```
 
 <a name="NewOptions"></a>
-### func [NewOptions](<https://github.com/slosive/sloscribe/blob/main/internal/parser/specification/sloth/language/golang/parser.go#L41>)
+### func [NewOptions](<https://github.com/slosive/sloscribe/blob/main/internal/parser/specification/sloth/language/golang/parser.go#L49>)
 
 ```go
 func NewOptions() *Options
