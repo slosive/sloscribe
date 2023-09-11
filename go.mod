@@ -3,7 +3,7 @@ module github.com/slosive/sloscribe
 go 1.20
 
 require (
-	github.com/alecthomas/participle/v2 v2.0.0
+	github.com/alecthomas/participle/v2 v2.1.0
 	github.com/go-logr/logr v1.2.4
 	github.com/go-logr/stdr v1.2.2
 	github.com/hashicorp/go-multierror v1.1.1
